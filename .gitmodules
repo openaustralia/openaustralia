@@ -1,0 +1,15 @@
+[submodule "perllib"]
+	path = perllib
+	url = git://github.com/mlandauer/perllib.git
+[submodule "phplib"]
+	path = phplib
+	url = git://github.com/mlandauer/phplib.git
+[submodule "rblib"]
+	path = rblib
+	url = git://github.com/mlandauer/rblib.git
+[submodule "twfy"]
+	path = twfy
+	url = git://github.com/mlandauer/twfy.git
+[submodule "openaustralia-parser"]
+	path = openaustralia-parser
+	url = git://github.com/mlandauer/openaustralia-parser.git
