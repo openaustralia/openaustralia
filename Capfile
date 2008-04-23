@@ -15,7 +15,7 @@ set :repository, "git://github.com/mlandauer/openaustralia.git"
 set :git_enable_submodules, true
 set :deploy_via, :remote_cache
 
-local_deploy = true
+local_deploy = false
 
 if local_deploy
 	set :deploy_to, "/Library/WebServer/Documents/test-deploy/#{application}"
