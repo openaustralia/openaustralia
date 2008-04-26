@@ -51,7 +51,8 @@ namespace :deploy do
 		links = {"#{release_path}/twfy/www/docs/images/mps" => "#{shared_path}/images/mps",
 			"#{release_path}/twfy/www/docs/images/mpsL" => "#{shared_path}/images/mpsL",
 			"#{release_path}/twfy/conf/general" => "#{shared_path}/general",
-			"#{release_path}/twfy/www/docs/.htaccess" => "#{shared_path}/root_htaccess"}
+			"#{release_path}/twfy/www/docs/.htaccess" => "#{shared_path}/root_htaccess",
+			"#{release_path}/openaustralia-parser/configuration.yml" => "#{shared_path}/parser_configuration.yml"}
 		
 		run "rm -rf #{links.keys.join(' ')}"
 		links.each_pair {|src, dst| run "ln -s #{dst} #{src}"} 
