@@ -35,6 +35,7 @@ namespace :deploy do
 		dirs = [deploy_to, releases_path, shared_path]
 		shared_images_path = File.join(shared_path, "images")
 		dirs += ["mps", "mpsL"].map {|d| File.join(shared_images_path, d)}
+		dirs << File.join(shared_path, "rss", "mp")
 		run "umask 02 && mkdir -p #{dirs.join(' ')}"
 	end
 
@@ -52,10 +53,12 @@ namespace :deploy do
 			"#{release_path}/twfy/www/docs/images/mpsL" => "#{shared_path}/images/mpsL",
 			"#{release_path}/twfy/conf/general" => "#{shared_path}/general",
 			"#{release_path}/twfy/www/docs/.htaccess" => "#{shared_path}/root_htaccess",
-			"#{release_path}/openaustralia-parser/configuration.yml" => "#{shared_path}/parser_configuration.yml"}
+			"#{release_path}/openaustralia-parser/configuration.yml" => "#{shared_path}/parser_configuration.yml",
+			"#{release_path}/xapiandb" => "#{shared_path}/xapiandb",
+			"#{release_path}/twfy/www/docs/rss/mp" => "#{shared_path}/rss/mp",
+			"#{release_path}/twfy/www/docs/debates/debates.rss" => "#{shared_path}/rss/debates.rss"}
 		
-		run "rm -rf #{links.keys.join(' ')}"
-		links.each_pair {|src, dst| run "ln -s #{dst} #{src}"} 
+		run "rm -rf #{links.keys.join(' ')}; " + links.map {|a| "ln -s #{a.last} #{a.first}"}.join(";")
 	end
 	
 	desc "Upload member images from local machine"
