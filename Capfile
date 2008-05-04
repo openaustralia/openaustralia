@@ -54,7 +54,6 @@ namespace :deploy do
 			"#{release_path}/twfy/conf/general" => "#{shared_path}/general",
 			"#{release_path}/twfy/www/docs/.htaccess" => "#{shared_path}/root_htaccess",
 			"#{release_path}/openaustralia-parser/configuration.yml" => "#{shared_path}/parser_configuration.yml",
-			"#{release_path}/xapiandb" => "#{shared_path}/xapiandb",
 			"#{release_path}/searchdb" => "#{shared_path}/searchdb",
 			"#{release_path}/twfy/www/docs/rss/mp" => "#{shared_path}/rss/mp",
 			"#{release_path}/twfy/www/docs/debates/debates.rss" => "#{shared_path}/rss/debates.rss"}
