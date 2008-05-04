@@ -59,6 +59,8 @@ namespace :deploy do
 			"#{release_path}/twfy/www/docs/debates/debates.rss" => "#{shared_path}/rss/debates.rss"}
 		
 		run "rm -rf #{links.keys.join(' ')}; " + links.map {|a| "ln -s #{a.last} #{a.first}"}.join(";")
+		# Now compile twfy/scripts/run-with-lockfile.c
+		run "gcc -o #{release_path}/twfy/scripts/run-with-lockfile #{release_path}/twfy/scripts/run-with-lockfile.c"
 	end
 	
 	desc "Upload member images from local machine"
