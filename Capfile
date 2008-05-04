@@ -24,7 +24,7 @@ if local_deploy
 	set :scm_command, "/opt/local/bin/git"
 else
 	set :deploy_to, "/www/openaustralia.org/#{application}"
-	role :web, "www-test.openaustralia.org"
+	role :web, "www.openaustralia.org"
 	set :user, "matthewl"
 end
 
@@ -55,6 +55,7 @@ namespace :deploy do
 			"#{release_path}/twfy/www/docs/.htaccess" => "#{shared_path}/root_htaccess",
 			"#{release_path}/openaustralia-parser/configuration.yml" => "#{shared_path}/parser_configuration.yml",
 			"#{release_path}/xapiandb" => "#{shared_path}/xapiandb",
+			"#{release_path}/searchdb" => "#{shared_path}/searchdb",
 			"#{release_path}/twfy/www/docs/rss/mp" => "#{shared_path}/rss/mp",
 			"#{release_path}/twfy/www/docs/debates/debates.rss" => "#{shared_path}/rss/debates.rss"}
 		
