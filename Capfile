@@ -23,7 +23,7 @@ if local_deploy
 	set :user, "matthewl"
 	set :scm_command, "/opt/local/bin/git"
 else
-	set :deploy_to, "/www/openaustralia.org/#{application}"
+	set :deploy_to, "/www/www.openaustralia.org/#{application}"
 	role :web, "www.openaustralia.org"
 	set :user, "matthewl"
 end
