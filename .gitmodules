@@ -13,3 +13,6 @@
 [submodule "openaustralia-parser"]
 	path = openaustralia-parser
 	url = git://github.com/mlandauer/openaustralia-parser.git
+[submodule "shlib"]
+	path = shlib
+	url = git://github.com/mlandauer/shlib.git
