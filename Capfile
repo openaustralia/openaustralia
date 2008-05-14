@@ -56,7 +56,8 @@ namespace :deploy do
 			"#{release_path}/openaustralia-parser/configuration.yml" => "#{shared_path}/parser_configuration.yml",
 			"#{release_path}/searchdb" => "#{shared_path}/searchdb",
 			"#{release_path}/twfy/www/docs/rss/mp" => "#{shared_path}/rss/mp",
-			"#{release_path}/twfy/www/docs/debates/debates.rss" => "#{shared_path}/rss/debates.rss"}
+			"#{release_path}/twfy/www/docs/debates/debates.rss" => "#{shared_path}/rss/debates.rss",
+			"#{release_path}/twfy/scripts/alerts-lastsent" => "#{shared_path}/alerts-lastsent"}
 		
 		run "rm -rf #{links.keys.join(' ')}; " + links.map {|a| "ln -s #{a.last} #{a.first}"}.join(";")
 		# Now compile twfy/scripts/run-with-lockfile.c
