@@ -59,7 +59,8 @@ namespace :deploy do
 			"#{release_path}/twfy/www/docs/debates/debates.rss" => "#{shared_path}/rss/debates.rss",
 			"#{release_path}/twfy/scripts/alerts-lastsent" => "#{shared_path}/alerts-lastsent"}
 		
-		run "rm -rf #{links.keys.join(' ')}; " + links.map {|a| "ln -s #{a.last} #{a.first}"}.join(";")
+		# "ln -sf <a> <b>" creates a symbolic link but deletes <b> if it already exists
+		run links.map {|a| "ln -sf #{a.last} #{a.first}"}.join(";")
 		# Now compile twfy/scripts/run-with-lockfile.c
 		run "gcc -o #{release_path}/twfy/scripts/run-with-lockfile #{release_path}/twfy/scripts/run-with-lockfile.c"
 	end
