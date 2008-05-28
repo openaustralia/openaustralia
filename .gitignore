@@ -1,2 +1,6 @@
 pwdata/*
 xapiandb/*
+searchdb-lastupdated
+searchdb-previous/*
+searchdb/*
+
