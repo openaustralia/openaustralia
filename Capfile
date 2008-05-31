@@ -59,6 +59,8 @@ namespace :deploy do
 			"#{release_path}/twfy/www/docs/debates/debates.rss" => "#{shared_path}/rss/debates.rss",
 			"#{release_path}/twfy/scripts/alerts-lastsent" => "#{shared_path}/alerts-lastsent"}
 		
+		# HACK: Remove twfy/www/docs/images/mps first because it has a file in it
+		run "rm -rf #{release_path}/twfy/www/docs/images/mps"
 		# "ln -sf <a> <b>" creates a symbolic link but deletes <b> if it already exists
 		run links.map {|a| "ln -sf #{a.last} #{a.first}"}.join(";")
 		# Now compile twfy/scripts/run-with-lockfile.c
