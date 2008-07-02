@@ -1,6 +1,9 @@
 # Capistrano 2.x recipe file
 #
 # Requirement cap 2.2
+#
+# Execute with:
+# cap -S stage=<production|test> task
 
 require 'tempfile'
 
@@ -16,6 +19,7 @@ set :git_enable_submodules, true
 set :deploy_via, :remote_cache
 
 local_deploy = false
+set :stage, "" unless exists? :stage
 
 if local_deploy
 	set :deploy_to, "/Library/WebServer/Documents/test-deploy/#{application}"
@@ -23,9 +27,15 @@ if local_deploy
 	set :user, "matthewl"
 	set :scm_command, "/opt/local/bin/git"
 else
-	set :deploy_to, "/www/www.openaustralia.org/#{application}"
-	role :web, "www.openaustralia.org"
-	set :user, "matthewl"
+  set :user, "matthewl"
+  if stage == "production"
+	  set :deploy_to, "/www/www.openaustralia.org/#{application}"
+	  role :web, "www.openaustralia.org"
+  elsif stage == "test"
+	  set :deploy_to, "/www/test.openaustralia.org/#{application}"
+	  role :web, "test.openaustralia.org"
+	  set :branch, "test"
+  end
 end
 
 load 'deploy' if respond_to?(:namespace) # cap2 differentiator
