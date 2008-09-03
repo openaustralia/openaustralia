@@ -15,6 +15,8 @@ set :repository, "git://github.com/mlandauer/openaustralia.git"
 set :git_enable_submodules, true
 set :deploy_via, :remote_cache
 
+ssh_options[:port] = 2506
+
 local_deploy = false
 
 if local_deploy
