@@ -18,6 +18,8 @@ set :repository, "git://github.com/mlandauer/openaustralia.git"
 set :git_enable_submodules, true
 set :deploy_via, :remote_cache
 
+ssh_options[:port] = 2506
+
 local_deploy = false
 set :stage, "" unless exists? :stage
 
@@ -67,10 +69,15 @@ namespace :deploy do
 			"#{release_path}/searchdb" => "#{shared_path}/searchdb",
 			"#{release_path}/twfy/www/docs/rss/mp" => "#{shared_path}/rss/mp",
 			"#{release_path}/twfy/www/docs/debates/debates.rss" => "#{shared_path}/rss/debates.rss",
-			"#{release_path}/twfy/scripts/alerts-lastsent" => "#{shared_path}/alerts-lastsent"}
+			"#{release_path}/twfy/scripts/alerts-lastsent" => "#{shared_path}/alerts-lastsent",
+			"#{release_path}/twfy/www/docs/sitemap.xml" => "#{shared_path}/sitemap.xml",
+			"#{release_path}/twfy/www/docs/sitemaps" => "#{shared_path}/sitemaps"}
 		
-		# HACK: Remove twfy/www/docs/images/mps first because it has a file in it
-		run "rm -rf #{release_path}/twfy/www/docs/images/mps #{release_path}/twfy/www/docs/rss/mp"
+		# First copy any images that have been checked into the repository to the shared area
+		run "cp #{release_path}/twfy/www/docs/images/mps/* #{shared_path}/images/mps"
+		run "cp #{release_path}/twfy/www/docs/images/mpsL/* #{shared_path}/images/mpsL"
+		# HACK: Remove directories next because they have files in them
+		run "rm -rf #{release_path}/twfy/www/docs/images/mps #{release_path}/twfy/www/docs/images/mpsL #{release_path}/twfy/www/docs/rss/mp"
 		# "ln -sf <a> <b>" creates a symbolic link but deletes <b> if it already exists
 		run links.map {|a| "ln -sf #{a.last} #{a.first}"}.join(";")
 		# Now compile twfy/scripts/run-with-lockfile.c
