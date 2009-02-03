@@ -18,12 +18,13 @@ set :repository, "git://github.com/mlandauer/openaustralia.git"
 set :git_enable_submodules, true
 set :deploy_via, :remote_cache
 
-ssh_options[:port] = 2506
-
-set :stage, "" unless exists? :stage
+set :stage, "test" unless exists? :stage
 
 set :user, "matthewl"
+
+ssh_options[:port] = 2506
 role :web, "www.openaustralia.org"
+
 if stage == "production"
   set :deploy_to, "/www/www.openaustralia.org/#{application}"
 elsif stage == "test"
@@ -33,7 +34,15 @@ end
 
 load 'deploy' if respond_to?(:namespace) # cap2 differentiator
 
-namespace :deploy do
+# Using Chef (http://wiki.opscode.com/display/chef/Home) configure the server to
+# have all the software we need. WORK IN PROGRESS
+task :chef do
+  run "rm -rf /tmp/chef"
+  upload("chef", "/tmp/chef")
+  sudo "chef-solo -c /tmp/chef/config/solo.rb -j /tmp/chef/config/dna.json"
+end
+
+namespace :deploy do  
 	task :setup do
 		dirs = [deploy_to, releases_path, shared_path]
 		shared_images_path = File.join(shared_path, "images")
