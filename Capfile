@@ -20,24 +20,15 @@ set :deploy_via, :remote_cache
 
 ssh_options[:port] = 2506
 
-local_deploy = false
 set :stage, "" unless exists? :stage
 
-if local_deploy
-	set :deploy_to, "/Library/WebServer/Documents/test-deploy/#{application}"
-	role :web, "localhost"
-	set :user, "matthewl"
-	set :scm_command, "/opt/local/bin/git"
-else
-  set :user, "matthewl"
-  if stage == "production"
-	  set :deploy_to, "/www/www.openaustralia.org/#{application}"
-	  role :web, "www.openaustralia.org"
-  elsif stage == "test"
-	  set :deploy_to, "/www/test.openaustralia.org/#{application}"
-	  role :web, "test.openaustralia.org"
-	  set :branch, "test"
-  end
+set :user, "matthewl"
+role :web, "www.openaustralia.org"
+if stage == "production"
+  set :deploy_to, "/www/www.openaustralia.org/#{application}"
+elsif stage == "test"
+  set :deploy_to, "/www/test.openaustralia.org/#{application}"
+  set :branch, "test"
 end
 
 load 'deploy' if respond_to?(:namespace) # cap2 differentiator
