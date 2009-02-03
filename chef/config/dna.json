@@ -1,0 +1,8 @@
+{
+  "recipes": ["sudo"],
+  "authorization": {
+    "sudo": {
+      "users": ["matthewl"]
+    }
+  }
+}
