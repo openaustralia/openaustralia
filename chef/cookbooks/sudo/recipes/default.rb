@@ -4,7 +4,8 @@
 #
 
 package "sudo" do
-  action :upgrade
+  # FreeBSD doesn't currently support :upgrade. So, commenting it out.
+  #action :upgrade
 end
 
 template "/usr/local/etc/sudoers" do
