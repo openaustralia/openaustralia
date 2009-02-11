@@ -39,7 +39,9 @@ load 'deploy' if respond_to?(:namespace) # cap2 differentiator
 task :chef do
   run "rm -rf /tmp/chef"
   upload("chef", "/tmp/chef")
-  sudo "chef-solo -c /tmp/chef/config/solo.rb -j /tmp/chef/config/dna.json"
+  # Using "sudo -E" to ensure that environment variables are propogated to new environment
+  # so that pkg_add knows to use passive ftp. What a PITA.
+  sudo "-E chef-solo -l debug -c /tmp/chef/config/solo.rb -j /tmp/chef/config/dna.json"
 end
 
 namespace :deploy do  
