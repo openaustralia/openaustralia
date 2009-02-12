@@ -5,8 +5,8 @@
 // *******************************************************************************
 // MySQL database.
 define ("DB_HOST", "localhost");
-define ("DB_USER", "username");
-define ("DB_PASSWORD", "password");
+define ("DB_USER", "openaustralia");
+define ("DB_PASSWORD", "openaustralia");
 define ("DB_NAME", "openaustralia");
 
 // *******************************************************************************
@@ -21,7 +21,7 @@ define ("COOKIEDOMAIN", "www.test-openaustralia.org");
 define ("CONTACTEMAIL", "contact@openaustralia.org");
 
 // File system path to the top directory of this Theyworkforyou installation
-define ("BASEDIR","/www/www.openaustralia.org/html"); 
+define ("BASEDIR","/www/www.openaustralia.org/html/"); 
 
 // Webserver path to 'top' directory of the site (possibly just "/"). For example,
 // if the site is at 'http://www.yourdomain.com/public/theyworkforyou', 

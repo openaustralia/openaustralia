@@ -32,6 +32,12 @@ remote_file "/www/www.openaustralia.org/openaustralia/shared/general" do
   group "matthewl"
 end
 
+remote_file "/www/www.openaustralia.org/openaustralia/shared/parser_configuration.yml" do
+  source "parser_configuration.yml"
+  owner "matthewl"
+  group "matthewl"
+end
+
 package "apache" do
   source "apache22"
 end
@@ -53,6 +59,7 @@ package "mysql-server" do
   source "mysql50-server"
 end
 package "php5-mysql"
+package "php5-curl"
 
 service "mysql-server" do
   supports :status => true, :restart => true
@@ -71,3 +78,16 @@ service "apache22" do
   action [:enable, :start]
   subscribes :reload, resources('remote_file[/usr/local/etc/apache22/httpd.conf]'), :immediately
 end
+
+gem_package "activesupport"
+# Temporarily installing from ports
+package "ruby-iconv" do
+  source "ports"
+end
+package "ImageMagick"
+gem_package "rmagick"
+gem_package "mechanize" do
+  version "0.6.10"
+end
+package "p5-DBD-mysql50"
+package "p5-XML-Twig"
