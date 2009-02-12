@@ -3,7 +3,11 @@
 # Recipe:: default
 #
 
-package "git"
+# For capistrano deploy we need at least version 1.5.5 of git
+# So, slightly hacky. Going to force install from ports (which we're assuming has been updated)
+package "git" do
+  source "ports"
+end
 
 # Container for all the web applications
 directory "/www" do
@@ -87,7 +91,7 @@ end
 package "ImageMagick"
 gem_package "rmagick"
 gem_package "mechanize" do
-  version "0.6.10"
+  version "0.8.5"
 end
 package "p5-DBD-mysql50"
 package "p5-XML-Twig"
