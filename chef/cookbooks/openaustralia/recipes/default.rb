@@ -33,7 +33,7 @@ remote_file "/www/www.openaustralia.org/openaustralia/shared/general" do
 end
 
 package "apache" do
-  source "ports:apache22"
+  source "apache22"
 end
 
 # Need to specify the build option for the php5 package below
@@ -47,6 +47,16 @@ end
 # Need to build php5 from ports to select the option for building mod_php
 package "php5" do
   source "ports"
+end
+
+package "mysql-server" do
+  source "mysql50-server"
+end
+package "php5-mysql"
+
+service "mysql-server" do
+  supports :status => true, :restart => true
+  action [:enable, :start]
 end
 
 remote_file "/usr/local/etc/apache22/httpd.conf" do
