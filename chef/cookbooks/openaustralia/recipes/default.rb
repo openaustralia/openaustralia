@@ -91,3 +91,5 @@ gem_package "mechanize" do
 end
 package "p5-DBD-mysql50"
 package "p5-XML-Twig"
+gem_package "htmlentities"
+gem_package "log4r"
