@@ -33,6 +33,21 @@ link "/www/test.openaustralia.org/html" do
   to "openaustralia/current/twfy/www/docs"
 end
 
+# Xapian Search directory needs to be writable by www
+directory "/www/www.openaustralia.org/openaustralia/shared/searchdb" do
+  owner "matthewl"
+  group "www"
+  mode 0775
+  action :create
+end
+  
+directory "/www/test.openaustralia.org/openaustralia/shared/searchdb" do
+  owner "matthewl"
+  group "www"
+  mode 0775
+  action :create
+end
+  
 # Configuration for OpenAustralia web app
 remote_file "/www/www.openaustralia.org/openaustralia/shared/general" do
   source "www.openaustralia.org/general"
@@ -73,6 +88,19 @@ end
 # Need to build php5 from ports to select the option for building mod_php
 package "php5" do
   source "ports"
+end
+
+# Xapian bindings for php (as well as other languages)
+package "xapian-bindings"
+# Xapian bindings for Perl
+package "p5-Search-Xapian"
+
+package "php5-ctype"
+
+# Would be nicer to just check that the "extension=xapian.so" line is present
+# rather than overwriting the whole file everytime
+remote_file "/usr/local/etc/php/extensions.ini" do
+  source "extensions.ini"
 end
 
 package "mysql-server" do
@@ -136,7 +164,6 @@ end
 # TODO:
 #   email
 #   cron jobs
-#   SSH port to 2506
 #   Wordpress
 #   Mediawiki
 #   Mysql Admin
