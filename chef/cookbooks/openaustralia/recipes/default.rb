@@ -35,13 +35,25 @@ end
 
 # Configuration for OpenAustralia web app
 remote_file "/www/www.openaustralia.org/openaustralia/shared/general" do
-  source "general"
+  source "www.openaustralia.org/general"
   owner "matthewl"
   group "matthewl"
 end
 
 remote_file "/www/www.openaustralia.org/openaustralia/shared/parser_configuration.yml" do
-  source "parser_configuration.yml"
+  source "www.openaustralia.org/parser_configuration.yml"
+  owner "matthewl"
+  group "matthewl"
+end
+
+remote_file "/www/test.openaustralia.org/openaustralia/shared/general" do
+  source "test.openaustralia.org/general"
+  owner "matthewl"
+  group "matthewl"
+end
+
+remote_file "/www/test.openaustralia.org/openaustralia/shared/parser_configuration.yml" do
+  source "test.openaustralia.org/parser_configuration.yml"
   owner "matthewl"
   group "matthewl"
 end

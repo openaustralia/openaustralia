@@ -5,15 +5,15 @@
 // *******************************************************************************
 // MySQL database.
 define ("DB_HOST", "localhost");
-define ("DB_USER", "openaustralia");
-define ("DB_PASSWORD", "openaustralia");
-define ("DB_NAME", "openaustralia");
+define ("DB_USER", "oa_test");
+define ("DB_PASSWORD", "oa_test");
+define ("DB_NAME", "openaustralia_test");
 
 // *******************************************************************************
 // Domains.
 // Set this to the domain you are hosting on. If you're running locally, this will be "localhost" 
-define ("DOMAIN", "www.test-openaustralia.org");
-define ("COOKIEDOMAIN", "www.test-openaustralia.org");
+define ("DOMAIN", "test.test-openaustralia.org");
+define ("COOKIEDOMAIN", "test.test-openaustralia.org");
 
 // General 'Contact us' type email address. Point this at a real address if you 
 // want the site generated email to come to you. Can be overridden for other mails below.
@@ -21,7 +21,7 @@ define ("COOKIEDOMAIN", "www.test-openaustralia.org");
 define ("CONTACTEMAIL", "contact@openaustralia.org");
 
 // File system path to the top directory of this Theyworkforyou installation
-define ("BASEDIR","/www/www.openaustralia.org/html/"); 
+define ("BASEDIR","/www/test.openaustralia.org/html/"); 
 
 // Webserver path to 'top' directory of the site (possibly just "/"). For example,
 // if the site is at 'http://www.yourdomain.com/public/theyworkforyou', 
@@ -47,8 +47,8 @@ define ("DEBUGTAG", 'debug');
 define ("TIMEZONE", "Australia/Sydney");
 
 // XML files and other scraped data stored as files
-define ("RAWDATA", "/www/www.openaustralia.org/openaustralia/shared/pwdata/");
-define ('PWMEMBERS', '/www/www.openaustralia.org/openaustralia/shared/pwdata/members/');
+define ("RAWDATA", "/www/test.openaustralia.org/openaustralia/shared/pwdata/");
+define ('PWMEMBERS', '/www/test.openaustralia.org/openaustralia/shared/pwdata/members/');
 
 // *******************************************************************************
 // If you've unpacked the tar file normally, and set the paths correctly above, 
