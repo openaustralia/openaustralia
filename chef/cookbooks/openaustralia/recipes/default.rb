@@ -218,3 +218,8 @@ remote_file "/etc/ssh/sshd_config" do
   source "sshd_config"
   notifies :reload, resources("service[sshd]")
 end
+
+# Because of an interesting naming difference between the port and the package as a workaround installing from the port
+package "phpmyadmin" do
+  source "ports"
+end
