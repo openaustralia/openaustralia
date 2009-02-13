@@ -134,8 +134,19 @@ service "ntpd" do
 end
 
 # TODO:
-#   Setup email
-#   Setup cron jobs
-#   Change SSH port to 2506
-#   Setup Virtual Hosts
+#   email
+#   cron jobs
+#   SSH port to 2506
+#   Wordpress
+#   Mediawiki
+#   Mysql Admin
+#   Xapian
 
+service "sshd" do
+  supports :status => true, :reload => true
+end
+
+remote_file "/etc/ssh/sshd_config" do
+  source "sshd_config"
+  notifies :reload, resources("service[sshd]")
+end
