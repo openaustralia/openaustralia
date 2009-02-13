@@ -24,6 +24,20 @@ directory "/www/www.openaustralia.org" do
   action :create
 end
 
+directory "/www/secure.openaustralia.org" do
+  owner "matthewl"
+  group "matthewl"
+  mode 0755
+  action :create
+end
+
+directory "/www/secure.openaustralia.org/html" do
+  owner "matthewl"
+  group "matthewl"
+  mode 0755
+  action :create
+end
+
 # Hmmm... I wonder if Apache will start up if the openaustralia app is not installed
 link "/www/www.openaustralia.org/html" do
   to "openaustralia/current/twfy/www/docs"
@@ -129,6 +143,33 @@ end
 
 remote_file "/usr/local/etc/apache22/extra/httpd-vhosts.conf" do
   source "httpd-vhosts.conf"
+  mode 0644
+  owner "root"
+  group "wheel"
+  notifies :reload, resources("service[apache22]")
+end
+
+# SSL key (first step of self-signed certificate)
+execute "openssl genrsa 1024 > server.key" do
+  cwd "/usr/local/etc/apache22"
+  creates "/usr/local/etc/apache22/server.key"
+end
+
+# Provide defaults for generating certificate so this can all be done automatically
+remote_file "/etc/ssl/openssl.cnf" do
+  source "openssl.cnf"
+  mode 0644
+  owner "root"
+  group "wheel"
+end
+
+execute "openssl req -batch -new -x509 -nodes -sha1 -days 365 -key server.key > server.crt" do
+  cwd "/usr/local/etc/apache22"
+  creates "/usr/local/etc/apache22/server.crt"
+end
+
+remote_file "/usr/local/etc/apache22/extra/httpd-ssl.conf" do
+  source "httpd-ssl.conf"
   mode 0644
   owner "root"
   group "wheel"
