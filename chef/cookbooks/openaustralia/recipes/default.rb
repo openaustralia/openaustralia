@@ -29,6 +29,10 @@ link "/www/www.openaustralia.org/html" do
   to "openaustralia/current/twfy/www/docs"
 end
 
+link "/www/test.openaustralia.org/html" do
+  to "openaustralia/current/twfy/www/docs"
+end
+
 # Configuration for OpenAustralia web app
 remote_file "/www/www.openaustralia.org/openaustralia/shared/general" do
   source "general"
@@ -70,17 +74,25 @@ service "mysql-server" do
   action [:enable, :start]
 end
 
+service "apache22" do
+  supports :status => true, :restart => true, :reload => true
+  action [:enable, :start]
+end
+
 remote_file "/usr/local/etc/apache22/httpd.conf" do
   source "httpd.conf"
   mode 0644
   owner "root"
   group "wheel"
+  notifies :reload, resources("service[apache22]")
 end
 
-service "apache22" do
-  supports :status => true, :restart => true, :reload => true
-  action [:enable, :start]
-  subscribes :reload, resources('remote_file[/usr/local/etc/apache22/httpd.conf]'), :immediately
+remote_file "/usr/local/etc/apache22/extra/httpd-vhosts.conf" do
+  source "httpd-vhosts.conf"
+  mode 0644
+  owner "root"
+  group "wheel"
+  notifies :reload, resources("service[apache22]")
 end
 
 gem_package "activesupport"
@@ -108,4 +120,10 @@ service "ntpd" do
   supports :status => true
   action [:enable, :start]
 end
+
+# TODO:
+#   Setup email
+#   Setup cron jobs
+#   Change SSH port to 2506
+#   Setup Virtual Hosts
 
