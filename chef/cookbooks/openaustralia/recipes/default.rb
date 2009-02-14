@@ -63,26 +63,26 @@ directory "/www/test.openaustralia.org/openaustralia/shared/searchdb" do
 end
   
 # Configuration for OpenAustralia web app
-remote_file "/www/www.openaustralia.org/openaustralia/shared/general" do
-  source "www.openaustralia.org/general"
+template "/www/www.openaustralia.org/openaustralia/shared/general" do
+  source "www.openaustralia.org/general.erb"
   owner "matthewl"
   group "matthewl"
 end
 
-remote_file "/www/www.openaustralia.org/openaustralia/shared/parser_configuration.yml" do
-  source "www.openaustralia.org/parser_configuration.yml"
+template "/www/www.openaustralia.org/openaustralia/shared/parser_configuration.yml" do
+  source "www.openaustralia.org/parser_configuration.yml.erb"
   owner "matthewl"
   group "matthewl"
 end
 
-remote_file "/www/test.openaustralia.org/openaustralia/shared/general" do
-  source "test.openaustralia.org/general"
+template "/www/test.openaustralia.org/openaustralia/shared/general" do
+  source "test.openaustralia.org/general.erb"
   owner "matthewl"
   group "matthewl"
 end
 
-remote_file "/www/test.openaustralia.org/openaustralia/shared/parser_configuration.yml" do
-  source "test.openaustralia.org/parser_configuration.yml"
+template "/www/test.openaustralia.org/openaustralia/shared/parser_configuration.yml" do
+  source "test.openaustralia.org/parser_configuration.yml.erb"
   owner "matthewl"
   group "matthewl"
 end
