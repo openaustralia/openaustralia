@@ -1,8 +1,9 @@
 {
-  "recipes": ["openaustralia", "sudo", "ntp"],
+  "recipes": ["openaustralia", "sudo", "ntp", "ssh"],
   "authorization": {
     "sudo": {
       "users": ["matthewl"]
     }
-  }
+  },
+  "ssh_port": "1111"
 }
