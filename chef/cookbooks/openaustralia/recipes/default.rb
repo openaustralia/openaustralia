@@ -3,11 +3,7 @@
 # Recipe:: default
 #
 
-# For capistrano deploy we need at least version 1.5.5 of git
-# So, slightly hacky. Going to force install from ports (which we're assuming has been updated)
-package "git" do
-  source "ports"
-end
+require_recipe 'xapian'
 
 [:production, :test].each do |stage|
   directory node[:openaustralia][stage][:install_path] do
@@ -81,17 +77,7 @@ package "php5" do
   source "ports"
 end
 
-# Xapian bindings for php (as well as other languages)
-package "xapian-bindings"
-# Xapian bindings for Perl
-package "p5-Search-Xapian"
-
 package "php5-ctype"
-
-# Make sure the line is added to the file (if it's not there already)
-remote_file_line "/usr/local/etc/php/extensions.ini" do
-  line "extension=xapian.so"
-end
 
 package "mysql-server" do
   source "mysql50-server"
