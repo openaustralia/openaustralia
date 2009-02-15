@@ -14,6 +14,8 @@ openaustralia[:production][:subdomain] = "www" unless openaustralia[:production]
 openaustralia[:test][:subdomain] = "test" unless openaustralia[:test].has_key?(:subdomain)
 openaustralia[:production][:database][:password] = "oa_production" unless openaustralia[:production][:database].has_key?(:password)
 openaustralia[:test][:database][:password] = "oa_test" unless openaustralia[:test][:database].has_key?(:password)
+openaustralia[:production][:dev_site] = "false" unless openaustralia[:production].has_key?(:dev_site)
+openaustralia[:test][:dev_site] = "true" unless openaustralia[:test].has_key?(:dev_site)
 
 # Making the configuration for the test and production site very similar. We could override this later if so desired
 [:production, :test].each do |stage|

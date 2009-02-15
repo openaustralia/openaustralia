@@ -61,28 +61,20 @@ directory "/www/test.openaustralia.org/openaustralia/shared/searchdb" do
 end
   
 # Configuration for OpenAustralia web app
-template "/www/www.openaustralia.org/openaustralia/shared/general" do
-  source "www.openaustralia.org/general.erb"
-  owner "matthewl"
-  group "matthewl"
-end
+[:production, :test].each do |stage|
+  template "#{@node[:openaustralia][stage][:install_path]}/shared/general" do
+    source "general.erb"
+    owner "matthewl"
+    group "matthewl"
+    variables :stage_config => @node[:openaustralia][stage]
+  end
 
-template "/www/www.openaustralia.org/openaustralia/shared/parser_configuration.yml" do
-  source "www.openaustralia.org/parser_configuration.yml.erb"
-  owner "matthewl"
-  group "matthewl"
-end
-
-template "/www/test.openaustralia.org/openaustralia/shared/general" do
-  source "test.openaustralia.org/general.erb"
-  owner "matthewl"
-  group "matthewl"
-end
-
-template "/www/test.openaustralia.org/openaustralia/shared/parser_configuration.yml" do
-  source "test.openaustralia.org/parser_configuration.yml.erb"
-  owner "matthewl"
-  group "matthewl"
+  template "#{@node[:openaustralia][stage][:install_path]}/shared/parser_configuration.yml" do
+    source "parser_configuration.yml.erb"
+    owner "matthewl"
+    group "matthewl"
+    variables :stage_config => @node[:openaustralia][stage]
+  end
 end
 
 package "apache" do
