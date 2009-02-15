@@ -4,10 +4,10 @@
 
 # The root directory of the patched Australian version of the TheyWorkForYou
 # website.
-web_root: "/www/www.openaustralia.org/openaustralia/current"
+web_root: "<%= @node[:openaustralia_production_install_path] %>/current"
 
-html_cache_path: "/www/www.openaustralia.org/openaustralia/shared/html_cache"
-log_path: "/www/www.openaustralia.org/openaustralia/shared/parser.log"
+html_cache_path: "<%= @node[:openaustralia_production_install_path] %>/shared/html_cache"
+log_path: "<%= @node[:openaustralia_production_install_path] %>/shared/parser.log"
 
 # Should hopefully not have to change anything below here
 
