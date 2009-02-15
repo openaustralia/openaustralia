@@ -3,19 +3,23 @@ openaustralia_email_contact "contact@openaustralia.org" unless attribute?("opena
 openaustralia_domain "test-openaustralia.org" unless attribute?("openaustralia_domain")
 openaustralia_database_name_prefix "openaustralia" unless attribute?("openaustralia_database_name_prefix")
 openaustralia_database_user_prefix "oa" unless attribute?("openaustralia_database_user_prefix")
+openaustralia Mash.new unless attribute?("openaustralia")
 
-# Configuration for www.openaustralia.org
-openaustralia_production_database_name "#{openaustralia_database_name_prefix}_production" unless attribute?("openaustralia_production_database_name")
-openaustralia_production_database_user "#{openaustralia_database_user_prefix}_production" unless attribute?("openaustralia_production_database_user")
-openaustralia_production_database_password "oa_production" unless attribute?("openaustralia_production_database_password")
-openaustralia_production_virtual_host_name "www.#{openaustralia_domain}" unless attribute?("openaustralia_production_virtual_host_name")
-openaustralia_production_install_path "/www/www.openaustralia.org/openaustralia" unless attribute?("openaustralia_production_install_path")
-openaustralia_production_html_root "/www/www.openaustralia.org/html" unless attribute?("openaustralia_production_html_root")
+[:production, :test].each do |stage|
+  openaustralia[stage] = Mash.new unless openaustralia.has_key?(stage)
+  openaustralia[stage][:database] = Mash.new unless openaustralia[stage].has_key?(:database)
+end
 
-# Configuration for test.openaustralia.org
-openaustralia_test_database_name "#{openaustralia_database_name_prefix}_test" unless attribute?("openaustralia_test_database_name")
-openaustralia_test_database_user "#{openaustralia_database_user_prefix}_test" unless attribute?("openaustralia_test_database_user")
-openaustralia_test_database_password "oa_test" unless attribute?("openaustralia_test_database_password")
-openaustralia_test_virtual_host_name "test.#{openaustralia_domain}" unless attribute?("openaustralia_test_virtual_host_name")
-openaustralia_test_install_path "/www/test.openaustralia.org/openaustralia" unless attribute?("openaustralia_test_install_path")
-openaustralia_test_html_root "/www/test.openaustralia.org/html" unless attribute?("openaustralia_test_html_root")
+openaustralia[:production][:subdomain] = "www" unless openaustralia[:production].has_key?(:subdomain)
+openaustralia[:test][:subdomain] = "test" unless openaustralia[:test].has_key?(:subdomain)
+openaustralia[:production][:database][:password] = "oa_production" unless openaustralia[:production][:database].has_key?(:password)
+openaustralia[:test][:database][:password] = "oa_test" unless openaustralia[:test][:database].has_key?(:password)
+
+# Making the configuration for the test and production site very similar. We could override this later if so desired
+[:production, :test].each do |stage|
+  openaustralia[stage][:virtual_host_name] = "#{openaustralia[stage][:subdomain]}.#{openaustralia_domain}" unless openaustralia[stage].has_key?(:virtual_host_name)
+  openaustralia[stage][:database][:name] = "#{openaustralia_database_name_prefix}_#{stage}" unless openaustralia[stage][:database].has_key?(:name)
+  openaustralia[stage][:database][:user] = "#{openaustralia_database_user_prefix}_#{stage}" unless openaustralia[stage][:database].has_key?(:user)
+  openaustralia[stage][:install_path] = "/www/#{openaustralia[stage][:subdomain]}.openaustralia.org/openaustralia" unless openaustralia[stage].has_key?(:install_path)
+  openaustralia[stage][:html_root] = "/www/#{openaustralia[stage][:subdomain]}.openaustralia.org/html" unless openaustralia[stage].has_key?(:html_root)
+end

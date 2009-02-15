@@ -5,15 +5,15 @@
 // *******************************************************************************
 // MySQL database.
 define ("DB_HOST", "localhost");
-define ("DB_USER", "<%= @node[:openaustralia_test_database_user] %>");
-define ("DB_PASSWORD", "<%= @node[:openaustralia_test_database_password] %>");
-define ("DB_NAME", "<%= @node[:openaustralia_test_database_name] %>");
+define ("DB_USER", "<%= @node[:openaustralia][:test][:database][:user] %>");
+define ("DB_PASSWORD", "<%= @node[:openaustralia][:test][:database][:password] %>");
+define ("DB_NAME", "<%= @node[:openaustralia][:test][:database][:name] %>");
 
 // *******************************************************************************
 // Domains.
 // Set this to the domain you are hosting on. If you're running locally, this will be "localhost" 
-define ("DOMAIN", "<%= @node[:openaustralia_test_virtual_host_name] %>");
-define ("COOKIEDOMAIN", "<%= @node[:openaustralia_test_virtual_host_name] %>");
+define ("DOMAIN", "<%= @node[:openaustralia][:test][:virtual_host_name] %>");
+define ("COOKIEDOMAIN", "<%= @node[:openaustralia][:test][:virtual_host_name] %>");
 
 // General 'Contact us' type email address. Point this at a real address if you 
 // want the site generated email to come to you. Can be overridden for other mails below.
@@ -21,7 +21,7 @@ define ("COOKIEDOMAIN", "<%= @node[:openaustralia_test_virtual_host_name] %>");
 define ("CONTACTEMAIL", "<%= @node[:openaustralia_email_contact] %>");
 
 // File system path to the top directory of this Theyworkforyou installation
-define ("BASEDIR","<%= @node[:openaustralia_test_install_path] %>/current/twfy/www/docs/"); 
+define ("BASEDIR","<%= @node[:openaustralia][:test][:install_path] %>/current/twfy/www/docs/"); 
 
 // Webserver path to 'top' directory of the site (possibly just "/"). For example,
 // if the site is at 'http://www.yourdomain.com/public/theyworkforyou', 
@@ -47,8 +47,8 @@ define ("DEBUGTAG", 'debug');
 define ("TIMEZONE", "Australia/Sydney");
 
 // XML files and other scraped data stored as files
-define ("RAWDATA", "<%= @node[:openaustralia_test_install_path] %>/shared/pwdata/");
-define ('PWMEMBERS', '<%= @node[:openaustralia_test_install_path] %>/shared/pwdata/members/');
+define ("RAWDATA", "<%= @node[:openaustralia][:test][:install_path] %>/shared/pwdata/");
+define ('PWMEMBERS', '<%= @node[:openaustralia][:test][:install_path] %>/shared/pwdata/members/');
 
 // *******************************************************************************
 // If you've unpacked the tar file normally, and set the paths correctly above, 
@@ -70,7 +70,7 @@ define ("REGMEMPDFPATH", "regmem/scan/");
 define ("METADATAPATH", BASEDIR . "/../includes/easyparliament/metadata.php");
 
 // Search related. If non-empty will use XAPIAN search instead of mysql search
-define ("XAPIANDB", '<%= @node[:openaustralia_test_install_path] %>/shared/searchdb');
+define ("XAPIANDB", '<%= @node[:openaustralia][:test][:install_path] %>/shared/searchdb');
 
 // Location of the parliamentary recess data file. You can access this remotely 
 // from the main theyworkforyou site if you use

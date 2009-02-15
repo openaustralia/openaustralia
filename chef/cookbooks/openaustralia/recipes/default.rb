@@ -38,13 +38,11 @@ directory "/www/secure.openaustralia.org/html" do
   action :create
 end
 
-# Hmmm... I wonder if Apache will start up if the openaustralia app is not installed
-link node[:openaustralia_production_html_root] do
-  to "#{node[:openaustralia_production_install_path]}/current/twfy/www/docs"
-end
-
-link node[:openaustralia_test_html_root] do
-  to "#{node[:openaustralia_test_install_path]}/current/twfy/www/docs"
+[:production, :test].each do |stage|
+  # Hmmm... I wonder if Apache will start up if the openaustralia app is not installed
+  link node[:openaustralia][stage][:html_root] do
+    to "#{node[:openaustralia][stage][:install_path]}/current/twfy/www/docs"
+  end
 end
 
 # Xapian Search directory needs to be writable by www
