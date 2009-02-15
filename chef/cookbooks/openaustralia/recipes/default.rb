@@ -4,6 +4,9 @@
 #
 
 require_recipe 'xapian'
+require_recipe 'apache'
+require_recipe 'php'
+require_recipe 'mysql'
 
 [:production, :test].each do |stage|
   directory node[:openaustralia][stage][:install_path] do
@@ -60,84 +63,11 @@ directory "/www/secure.openaustralia.org/html" do
   recursive true
 end
 
-package "apache" do
-  source "apache22"
-end
-
-# Need to specify the build option for the php5 package below
-remote_file "/var/db/ports/php5/options" do
-  source "php5.ports.options"
-  mode 0644
-  owner "root"
-  group "wheel"
-end
-
-# Need to build php5 from ports to select the option for building mod_php
-package "php5" do
-  source "ports"
-end
-
+# PHP bits and pieces
 package "php5-ctype"
-
-package "mysql-server" do
-  source "mysql50-server"
-end
-package "php5-mysql"
 package "php5-curl"
 
-service "mysql-server" do
-  supports :status => true, :restart => true
-  action [:enable, :start]
-end
-
-service "apache22" do
-  supports :status => true, :restart => true, :reload => true
-  action [:enable, :start]
-end
-
-remote_file "/usr/local/etc/apache22/httpd.conf" do
-  source "httpd.conf"
-  mode 0644
-  owner "root"
-  group "wheel"
-  notifies :reload, resources("service[apache22]")
-end
-
-remote_file "/usr/local/etc/apache22/extra/httpd-vhosts.conf" do
-  source "httpd-vhosts.conf"
-  mode 0644
-  owner "root"
-  group "wheel"
-  notifies :reload, resources("service[apache22]")
-end
-
-# SSL key (first step of self-signed certificate)
-execute "openssl genrsa 1024 > server.key" do
-  cwd "/usr/local/etc/apache22"
-  creates "/usr/local/etc/apache22/server.key"
-end
-
-# Provide defaults for generating certificate so this can all be done automatically
-remote_file "/etc/ssl/openssl.cnf" do
-  source "openssl.cnf"
-  mode 0644
-  owner "root"
-  group "wheel"
-end
-
-execute "openssl req -batch -new -x509 -nodes -sha1 -days 365 -key server.key > server.crt" do
-  cwd "/usr/local/etc/apache22"
-  creates "/usr/local/etc/apache22/server.crt"
-end
-
-remote_file "/usr/local/etc/apache22/extra/httpd-ssl.conf" do
-  source "httpd-ssl.conf"
-  mode 0644
-  owner "root"
-  group "wheel"
-  notifies :reload, resources("service[apache22]")
-end
-
+# Ruby bits and pieces
 gem_package "activesupport"
 # Temporarily installing from ports
 package "ruby-iconv" do
@@ -148,10 +78,11 @@ gem_package "rmagick"
 gem_package "mechanize" do
   version "0.8.5"
 end
-package "p5-DBD-mysql50"
-package "p5-XML-Twig"
 gem_package "htmlentities"
 gem_package "log4r"
+
+# Perl bits and pieces
+package "p5-XML-Twig"
 
 # TODO:
 #   email
