@@ -39,12 +39,12 @@ directory "/www/secure.openaustralia.org/html" do
 end
 
 # Hmmm... I wonder if Apache will start up if the openaustralia app is not installed
-link "/www/www.openaustralia.org/html" do
-  to "openaustralia/current/twfy/www/docs"
+link node[:openaustralia_production_html_root] do
+  to "#{node[:openaustralia_production_install_path]}/current/twfy/www/docs"
 end
 
-link "/www/test.openaustralia.org/html" do
-  to "openaustralia/current/twfy/www/docs"
+link node[:openaustralia_test_html_root] do
+  to "#{node[:openaustralia_test_install_path]}/current/twfy/www/docs"
 end
 
 # Xapian Search directory needs to be writable by www
