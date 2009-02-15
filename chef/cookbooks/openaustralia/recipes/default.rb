@@ -160,8 +160,3 @@ gem_package "log4r"
 #   Mediawiki
 #   Mysql Admin
 #   Xapian
-
-# Because of an interesting naming difference between the port and the package as a workaround installing from the port
-package "phpmyadmin" do
-  source "ports"
-end
