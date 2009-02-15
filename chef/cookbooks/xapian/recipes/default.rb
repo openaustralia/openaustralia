@@ -1,4 +1,5 @@
-# TODO: Need to make sure that php and perl have already been installed
+require_recipe 'php'
+# TODO: Need to make sure that perl has already been installed
 
 # Xapian bindings for php (as well as other languages)
 package "xapian-bindings"
