@@ -9,63 +9,41 @@ package "git" do
   source "ports"
 end
 
-# Container for all the web applications
-directory "/www" do
-  owner "matthewl"
-  group "matthewl"
-  mode 0755
-  action :create
-end
-
-directory "/www/www.openaustralia.org" do
-  owner "matthewl"
-  group "matthewl"
-  mode 0755
-  action :create
-end
-
-directory "/www/secure.openaustralia.org" do
-  owner "matthewl"
-  group "matthewl"
-  mode 0755
-  action :create
-end
-
-directory "/www/secure.openaustralia.org/html" do
-  owner "matthewl"
-  group "matthewl"
-  mode 0755
-  action :create
-end
-
 [:production, :test].each do |stage|
+  directory node[:openaustralia][stage][:install_path] do
+    owner "matthewl"
+    group "matthewl"
+    mode 0755
+    action :create
+    recursive true
+  end
+
   # Hmmm... I wonder if Apache will start up if the openaustralia app is not installed
   link node[:openaustralia][stage][:html_root] do
     to "#{node[:openaustralia][stage][:install_path]}/current/twfy/www/docs"
   end
-end
 
-# Xapian Search directory needs to be writable by www
-directory "/www/www.openaustralia.org/openaustralia/shared/searchdb" do
-  owner "matthewl"
-  group "www"
-  mode 0775
-  action :create
-end
-  
-directory "/www/test.openaustralia.org/openaustralia/shared/searchdb" do
-  owner "matthewl"
-  group "www"
-  mode 0775
-  action :create
-end
-  
-# Configuration for OpenAustralia web app
-[:production, :test].each do |stage|
+  directory "#{node[:openaustralia][stage][:install_path]}/shared" do
+    owner "matthewl"
+    group "matthewl"
+    mode 0775
+    action :create
+  end
+
+  # Xapian Search directory needs to be writable by www
+  directory "#{node[:openaustralia][stage][:install_path]}/shared/searchdb" do
+    owner "matthewl"
+    group "www"
+    mode 0775
+    action :create
+  end
+
+  # Configuration for OpenAustralia web app
   template "#{@node[:openaustralia][stage][:install_path]}/shared/general" do
     source "general.erb"
     owner "matthewl"
     group "matthewl"
+    mode 0644
     variables :stage_config => @node[:openaustralia][stage]
   end
 
@@ -73,8 +51,17 @@ end
     source "parser_configuration.yml.erb"
     owner "matthewl"
     group "matthewl"
+    mode 0644
     variables :stage_config => @node[:openaustralia][stage]
   end
+end
+
+directory "/www/secure.openaustralia.org/html" do
+  owner "matthewl"
+  group "matthewl"
+  mode 0755
+  action :create
+  recursive true
 end
 
 package "apache" do
