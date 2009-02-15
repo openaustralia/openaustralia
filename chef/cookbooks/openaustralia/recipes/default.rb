@@ -88,10 +88,9 @@ package "p5-Search-Xapian"
 
 package "php5-ctype"
 
-# Would be nicer to just check that the "extension=xapian.so" line is present
-# rather than overwriting the whole file everytime
-remote_file "/usr/local/etc/php/extensions.ini" do
-  source "extensions.ini"
+# Make sure the line is added to the file (if it's not there already)
+remote_file_line "/usr/local/etc/php/extensions.ini" do
+  line "extension=xapian.so"
 end
 
 package "mysql-server" do
