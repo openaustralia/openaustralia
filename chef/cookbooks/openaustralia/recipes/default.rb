@@ -158,5 +158,3 @@ gem_package "log4r"
 #   cron jobs
 #   Wordpress
 #   Mediawiki
-#   Mysql Admin
-#   Xapian
