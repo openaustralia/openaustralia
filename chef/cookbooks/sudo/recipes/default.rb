@@ -4,8 +4,7 @@
 #
 
 package "sudo" do
-  # FreeBSD doesn't currently support :upgrade. So, commenting it out.
-  #action :upgrade
+  source "ports"
 end
 
 template "/usr/local/etc/sudoers" do

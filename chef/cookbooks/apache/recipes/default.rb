@@ -1,28 +1,23 @@
 # TODO: currently contains configuration for the web apps mixed up the Apache configuration
 
 package "apache" do
-  source "apache22"
+  source "ports:apache22"
 end
 
-service "apache22" do
-  supports :status => true, :restart => true, :reload => true
-  action [:enable, :start]
-end
-
-remote_file "/usr/local/etc/apache22/httpd.conf" do
+remote_file "httpd.conf" do
+  path "/usr/local/etc/apache22/httpd.conf"
   source "httpd.conf"
   mode 0644
   owner "root"
   group "wheel"
-  notifies :reload, resources("service[apache22]")
 end
 
-remote_file "/usr/local/etc/apache22/extra/httpd-vhosts.conf" do
+remote_file "httpd-vhosts.conf" do
+  path "/usr/local/etc/apache22/extra/httpd-vhosts.conf"
   source "httpd-vhosts.conf"
   mode 0644
   owner "root"
   group "wheel"
-  notifies :reload, resources("service[apache22]")
 end
 
 # SSL key (first step of self-signed certificate)
@@ -44,10 +39,16 @@ execute "openssl req -batch -new -x509 -nodes -sha1 -days 365 -key server.key > 
   creates "/usr/local/etc/apache22/server.crt"
 end
 
-remote_file "/usr/local/etc/apache22/extra/httpd-ssl.conf" do
+remote_file "httpd-ssl.conf" do
+  path "/usr/local/etc/apache22/extra/httpd-ssl.conf"
   source "httpd-ssl.conf"
   mode 0644
   owner "root"
   group "wheel"
-  notifies :reload, resources("service[apache22]")
+end
+
+service "apache22" do
+  supports :status => true, :restart => true, :reload => true
+  action [:enable, :start]
+  subscribes :reload, resources('remote_file[httpd.conf]', 'remote_file[httpd-vhosts.conf]', 'remote_file[httpd-ssl.conf]')
 end

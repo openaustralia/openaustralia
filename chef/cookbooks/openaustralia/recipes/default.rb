@@ -64,8 +64,12 @@ directory "/www/secure.openaustralia.org/html" do
 end
 
 # PHP bits and pieces
-package "php5-ctype"
-package "php5-curl"
+package "php5-ctype" do
+  source "ports"
+end
+package "php5-curl" do
+  source "ports"
+end
 
 # Ruby bits and pieces
 gem_package "activesupport"
@@ -73,7 +77,9 @@ gem_package "activesupport"
 package "ruby-iconv" do
   source "ports"
 end
-package "ImageMagick"
+package "ImageMagick" do
+  source "ports"
+end
 gem_package "rmagick"
 gem_package "mechanize" do
   version "0.8.5"
@@ -82,7 +88,9 @@ gem_package "htmlentities"
 gem_package "log4r"
 
 # Perl bits and pieces
-package "p5-XML-Twig"
+package "p5-XML-Twig" do
+  source "ports"
+end
 
 # TODO:
 #   email

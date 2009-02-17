@@ -2,7 +2,7 @@ require_recipe 'php'
 # TODO: Requires installation of perl first
 
 package "mysql-server" do
-  source "mysql50-server"
+  source "ports:mysql50-server"
 end
 
 service "mysql-server" do
@@ -11,6 +11,10 @@ service "mysql-server" do
 end
 
 # Language bindings for mysql
-package "php5-mysql"
-package "p5-DBD-mysql50"
+package "php5-mysql" do
+  source "ports"
+end
+package "p5-DBD-mysql50" do
+  source "ports"
+end
 
