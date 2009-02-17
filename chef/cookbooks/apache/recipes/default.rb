@@ -12,14 +12,6 @@ remote_file "httpd.conf" do
   group "wheel"
 end
 
-remote_file "httpd-vhosts.conf" do
-  path "/usr/local/etc/apache22/extra/httpd-vhosts.conf"
-  source "httpd-vhosts.conf"
-  mode 0644
-  owner "root"
-  group "wheel"
-end
-
 # SSL key (first step of self-signed certificate)
 execute "openssl genrsa 1024 > server.key" do
   cwd "/usr/local/etc/apache22"
@@ -50,5 +42,27 @@ end
 service "apache22" do
   supports :status => true, :restart => true, :reload => true
   action [:enable, :start]
-  subscribes :reload, resources('remote_file[httpd.conf]', 'remote_file[httpd-vhosts.conf]', 'remote_file[httpd-ssl.conf]')
+  subscribes :reload, resources('remote_file[httpd.conf]', 'remote_file[httpd-ssl.conf]')
+end
+
+directory "/usr/local/etc/apache22/sites-enabled" do
+  mode 0755
+  owner "root"
+  group "wheel"
+end
+
+# Add individual site virtual hosts here
+%w{www.openaustralia.org openaustralia.org test.openaustralia.org wiki.openaustralia.org software.openaustralia.org blog.openaustralia.org}.each do |site|
+  remote_file "site.conf" do
+    if site == "www.openaustralia.org"
+      path "/usr/local/etc/apache22/sites-enabled/000-default"
+    else
+      path "/usr/local/etc/apache22/sites-enabled/#{site}"
+    end
+    source "httpd-vhost-#{site}.conf"
+    mode 0644
+    owner "root"
+    group "wheel"
+    notifies :reload, resources(:service => "apache22")
+  end
 end
