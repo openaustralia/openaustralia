@@ -97,3 +97,28 @@ end
 #   cron jobs
 #   Wordpress
 #   Mediawiki
+
+template "#{@node[:apache][:dir]}/sites-available/default" do
+  source "apache_production.conf.erb"
+  mode 0644
+  owner "root"
+  group "wheel"
+end
+
+template "#{@node[:apache][:dir]}/sites-available/openaustralia.org" do
+  source "apache_production_redirect.conf.erb"
+  mode 0644
+  owner "root"
+  group "wheel"
+end
+
+template "#{@node[:apache][:dir]}/sites-available/test.openaustralia.org" do
+  source "apache_test.conf.erb"
+  mode 0644
+  owner "root"
+  group "wheel"
+end
+
+apache_site "default"
+apache_site "openaustralia.org"
+apache_site "test.openaustralia.org"
