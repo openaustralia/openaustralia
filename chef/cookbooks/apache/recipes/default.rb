@@ -57,14 +57,6 @@ execute "generate-module-list" do
   action :run
 end
 
-# Add php module to the mix because the above script doesn't pick it up
-remote_file "#{@node[:apache][:dir]}/mods-available/php5.load" do
-  source "php5.load"
-  mode 0644
-  owner "root"
-  group "wheel"
-end
-
 %w{a2ensite a2dissite a2enmod a2dismod}.each do |modscript|
   template "/usr/local/sbin/#{modscript}" do
     source "#{modscript}.erb"
@@ -96,5 +88,4 @@ apache_module "alias"
 apache_module "rewrite"
 apache_module "dir"
 apache_module "deflate"
-apache_module "php5"
 

@@ -18,3 +18,13 @@ end
 package "php5" do
   source "ports"
 end
+
+# Tell apache about the new module
+remote_file "#{@node[:apache][:dir]}/mods-available/php5.load" do
+  source "php5.load"
+  mode 0644
+  owner "root"
+  group "wheel"
+end
+
+apache_module "php5"
