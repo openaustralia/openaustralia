@@ -37,7 +37,14 @@ service "apache22" do
   subscribes :reload, resources('remote_file[httpd.conf]')
 end
 
-%w{sites-available sites-enabled}.each do |dir|
+remote_file "/usr/local/bin/apache2_module_conf_generate.pl" do
+  source "apache2_module_conf_generate.pl"
+  mode 0755
+  owner "root"
+  group "wheel"
+end
+
+%w{sites-available sites-enabled mods-available mods-enabled}.each do |dir|
   directory "#{node[:apache][:dir]}/#{dir}" do
     mode 0755
     owner "root"
@@ -45,7 +52,20 @@ end
   end
 end
 
-%w{a2ensite a2dissite}.each do |modscript|
+execute "generate-module-list" do
+  command "/usr/local/bin/apache2_module_conf_generate.pl /usr/local/libexec/apache22 #{node[:apache][:dir]}/mods-available"  
+  action :run
+end
+
+# Add php module to the mix because the above script doesn't pick it up
+remote_file "#{@node[:apache][:dir]}/mods-available/php5.load" do
+  source "php5.load"
+  mode 0644
+  owner "root"
+  group "wheel"
+end
+
+%w{a2ensite a2dissite a2enmod a2dismod}.each do |modscript|
   template "/usr/local/sbin/#{modscript}" do
     source "#{modscript}.erb"
     mode 0755
@@ -66,3 +86,15 @@ end
   
   apache_site site
 end
+
+apache_module "authz_host"
+apache_module "log_config"
+apache_module "setenvif"
+apache_module "ssl"
+apache_module "mime"
+apache_module "alias"
+apache_module "rewrite"
+apache_module "dir"
+apache_module "deflate"
+apache_module "php5"
+
