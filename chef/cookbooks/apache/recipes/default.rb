@@ -31,18 +31,10 @@ execute "openssl req -batch -new -x509 -nodes -sha1 -days 365 -key server.key > 
   creates "/usr/local/etc/apache22/server.crt"
 end
 
-remote_file "httpd-ssl.conf" do
-  path "/usr/local/etc/apache22/extra/httpd-ssl.conf"
-  source "httpd-ssl.conf"
-  mode 0644
-  owner "root"
-  group "wheel"
-end
-
 service "apache22" do
   supports :status => true, :restart => true, :reload => true
   action [:enable, :start]
-  subscribes :reload, resources('remote_file[httpd.conf]', 'remote_file[httpd-ssl.conf]')
+  subscribes :reload, resources('remote_file[httpd.conf]')
 end
 
 %w{sites-available sites-enabled}.each do |dir|
