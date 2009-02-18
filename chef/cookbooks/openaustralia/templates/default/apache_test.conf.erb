@@ -1,3 +1,10 @@
+<Directory "/www/test.openaustralia.org/html">
+    Options Indexes FollowSymLinks
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+</Directory>
+
 <VirtualHost *:80>
     DocumentRoot "/www/test.openaustralia.org/html"
     ServerName test.test-openaustralia.org
