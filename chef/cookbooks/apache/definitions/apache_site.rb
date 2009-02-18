@@ -1,0 +1,34 @@
+#
+# Cookbook Name:: apache2
+# Definition:: apache_site
+#
+# Copyright 2008, OpsCode, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+define :apache_site, :enable => true do
+  if params[:enable]
+    execute "a2ensite #{params[:name]}" do
+      command "/usr/local/sbin/a2ensite #{params[:name]}"
+      notifies :reload, resources(:service => "apache22")
+      not_if do File.symlink?("#{node[:apache][:dir]}/sites-enabled/#{params[:name]}") end
+    end
+  else
+    execute "a2dissite #{params[:name]}" do
+      command "/usr/local/sbin/a2dissite #{params[:name]}"
+      notifies :reload, resources(:service => "apache22")
+      only_if do File.symlink?("#{node[:apache][:dir]}/sites-enabled/#{params[:name]}") end
+    end
+  end
+end

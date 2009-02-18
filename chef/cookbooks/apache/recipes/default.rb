@@ -45,24 +45,32 @@ service "apache22" do
   subscribes :reload, resources('remote_file[httpd.conf]', 'remote_file[httpd-ssl.conf]')
 end
 
-directory "/usr/local/etc/apache22/sites-enabled" do
-  mode 0755
-  owner "root"
-  group "wheel"
+%w{sites-available sites-enabled}.each do |dir|
+  directory "#{node[:apache][:dir]}/#{dir}" do
+    mode 0755
+    owner "root"
+    group "wheel"
+  end
+end
+
+%w{a2ensite a2dissite}.each do |modscript|
+  template "/usr/local/sbin/#{modscript}" do
+    source "#{modscript}.erb"
+    mode 0755
+    owner "root"
+    group "wheel"
+  end  
 end
 
 # Add individual site virtual hosts here
-%w{www.openaustralia.org openaustralia.org test.openaustralia.org wiki.openaustralia.org software.openaustralia.org blog.openaustralia.org}.each do |site|
+%w{default openaustralia.org test.openaustralia.org wiki.openaustralia.org software.openaustralia.org blog.openaustralia.org}.each do |site|
   remote_file "site.conf" do
-    if site == "www.openaustralia.org"
-      path "/usr/local/etc/apache22/sites-enabled/000-default"
-    else
-      path "/usr/local/etc/apache22/sites-enabled/#{site}"
-    end
+    path "/usr/local/etc/apache22/sites-available/#{site}"
     source "httpd-vhost-#{site}.conf"
     mode 0644
     owner "root"
     group "wheel"
-    notifies :reload, resources(:service => "apache22")
   end
+  
+  apache_site site
 end
