@@ -1,4 +1,10 @@
-# TODO: currently contains configuration for the web apps mixed up the Apache configuration
+# Building mod_proxy and mod_proxy_http as well. Settings this in the apache22 options file
+remote_file "/var/db/ports/apache22/options" do
+  source "apache22.ports.options"
+  mode 0644
+  owner "root"
+  group "wheel"
+end
 
 package "apache" do
   source "ports:apache22"
