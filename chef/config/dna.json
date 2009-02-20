@@ -1,5 +1,5 @@
 {
-  "recipes": ["openaustralia", "sudo", "ntp", "ssh", "git", "phpmyadmin"],
+  "recipes": ["openaustralia", "sudo", "ntp", "ssh", "git", "phpmyadmin", "jira"],
   "authorization": {
     "sudo": {
       "users": ["matthewl"]

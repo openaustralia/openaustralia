@@ -1,0 +1,17 @@
+<Proxy *>
+Order deny,allow
+Allow from all
+</Proxy>
+
+<VirtualHost *:80>
+    ServerName jira.test-openaustralia.org
+    ErrorLog "/var/log/jira.openaustralia.org-error_log"
+    CustomLog /var/log/jira.openaustralia.org-access_log common
+
+    ProxyRequests       Off
+    ProxyPreserveHost On
+    ProxyPass           /       http://localhost:8080/
+    ProxyPassReverse    /       http://localhost:8080/
+
+</VirtualHost>
+
