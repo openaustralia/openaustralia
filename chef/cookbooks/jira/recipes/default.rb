@@ -26,11 +26,13 @@
 #   grant all privileges on $jira_database_name.* to '$jira_user'@'localhost' identified by '$jira_password';
 #   flush privileges;
 
-#include_recipe "runit"
 include_recipe "java"
 include_recipe "apache"
 
-directory "/www/jira.openaustralia.org"
+directory "/www/jira.openaustralia.org" do
+  owner "www"
+  group "www"
+end
 
 unless File.exists?(node[:jira_install_path])
   remote_file "jira" do
@@ -44,7 +46,7 @@ unless File.exists?(node[:jira_install_path])
   
   execute "install-jira" do
     command "mv /tmp/atlassian-jira-#{node[:jira_version]}-standalone #{node[:jira_install_path]}"
-  end  
+  end
 end
 
 unless File.exists?("#{node[:jira_install_path]}/common/lib/mysql-connector-java-5.1.7-bin.jar")
@@ -62,17 +64,15 @@ unless File.exists?("#{node[:jira_install_path]}/common/lib/mysql-connector-java
   end
 end
 
-#remote_file "#{node[:jira_install_path]}/bin/startup.sh" do
-#  source "startup.sh"
-#  owner "root"
-#  mode 0755
-#end
-  
-#remote_file "#{node[:jira_install_path]}/bin/catalina.sh" do
-#  source "catalina.sh"
-#  owner "root"
-#  mode 0755
-#end
+directory "/www/jira.openaustralia.org/jira" do
+  owner "www"
+  group "www"
+end
+
+directory "/www/jira.openaustralia.org/jira/logs" do
+  owner "www"
+  group "www"
+end
 
 template "#{node[:jira_install_path]}/conf/server.xml" do
   source "server.xml.erb"
@@ -86,8 +86,6 @@ template "#{node[:jira_install_path]}/atlassian-jira/WEB-INF/classes/entityengin
   mode 0755
 end
 
-#runit_service "jira"
-
 apache_module "proxy"
 apache_module "proxy_http"
 
@@ -98,4 +96,17 @@ template "#{node[:apache][:dir]}/sites-available/jira.openaustralia.org" do
 end
 
 apache_site "jira.openaustralia.org"
+
+#runit_service "jira"
+
+template "/usr/local/etc/rc.d/jira" do
+  source "jira.erb"
+  mode 0555
+end
+
+service "jira" do
+  supports :start => true, :stop => true, :status => true
+  action [:enable, :start]
+end
+
 
