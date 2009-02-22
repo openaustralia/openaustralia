@@ -4,6 +4,6 @@ end
 
 template "/etc/ssh/sshd_config" do
   source "sshd_config.erb"
-  notifies :reload, resources("service[sshd]")
+  notifies :restart, resources("service[sshd]")
 end
 
