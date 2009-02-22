@@ -22,7 +22,7 @@
 #
 # MySQL:
 #
-#   create database jiradb character set utf8;
+#   create database $jira_database_name character set utf8;
 #   grant all privileges on $jira_database_name.* to '$jira_user'@'localhost' identified by '$jira_password';
 #   flush privileges;
 
@@ -96,8 +96,6 @@ template "#{node[:apache][:dir]}/sites-available/jira.openaustralia.org" do
 end
 
 apache_site "jira.openaustralia.org"
-
-#runit_service "jira"
 
 template "/usr/local/etc/rc.d/jira" do
   source "jira.erb"
