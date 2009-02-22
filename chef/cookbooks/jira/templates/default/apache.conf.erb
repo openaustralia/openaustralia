@@ -4,9 +4,9 @@ Allow from all
 </Proxy>
 
 <VirtualHost *:80>
-    ServerName jira.test-openaustralia.org
-    ErrorLog "/var/log/jira.openaustralia.org-error_log"
-    CustomLog /var/log/jira.openaustralia.org-access_log common
+    ServerName <%= @node[:jira_virtual_host_name] %>
+    ErrorLog "/var/log/<%= @node[:jira_virtual_host_name] %>-error_log"
+    CustomLog /var/log/<%= @node[:jira_virtual_host_name] %>-access_log common
 
     ProxyRequests       Off
     ProxyPreserveHost On
