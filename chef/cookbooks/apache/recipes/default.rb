@@ -6,8 +6,8 @@ remote_file "/var/db/ports/apache22/options" do
   group "wheel"
 end
 
-package "apache" do
-  source "ports:apache22"
+package "apache22" do
+  source "ports"
 end
 
 remote_file "httpd.conf" do
