@@ -3,9 +3,7 @@
 # Recipe:: default
 #
 
-package "sudo" do
-  source "ports"
-end
+package "sudo"
 
 template "/usr/local/etc/sudoers" do
   source "sudoers.erb"

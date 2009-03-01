@@ -1,3 +1,5 @@
+directory "/var/db/ports/apache22"
+
 # Building mod_proxy and mod_proxy_http as well. Settings this in the apache22 options file
 remote_file "/var/db/ports/apache22/options" do
   source "apache22.ports.options"
@@ -6,6 +8,11 @@ remote_file "/var/db/ports/apache22/options" do
   group "wheel"
 end
 
+# Perl is needed by the Apache install. Installing it explicitly from binary so that it doesn't get
+# built from source in the Apache install (for speed)
+package "perl5.8"
+
+# Because we are setting build options we need to build this from source
 package "apache22" do
   source "ports"
 end
@@ -16,12 +23,6 @@ remote_file "httpd.conf" do
   mode 0644
   owner "root"
   group "wheel"
-end
-
-service "apache22" do
-  supports :status => true, :restart => true, :reload => true
-  action [:enable, :start]
-  subscribes :reload, resources('remote_file[httpd.conf]')
 end
 
 remote_file "/usr/local/bin/apache2_module_conf_generate.pl" do
@@ -53,6 +54,21 @@ end
   end  
 end
 
+service "apache22" do
+  supports :status => true, :restart => true, :reload => true
+  action [:enable]
+end
+
+apache_module "authz_host"
+apache_module "log_config"
+apache_module "setenvif"
+apache_module "ssl"
+apache_module "mime"
+apache_module "alias"
+apache_module "rewrite"
+apache_module "dir"
+apache_module "deflate"
+
 # Add individual site virtual hosts here
 %w{wiki.openaustralia.org software.openaustralia.org blog.openaustralia.org}.each do |site|
   remote_file "site.conf" do
@@ -66,13 +82,9 @@ end
   apache_site site
 end
 
-apache_module "authz_host"
-apache_module "log_config"
-apache_module "setenvif"
-apache_module "ssl"
-apache_module "mime"
-apache_module "alias"
-apache_module "rewrite"
-apache_module "dir"
-apache_module "deflate"
+service "apache22" do
+  supports :status => true, :restart => true, :reload => true
+  action [:enable, :start]
+  subscribes :reload, resources('remote_file[httpd.conf]')
+end
 

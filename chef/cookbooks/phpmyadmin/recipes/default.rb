@@ -1,10 +1,12 @@
 # TODO: Requires Apache, Apache configuration, SSL setup
 require_recipe 'apache'
- 
-# Because of an interesting naming difference between the port and the package as a workaround installing from the port
-package "phpmyadmin" do
+
+# phpmyadmin needs pdflib which apparently needs to be installed from ports (license restrictions)
+package "pdflib" do
   source "ports"
 end
+
+package "phpmyadmin"
 
 # SSL key (first step of self-signed certificate)
 execute "openssl genrsa 1024 > server.key" do

@@ -2,14 +2,10 @@ require_recipe 'php'
 # TODO: Need to make sure that perl has already been installed
 
 # Xapian bindings for php (as well as other languages)
-package "xapian-bindings" do
-  source "ports"
-end
+package "xapian-bindings"
 
 # Xapian bindings for Perl
-package "p5-Search-Xapian" do
-  source "ports"
-end
+package "p5-Search-Xapian"
 
 directory "/usr/local/etc/php"
 
