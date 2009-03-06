@@ -16,7 +16,7 @@ load_rc_config $name
 pidfile='<%= @node[:jira_install_path] %>/jira.pid'
 procname='java'
 
-export JAVA_HOME=/usr/local/diablo-jre1.6.0
+export JAVA_HOME=/usr/local/diablo-jdk1.6.0
 export CATALINA_PID=$pidfile
 
 start_cmd="su -m <%= @node[:jira_run_user] %> -c 'sh -c \"<%= @node[:jira_install_path] %>/bin/startup.sh\"'"
