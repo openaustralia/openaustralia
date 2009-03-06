@@ -26,9 +26,9 @@ ssh_options[:port] = 2506
 role :web, "www.openaustralia.org"
 
 if stage == "production"
-  set :deploy_to, "/www/www.openaustralia.org/#{application}"
+  set :deploy_to, "/www/www/#{application}"
 elsif stage == "test"
-  set :deploy_to, "/www/test.openaustralia.org/#{application}"
+  set :deploy_to, "/www/test/#{application}"
   set :branch, "test"
 end
 
@@ -42,6 +42,7 @@ task :chef do
   # Using "sudo -E" to ensure that environment variables are propogated to new environment
   # so that pkg_add knows to use passive ftp. What a PITA.
   sudo "-E chef-solo -l debug -c /tmp/chef/config/solo.rb -j /tmp/chef/config/dna.json"
+  #sudo "-E chef-solo -c /tmp/chef/config/solo.rb -j /tmp/chef/config/dna.json"
 end
 
 namespace :deploy do  
