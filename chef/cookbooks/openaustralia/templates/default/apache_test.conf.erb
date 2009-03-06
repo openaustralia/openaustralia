@@ -10,13 +10,13 @@
     ServerName test.<%= @node[:oa_domain] %>
     ErrorLog "/var/log/test-error_log"
     CustomLog /var/log/test-access_log common
-
+    
 		RewriteEngine on
 
 		# Links in emails
-		RewriteRule ^/A/(.*)$     /alert/confirm/?t=$1 [QSA]
-		RewriteRule ^/D/(.*)$     /alert/delete/?t=$1 [QSA]
-		RewriteRule ^/U/(.*)$     /user/confirm/?t=$1 [QSA]
+		RewriteRule ^/A/(.*)$     /alert/confirm/index.php?t=$1 [QSA]
+		RewriteRule ^/D/(.*)$     /alert/delete/index.php?t=$1 [QSA]
+		RewriteRule ^/U/(.*)$     /user/confirm/index.php?t=$1 [QSA]
 
 		# API
 		#RewriteRule ^/api/((get|convert).*)$ /api/index.php?method=$1 [QSA]
