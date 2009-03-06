@@ -132,5 +132,5 @@ define('OPTION_PHP_DEBUG_LEVEL', 0);
 
 // Using pingmymap.com for simultaneously notifying many search engines of new xml sitemaps
 // Sign up for an account to get an API key
-define('PINGMYMAP_API_KEY', '0123456789abcdef0123456789abcdef');
+define('PINGMYMAP_API_KEY', '<%= @stage_config[:pingmymap_api_key] %>');
 

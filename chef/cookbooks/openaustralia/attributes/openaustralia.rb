@@ -15,6 +15,8 @@ openaustralia[:production][:database][:password] = "oa_production" unless openau
 openaustralia[:test][:database][:password] = "oa_test" unless openaustralia[:test][:database].has_key?(:password)
 openaustralia[:production][:dev_site] = "false" unless openaustralia[:production].has_key?(:dev_site)
 openaustralia[:test][:dev_site] = "true" unless openaustralia[:test].has_key?(:dev_site)
+openaustralia[:production][:pingmymap_api_key] = "0123456789abcdef0123456789abcdef" unless openaustralia[:production].has_key?(:pingmymap_api_key)
+openaustralia[:test][:pingmymap_api_key] = "" unless openaustralia[:test].has_key?(:pingmymap_api_key)
 
 # Making the configuration for the test and production site very similar. We could override this later if so desired
 [:production, :test].each do |stage|
