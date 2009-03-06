@@ -63,19 +63,24 @@ namespace :deploy do
 
 	desc "After a code update, we link the images directories to the shared ones"
 	task :after_update_code do
-		links = {"#{release_path}/twfy/www/docs/images/mps" => "#{shared_path}/images/mps",
-			"#{release_path}/twfy/www/docs/images/mpsL" => "#{shared_path}/images/mpsL",
-			"#{release_path}/twfy/conf/general" => "#{shared_path}/general",
-			"#{release_path}/twfy/www/docs/.htaccess" => "#{shared_path}/root_htaccess",
-			"#{release_path}/openaustralia-parser/configuration.yml" => "#{shared_path}/parser_configuration.yml",
-			"#{release_path}/searchdb" => "#{shared_path}/searchdb",
-			"#{release_path}/twfy/www/docs/rss/mp" => "#{shared_path}/rss/mp",
-			"#{release_path}/twfy/www/docs/debates/debates.rss" => "#{shared_path}/rss/debates.rss",
-			"#{release_path}/twfy/scripts/alerts-lastsent" => "#{shared_path}/alerts-lastsent",
-			"#{release_path}/twfy/www/docs/sitemap.xml" => "#{shared_path}/sitemap.xml",
-			"#{release_path}/twfy/www/docs/sitemaps" => "#{shared_path}/sitemaps",
-			"#{release_path}/twfy/www/docs/regmem/scan" => "#{shared_path}/regmem_scan"}
-		
+		links = {
+			"#{release_path}/searchdb"                                => "../../shared/searchdb",
+
+			"#{release_path}/openaustralia-parser/configuration.yml"  => "../../../shared/parser_configuration.yml",
+
+			"#{release_path}/twfy/conf/general"                       => "../../../../shared/general",
+			"#{release_path}/twfy/scripts/alerts-lastsent"            => "../../../../shared/alerts-lastsent",
+
+			"#{release_path}/twfy/www/docs/.htaccess"                 => "../../../../../shared/root_htaccess",
+			"#{release_path}/twfy/www/docs/sitemap.xml"               => "../../../../../shared/sitemap.xml",
+			"#{release_path}/twfy/www/docs/sitemaps"                  => "../../../../../shared/sitemaps",
+
+		  "#{release_path}/twfy/www/docs/images/mps"                => "../../../../../../shared/images/mps",
+			"#{release_path}/twfy/www/docs/images/mpsL"               => "../../../../../../shared/images/mpsL",
+			"#{release_path}/twfy/www/docs/regmem/scan"               => "../../../../../../shared/regmem_scan",
+			"#{release_path}/twfy/www/docs/rss/mp"                    => "../../../../../../shared/rss/mp",
+			"#{release_path}/twfy/www/docs/debates/debates.rss"       => "../../../../../../shared/rss/debates.rss"
+		}
 		# First copy any images that have been checked into the repository to the shared area
 		run "cp #{release_path}/twfy/www/docs/images/mps/* #{shared_path}/images/mps"
 		run "cp #{release_path}/twfy/www/docs/images/mpsL/* #{shared_path}/images/mpsL"
