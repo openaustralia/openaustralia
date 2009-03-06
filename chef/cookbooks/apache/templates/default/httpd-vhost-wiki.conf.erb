@@ -1,4 +1,4 @@
-<Directory "/www/wiki.<%= @node[:oa_domain] %>/html">
+<Directory "/www/wiki/html">
     Options Indexes FollowSymLinks MultiViews
     AllowOverride All
     Order allow,deny
@@ -6,8 +6,8 @@
 </Directory>
 
 <VirtualHost *:80>
-    DocumentRoot "/www/wiki.<%= @node[:oa_domain] %>/html"
+    DocumentRoot "/www/wiki/html"
     ServerName wiki.<%= @node[:oa_domain] %>
-    ErrorLog "/var/log/wiki.<%= @node[:oa_domain] %>-error_log"
-    CustomLog /var/log/wiki.<%= @node[:oa_domain] %>-access_log common
+    ErrorLog "/var/log/wiki-error_log"
+    CustomLog /var/log/wiki-access_log common
 </VirtualHost>

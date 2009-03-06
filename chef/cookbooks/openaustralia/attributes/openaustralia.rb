@@ -21,6 +21,6 @@ openaustralia[:test][:dev_site] = "true" unless openaustralia[:test].has_key?(:d
   openaustralia[stage][:virtual_host_name] = "#{openaustralia[stage][:subdomain]}.#{oa_domain}" unless openaustralia[stage].has_key?(:virtual_host_name)
   openaustralia[stage][:database][:name] = "#{openaustralia_database_name_prefix}_#{stage}" unless openaustralia[stage][:database].has_key?(:name)
   openaustralia[stage][:database][:user] = "#{openaustralia_database_user_prefix}_#{stage}" unless openaustralia[stage][:database].has_key?(:user)
-  openaustralia[stage][:install_path] = "/www/#{openaustralia[stage][:subdomain]}.#{oa_domain}/openaustralia" unless openaustralia[stage].has_key?(:install_path)
-  openaustralia[stage][:html_root] = "/www/#{openaustralia[stage][:subdomain]}.#{oa_domain}/html" unless openaustralia[stage].has_key?(:html_root)
+  openaustralia[stage][:install_path] = "/www/#{openaustralia[stage][:subdomain]}/openaustralia" unless openaustralia[stage].has_key?(:install_path)
+  openaustralia[stage][:html_root] = "/www/#{openaustralia[stage][:subdomain]}/html" unless openaustralia[stage].has_key?(:html_root)
 end

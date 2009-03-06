@@ -1,4 +1,4 @@
-<Directory "/www/www.<%= @node[:oa_domain] %>/html">
+<Directory "/www/www/html">
     Options Indexes FollowSymLinks
     AllowOverride None
     Order allow,deny
@@ -6,10 +6,10 @@
 </Directory>
 
 <VirtualHost *:80>
-    DocumentRoot "/www/www.<%= @node[:oa_domain] %>/html"
+    DocumentRoot "/www/www/html"
     ServerName www.<%= @node[:oa_domain] %>
-    ErrorLog "/var/log/www.<%= @node[:oa_domain] %>-error_log"
-    CustomLog /var/log/www.<%= @node[:oa_domain] %>-access_log common
+    ErrorLog "/var/log/www-error_log"
+    CustomLog /var/log/www-access_log common
 
 		RewriteEngine on
 
@@ -56,3 +56,8 @@
 		#RewriteRule /down.html / [R]
 </VirtualHost>
 
+# Redirect (301) http://openaustralia.org/foo -> http://www.openaustralia.org/foo
+<VirtualHost *:80>
+    ServerName <%= @node[:oa_domain] %>
+		RedirectMatch permanent ^/(.*) http://www.<%= @node[:oa_domain] %>/$1
+</VirtualHost>

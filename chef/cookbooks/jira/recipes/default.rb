@@ -82,13 +82,13 @@ end
 apache_module "proxy"
 apache_module "proxy_http"
 
-template "#{node[:apache][:dir]}/sites-available/#{node[:jira_virtual_host_name]}" do
+template "#{node[:apache][:dir]}/sites-available/#{node[:jira_subdomain]}" do
   source "apache.conf.erb"
   owner "root"
   mode 0644
 end
 
-apache_site node[:jira_virtual_host_name]
+apache_site node[:jira_subdomain]
 
 template "/usr/local/etc/rc.d/jira" do
   source "jira.erb"

@@ -1,4 +1,4 @@
-<Directory "/www/test.<%= @node[:oa_domain] %>/html">
+<Directory "/www/test/html">
     Options Indexes FollowSymLinks
     AllowOverride None
     Order allow,deny
@@ -6,10 +6,10 @@
 </Directory>
 
 <VirtualHost *:80>
-    DocumentRoot "/www/test.<%= @node[:oa_domain] %>/html"
+    DocumentRoot "/www/test/html"
     ServerName test.<%= @node[:oa_domain] %>
-    ErrorLog "/var/log/test.<%= @node[:oa_domain] %>-error_log"
-    CustomLog /var/log/test.<%= @node[:oa_domain] %>-access_log common
+    ErrorLog "/var/log/test-error_log"
+    CustomLog /var/log/test-access_log common
 
 		RewriteEngine on
 
