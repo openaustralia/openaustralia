@@ -102,5 +102,13 @@ template "#{@node[:apache][:dir]}/sites-available/test" do
   group "wheel"
 end
 
+template "#{@node[:apache][:dir]}/sites-available/software" do
+  source "apache_software.conf.erb"
+  mode 0644
+  owner "root"
+  group "wheel"
+end
+
 apache_site "default"
 apache_site "test"
+apache_site "software"

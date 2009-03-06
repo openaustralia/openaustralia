@@ -56,7 +56,8 @@ end
 
 service "apache22" do
   supports :status => true, :restart => true, :reload => true
-  action [:enable]
+  action [:enable, :start]
+  subscribes :reload, resources('remote_file[httpd.conf]')
 end
 
 apache_module "authz_host"
@@ -68,26 +69,4 @@ apache_module "alias"
 apache_module "rewrite"
 apache_module "dir"
 apache_module "deflate"
-
-directory "/www/wiki"
-directory "/www/wiki/html"
-
-# Add individual site virtual hosts here
-%w{wiki software}.each do |site|
-  template "site.conf" do
-    path "/usr/local/etc/apache22/sites-available/#{site}"
-    source "httpd-vhost-#{site}.conf.erb"
-    mode 0644
-    owner "root"
-    group "wheel"
-  end
-  
-  apache_site "#{site}"
-end
-
-service "apache22" do
-  supports :status => true, :restart => true, :reload => true
-  action [:enable, :start]
-  subscribes :reload, resources('remote_file[httpd.conf]')
-end
 
