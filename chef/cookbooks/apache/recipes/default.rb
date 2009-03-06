@@ -70,7 +70,7 @@ apache_module "dir"
 apache_module "deflate"
 
 # Add individual site virtual hosts here
-%w{wiki.openaustralia.org software.openaustralia.org blog.openaustralia.org}.each do |site|
+%w{wiki.openaustralia.org software.openaustralia.org}.each do |site|
   remote_file "site.conf" do
     path "/usr/local/etc/apache22/sites-available/#{site}"
     source "httpd-vhost-#{site}.conf"
