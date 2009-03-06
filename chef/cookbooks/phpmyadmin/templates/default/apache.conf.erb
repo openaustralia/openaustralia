@@ -13,11 +13,11 @@
 <VirtualHost _default_:443>
 
 #   General setup for the virtual host
-DocumentRoot "/www/secure.openaustralia.org/html"
-ServerName secure.test-openaustralia.org:443
+DocumentRoot "/www/secure.<%= @node[:oa_domain] %>/html"
+ServerName secure.<%= @node[:oa_domain] %>:443
 ServerAdmin matthew@openaustralia.org
-ErrorLog "/var/log/secure.openaustralia.org-error.log"
-TransferLog "/var/log/secure.openaustralia.org-access.log"
+ErrorLog "/var/log/secure.<%= @node[:oa_domain] %>-error.log"
+TransferLog "/var/log/secure.<%= @node[:oa_domain] %>-access.log"
 
 Alias /phpmyadmin "/usr/local/www/phpMyAdmin"
 

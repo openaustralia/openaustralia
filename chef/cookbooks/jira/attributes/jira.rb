@@ -1,4 +1,4 @@
-jira_virtual_host_name "tickets.openaustralia.org" unless attribute?("jira_virtual_host_name")
+jira_virtual_host_name "tickets.#{oa_domain}" unless attribute?("jira_virtual_host_name")
 # type-version-standalone
 jira_version "enterprise-3.13.2" unless attribute?("jira_version")
 jira_install_path "/www/#{jira_virtual_host_name}" unless attribute?("jira_install_path")

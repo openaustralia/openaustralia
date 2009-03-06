@@ -55,7 +55,7 @@ require_recipe 'mysql'
   end
 end
 
-directory "/www/secure.openaustralia.org/html" do
+directory "/www/secure.#{node[:oa_domain]}/html" do
   owner "matthewl"
   group "matthewl"
   mode 0755
@@ -95,14 +95,14 @@ template "#{@node[:apache][:dir]}/sites-available/default" do
   group "wheel"
 end
 
-template "#{@node[:apache][:dir]}/sites-available/openaustralia.org" do
+template "#{@node[:apache][:dir]}/sites-available/#{node[:oa_domain]}" do
   source "apache_production_redirect.conf.erb"
   mode 0644
   owner "root"
   group "wheel"
 end
 
-template "#{@node[:apache][:dir]}/sites-available/test.openaustralia.org" do
+template "#{@node[:apache][:dir]}/sites-available/test.#{node[:oa_domain]}" do
   source "apache_test.conf.erb"
   mode 0644
   owner "root"
@@ -110,5 +110,5 @@ template "#{@node[:apache][:dir]}/sites-available/test.openaustralia.org" do
 end
 
 apache_site "default"
-apache_site "openaustralia.org"
-apache_site "test.openaustralia.org"
+apache_site node[:oa_domain]
+apache_site "test.#{node[:oa_domain]}"

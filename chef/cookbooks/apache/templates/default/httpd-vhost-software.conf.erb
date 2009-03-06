@@ -1,4 +1,4 @@
 <VirtualHost *:80>
-    ServerName software.openaustralia.org
+    ServerName software.<%= @node[:oa_domain] %>
 		RedirectMatch ^/(.*) http://trac2.assembla.com/openaustralia/$1
 </VirtualHost>

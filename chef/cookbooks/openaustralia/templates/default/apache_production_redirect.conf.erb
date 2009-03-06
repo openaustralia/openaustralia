@@ -1,6 +1,6 @@
-# Redirect (301) http://test-openaustralia.org/foo -> http://www.test-openaustralia.org/foo
+# Redirect (301) http://openaustralia.org/foo -> http://www.openaustralia.org/foo
 <VirtualHost *:80>
-    ServerName test-openaustralia.org
-		RedirectMatch permanent ^/(.*) http://www.test-openaustralia.org/$1
+    ServerName <%= @node[:oa_domain] %>
+		RedirectMatch permanent ^/(.*) http://www.<%= @node[:oa_domain] %>/$1
 </VirtualHost>
 

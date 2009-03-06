@@ -1,0 +1,13 @@
+<Directory "/www/wiki.<%= @node[:oa_domain] %>/html">
+    Options Indexes FollowSymLinks MultiViews
+    AllowOverride All
+    Order allow,deny
+    Allow from all
+</Directory>
+
+<VirtualHost *:80>
+    DocumentRoot "/www/wiki.<%= @node[:oa_domain] %>/html"
+    ServerName wiki.<%= @node[:oa_domain] %>
+    ErrorLog "/var/log/wiki.<%= @node[:oa_domain] %>-error_log"
+    CustomLog /var/log/wiki.<%= @node[:oa_domain] %>-access_log common
+</VirtualHost>

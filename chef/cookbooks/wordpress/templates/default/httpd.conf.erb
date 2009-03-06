@@ -1,0 +1,13 @@
+<Directory "/www/blog.<%= @node[:oa_domain] %>/html">
+    Options Indexes FollowSymLinks MultiViews
+    AllowOverride All
+    Order allow,deny
+    Allow from all
+</Directory>
+
+<VirtualHost *:80>
+    DocumentRoot "/www/blog.<%= @node[:oa_domain] %>/html"
+    ServerName blog.<%= @node[:oa_domain] %>
+    ErrorLog "/var/log/blog.<%= @node[:oa_domain] %>-error_log"
+    CustomLog /var/log/blog.<%= @node[:oa_domain] %>-access_log common
+</VirtualHost>

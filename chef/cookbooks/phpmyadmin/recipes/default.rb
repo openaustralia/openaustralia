@@ -27,11 +27,11 @@ execute "openssl req -batch -new -x509 -nodes -sha1 -days 365 -key server.key > 
   creates "/usr/local/etc/apache22/server.crt"
 end
 
-template "#{@node[:apache][:dir]}/sites-available/secure.openaustralia.org" do
+template "#{@node[:apache][:dir]}/sites-available/secure.#{node[:oa_domain]}" do
   source "apache.conf.erb"
   mode 0644
   owner "root"
   group "wheel"
 end
 
-apache_site "secure.openaustralia.org"
+apache_site "secure.#{node[:oa_domain]}"

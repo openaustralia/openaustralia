@@ -1,6 +1,5 @@
 # Common bits of configuration 
 openaustralia_email_contact "contact@openaustralia.org" unless attribute?("openaustralia_email_contact")
-openaustralia_domain "test-openaustralia.org" unless attribute?("openaustralia_domain")
 openaustralia_database_name_prefix "openaustralia" unless attribute?("openaustralia_database_name_prefix")
 openaustralia_database_user_prefix "oa" unless attribute?("openaustralia_database_user_prefix")
 openaustralia Mash.new unless attribute?("openaustralia")
@@ -19,9 +18,9 @@ openaustralia[:test][:dev_site] = "true" unless openaustralia[:test].has_key?(:d
 
 # Making the configuration for the test and production site very similar. We could override this later if so desired
 [:production, :test].each do |stage|
-  openaustralia[stage][:virtual_host_name] = "#{openaustralia[stage][:subdomain]}.#{openaustralia_domain}" unless openaustralia[stage].has_key?(:virtual_host_name)
+  openaustralia[stage][:virtual_host_name] = "#{openaustralia[stage][:subdomain]}.#{oa_domain}" unless openaustralia[stage].has_key?(:virtual_host_name)
   openaustralia[stage][:database][:name] = "#{openaustralia_database_name_prefix}_#{stage}" unless openaustralia[stage][:database].has_key?(:name)
   openaustralia[stage][:database][:user] = "#{openaustralia_database_user_prefix}_#{stage}" unless openaustralia[stage][:database].has_key?(:user)
-  openaustralia[stage][:install_path] = "/www/#{openaustralia[stage][:subdomain]}.openaustralia.org/openaustralia" unless openaustralia[stage].has_key?(:install_path)
-  openaustralia[stage][:html_root] = "/www/#{openaustralia[stage][:subdomain]}.openaustralia.org/html" unless openaustralia[stage].has_key?(:html_root)
+  openaustralia[stage][:install_path] = "/www/#{openaustralia[stage][:subdomain]}.#{oa_domain}/openaustralia" unless openaustralia[stage].has_key?(:install_path)
+  openaustralia[stage][:html_root] = "/www/#{openaustralia[stage][:subdomain]}.#{oa_domain}/html" unless openaustralia[stage].has_key?(:html_root)
 end

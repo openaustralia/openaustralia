@@ -5,5 +5,6 @@
       "users": ["matthewl"]
     }
   },
-  "ssh_port": "1111"
+  "ssh_port": "1111",
+  "oa_domain": "test.org"
 }

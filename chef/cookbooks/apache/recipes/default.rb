@@ -69,17 +69,20 @@ apache_module "rewrite"
 apache_module "dir"
 apache_module "deflate"
 
+directory "/www/wiki.#{node[:oa_domain]}"
+directory "/www/wiki.#{node[:oa_domain]}/html"
+
 # Add individual site virtual hosts here
-%w{wiki.openaustralia.org software.openaustralia.org}.each do |site|
-  remote_file "site.conf" do
-    path "/usr/local/etc/apache22/sites-available/#{site}"
-    source "httpd-vhost-#{site}.conf"
+%w{wiki software}.each do |site|
+  template "site.conf" do
+    path "/usr/local/etc/apache22/sites-available/#{site}.#{node[:oa_domain]}"
+    source "httpd-vhost-#{site}.conf.erb"
     mode 0644
     owner "root"
     group "wheel"
   end
   
-  apache_site site
+  apache_site "#{site}.#{node[:oa_domain]}"
 end
 
 service "apache22" do
