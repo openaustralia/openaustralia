@@ -9,16 +9,16 @@ require_recipe 'php'
 require_recipe 'mysql'
 
 [:production, :test].each do |stage|
-  # Hmmm... I wonder if Apache will start up if the openaustralia app is not installed
-  link node[:openaustralia][stage][:html_root] do
-    to "openaustralia/current/twfy/www/docs"
-  end
-
   directory node[:openaustralia][stage][:install_path] do
     owner "matthewl"
     group "matthewl"
     mode 0755
     recursive true
+  end
+
+  # Hmmm... I wonder if Apache will start up if the openaustralia app is not installed
+  link node[:openaustralia][stage][:html_root] do
+    to "openaustralia/current/twfy/www/docs"
   end
 
   %w{shared releases shared/images/mps shared/images/mpsL shared/rss/mp}.each do |dir|
