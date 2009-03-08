@@ -1,59 +1,20 @@
 A rough guide to setting up and configuring the openaustralia server:
 
-* Install FreeBSD (I'm using 7.0 currently)
-* Upgrade ports:
-# portsnap fetch
-# portsnap extract
-* Install RubyGems (from ports):
-# cd /usr/ports/devel/ruby-gems
-# make install
-# rehash
-* Install chef
-# gem sources -a http://gems.opscode.com
-# gem install chef ohai
-* Install sudo (from ports)
-# cd /usr/ports/security/sudo
-# make install
-
-*** VM snapshotted here ****
-
-* Add login user
-# adduser
-* Add login user to sudoers
-# visudo
-* Speed up ssh login
-# vi /etc/ssh/sshd_config (Set "UseDNS" from "yes" to "no")
-# /etc/rc.d/sshd restart
-# vi /etc/hosts (add entry for machine logging in from)
-* Upgrade chef to special patched FreeBSD version
-# cd /usr/ports/devel/git
-# make install
-# cd
-# mkdir git
-$ cd git
-$ git clone git://github.com/mlandauer/chef.git
-$ cd chef
-$ git checkout --track -b chef-119 origin/chef-119
-$ sudo gem install rake
-$ sudo gem install rspec
-$ rake install
-$ sudo gem uninstall chef --version 0.5.4
-
-* Then configure the rest of the server from another machine by using Capistrano and Chef
-$ cap chef
-
-
-***************************
-
-Alternative method (let's see if this works)
 * Install FreeBSD (I'm using 7.0 currently) (Install ports collection and don't add another user other than root)
 * Allow root login over ssh (vi /etc/ssh/sshd_config)
 * Restart sshd: /etc/rc.d/sshd restart
 * Install Rubygems: pkg_add -r ruby18-gems
+* Upgrade Rubygems:
+# gem update
+# gem update --system
+# mv /usr/local/bin/gem18 /usr/local/bin/gem
 * Install Chef dependencies:
 # gem sources -a http://gems.opscode.com
-# gem install chef ohai (make sure that there is no chef-0.5.5.gem in the current directory)
+# gem install chef --version 0.5.4 (make sure that there is no chef-0.5.5.gem in the current directory)
 * Create the chef gem on another machine (rake gem)
-* copy it here: scp chef-0.5.5.gem root@www.test-openaustralia.org:
+* copy it here: scp chef-0.5.5.gem root@test.org:
 * Install chef: gem install chef-0.5.5.gem
 * Synchronise the clock a little better than before: ntpdate tick.ucla.edu
+* Ensure that in Capfile, port for ssh is at the default and the user is set to root
+* cap chef
+* cap deploy
