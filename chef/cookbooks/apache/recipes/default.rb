@@ -56,10 +56,11 @@ end
 
 service "apache22" do
   supports :status => true, :restart => true, :reload => true
-  action [:enable, :start]
-  subscribes :reload, resources('remote_file[httpd.conf]')
+  action [:enable]
 end
 
+# Need to have an apache22 service in place before we do this, but we don't actually want to
+# start Apache up until these modules are enabled. That's why service "apache22" occurs twice.
 apache_module "authz_host"
 apache_module "log_config"
 apache_module "setenvif"
@@ -69,4 +70,10 @@ apache_module "alias"
 apache_module "rewrite"
 apache_module "dir"
 apache_module "deflate"
+
+service "apache22" do
+  supports :status => true, :restart => true, :reload => true
+  action [:enable, :start]
+  subscribes :reload, resources('remote_file[httpd.conf]')
+end
 
