@@ -84,10 +84,4 @@ namespace :deploy do
 		# Now compile twfy/scripts/run-with-lockfile.c
 		run "gcc -o #{release_path}/twfy/scripts/run-with-lockfile #{release_path}/twfy/scripts/run-with-lockfile.c"
 	end
-	
-	desc "Upload member images from local machine"
-	task :images do
-		put_directory "../pwdata/images/mps", "#{shared_path}/images/mps"
-		put_directory "../pwdata/images/mpsL", "#{shared_path}/images/mpsL"
-	end	
 end
