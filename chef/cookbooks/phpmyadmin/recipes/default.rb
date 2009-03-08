@@ -1,9 +1,25 @@
 require_recipe 'apache'
 require_recipe 'mysql'
 
+directory "/var/db/ports/phpMyAdmin"
+
+# Turn off pdflib (because we don't need it and it requires a heap of other dependencies)
+remote_file "/var/db/ports/phpMyAdmin/options" do
+  source "ports.options"
+  mode 0644
+end
+
 # Install from ports so that it uses the currently installed version of mysql
 package "phpmyadmin" do
   source "ports"
+end
+
+# Copy across configuration file for phpmyadmin
+template "/usr/local/www/phpMyAdmin/config.inc.php" do
+  source "config.inc.php.erb"
+  mode 0640
+  owner "root"
+  group "www"
 end
 
 # SSL key (first step of self-signed certificate)
