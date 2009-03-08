@@ -46,14 +46,6 @@ task :chef do
 end
 
 namespace :deploy do  
-	task :setup do
-		dirs = [deploy_to, releases_path, shared_path]
-		shared_images_path = File.join(shared_path, "images")
-		dirs += ["mps", "mpsL"].map {|d| File.join(shared_images_path, d)}
-		dirs << File.join(shared_path, "rss", "mp")
-		run "umask 02 && mkdir -p #{dirs.join(' ')}"
-	end
-
 	# Do nothing for deploy:restart
 	task :restart do
 	end

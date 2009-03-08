@@ -9,24 +9,25 @@ require_recipe 'php'
 require_recipe 'mysql'
 
 [:production, :test].each do |stage|
+  # Hmmm... I wonder if Apache will start up if the openaustralia app is not installed
+  link node[:openaustralia][stage][:html_root] do
+    to "openaustralia/current/twfy/www/docs"
+  end
+
   directory node[:openaustralia][stage][:install_path] do
     owner "matthewl"
     group "matthewl"
     mode 0755
-    action :create
     recursive true
   end
 
-  # Hmmm... I wonder if Apache will start up if the openaustralia app is not installed
-  link node[:openaustralia][stage][:html_root] do
-    to "#{node[:openaustralia][stage][:install_path]}/current/twfy/www/docs"
-  end
-
-  directory "#{node[:openaustralia][stage][:install_path]}/shared" do
-    owner "matthewl"
-    group "matthewl"
-    mode 0775
-    action :create
+  %w{shared releases shared/images/mps shared/images/mpsL shared/rss/mp}.each do |dir|
+    directory "#{node[:openaustralia][stage][:install_path]}/#{dir}" do
+      owner "matthewl"
+      group "matthewl"
+      mode 0775
+      recursive true
+    end
   end
 
   # Xapian Search directory needs to be writable by www
@@ -34,7 +35,6 @@ require_recipe 'mysql'
     owner "matthewl"
     group "www"
     mode 0775
-    action :create
   end
 
   # Configuration for OpenAustralia web app
@@ -52,7 +52,7 @@ require_recipe 'mysql'
     group "matthewl"
     mode 0644
     variables :stage_config => @node[:openaustralia][stage]
-  end
+  end  
 end
 
 directory "/www/secure/html" do
@@ -84,8 +84,6 @@ package "p5-XML-Twig"
 # TODO:
 #   email
 #   cron jobs
-#   Wordpress
-#   Mediawiki
 #   Password on test website
 
 template "#{@node[:apache][:dir]}/sites-available/default" do
@@ -112,3 +110,4 @@ end
 apache_site "default"
 apache_site "test"
 apache_site "software"
+
