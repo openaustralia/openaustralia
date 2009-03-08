@@ -45,9 +45,10 @@ task :chef do
   #sudo "-E chef-solo -c /tmp/chef/config/solo.rb -j /tmp/chef/config/dna.json"
 end
 
-namespace :deploy do  
-	# Do nothing for deploy:restart
+namespace :deploy do
+	# Restart Apache because for some reason a deploy can cause trouble very occasionally (which is fixed by a restart). So, playing safe
 	task :restart do
+	  sudo "apachectl restart"
 	end
 
 	task :finalize_update do
