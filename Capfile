@@ -65,7 +65,6 @@ namespace :deploy do
 			"#{release_path}/twfy/conf/general"                       => "../../../../shared/general",
 			"#{release_path}/twfy/scripts/alerts-lastsent"            => "../../../../shared/alerts-lastsent",
 
-			"#{release_path}/twfy/www/docs/.htaccess"                 => "../../../../../shared/root_htaccess",
 			"#{release_path}/twfy/www/docs/sitemap.xml"               => "../../../../../shared/sitemap.xml",
 			"#{release_path}/twfy/www/docs/sitemaps"                  => "../../../../../shared/sitemaps",
 
