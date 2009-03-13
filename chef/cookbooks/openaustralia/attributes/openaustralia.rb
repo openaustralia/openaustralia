@@ -26,3 +26,5 @@ openaustralia[:test][:pingmymap_api_key] = "" unless openaustralia[:test].has_ke
   openaustralia[stage][:install_path] = "/www/#{openaustralia[stage][:subdomain]}/openaustralia" unless openaustralia[stage].has_key?(:install_path)
   openaustralia[stage][:html_root] = "/www/#{openaustralia[stage][:subdomain]}/html" unless openaustralia[stage].has_key?(:html_root)
 end
+
+openaustralia[:test][:apache_password_file] = "#{openaustralia[:test][:install_path]}/shared/htpasswd" unless openaustralia[:test].has_key?(:apache_password_file)

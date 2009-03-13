@@ -3,6 +3,11 @@
     AllowOverride None
     Order allow,deny
     Allow from all
+
+    AuthType Basic
+    AuthName "OpenAustralia Staging Server"
+    AuthUserFile <%= @node[:openaustralia][:test][:apache_password_file] %>
+    Require user test    
 </Directory>
 
 <VirtualHost *:80>
@@ -10,7 +15,7 @@
     ServerName test.<%= @node[:oa_domain] %>
     ErrorLog "/var/log/test-error_log"
     CustomLog /var/log/test-access_log common
-    
+
 		RewriteEngine on
 
 		# Links in emails

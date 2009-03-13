@@ -82,9 +82,17 @@ gem_package "log4r"
 package "p5-XML-Twig"
 
 # TODO:
-#   email
 #   cron jobs
-#   Password on test website
+
+# Needed to put a password on the test instance
+apache_module "authn_file"
+apache_module "auth_basic"
+apache_module "authz_user"
+
+remote_file @node[:openaustralia][:test][:apache_password_file] do
+  source "htpasswd"
+  mode 0644
+end
 
 template "#{@node[:apache][:dir]}/sites-available/default" do
   source "apache_production.conf.erb"
