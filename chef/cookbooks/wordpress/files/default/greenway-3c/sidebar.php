@@ -16,7 +16,7 @@
 <br/>
 
 <center>
-<a href="<?php bloginfo('rss2_url'); ?>"><img src="http://i71.photobucket.com/albums/i136/headsetop/rss.gif" alt="rss feed" /></a>  <a href="http://technorati.com/faves?add=<?php bloginfo('siteurl'); ?>"><img src="http://i71.photobucket.com/albums/i136/headsetop/tech.gif" alt="technorati fav" /></a>
+<a href="<?php bloginfo('rss2_url'); ?>"><img src="http://i71.photobucket.com/albums/i136/headsetop/rss.gif" alt="rss feed" /></a>
 </center>
 
 
@@ -59,10 +59,10 @@ if ($wpdb->get_results("SELECT * FROM $wpdb->posts WHERE post_parent = '$parent_
  <?php } ?>
 
 
-<?php if ( function_exists('dynamic_sidebar') && dynamic_sidebar(2) ) : else : ?>
+<?php if ( function_exists('dynamic_sidebar') && dynamic_sidebar(1) ) : else : ?>
 
 
-<h2><?php _e('Categories:'); ?></h2>
+<h3><?php _e('Categories:'); ?></h3>
 	<ul class="sidemenu">
 	<?php wp_list_cats(); ?>
 	</ul>
@@ -70,7 +70,7 @@ if ($wpdb->get_results("SELECT * FROM $wpdb->posts WHERE post_parent = '$parent_
 <br/>
 
  
-<h2><?php _e('Archives:'); ?> </h2>
+<h3><?php _e('Archives:'); ?> </h3>
 
  	<ul class="sidemenu">
 	 <?php wp_get_archives('type=monthly'); ?>
@@ -87,25 +87,20 @@ if ($wpdb->get_results("SELECT * FROM $wpdb->posts WHERE post_parent = '$parent_
 
 <?php if ( function_exists('dynamic_sidebar') && dynamic_sidebar(2) ) : else : ?>
 
-<h2><?php _e('Meta:'); ?> </h2>
+<h3><?php _e('Meta:'); ?> </h3>
 <ul class="sidemenu">
 		<?php wp_register(); ?>
 		<li><?php wp_loginout(); ?></li>
 		<li><a href="feed:<?php bloginfo('rss2_url'); ?>" title="<?php _e('Syndicate this site using RSS'); ?>"><?php _e('<abbr title="Really Simple Syndication">RSS</abbr>'); ?></a></li>
 		<li><a href="feed:<?php bloginfo('comments_rss2_url'); ?>" title="<?php _e('The latest comments to all posts in RSS'); ?>"><?php _e('Comments <abbr title="Really Simple Syndication">RSS</abbr>'); ?></a></li>
-		<li><a href="http://www.headsetoptions.org/folio"><abbr title="Web Design">Design services</abbr></a></li>
-		<li><a href="http://www.mandarinmusing.com/themes"><abbr title="WP Themes">WP Themes</abbr></a></li>
-		<?php wp_meta(); ?>
+		
+<?php wp_meta(); ?>
 </ul>
 <br/>
   
 
 
 
-<h2>Flickr:</h2>
-<div id="flickr">
-<script type="text/javascript" src="http://www.flickr.com/badge_code_v2.gne?count=6&amp;display=random&amp;size=s&amp;layout=x&amp;source=all_tag&amp;tag=art"></script>
-</div>	
 <br/>
 
 <?php endif; ?>
@@ -117,10 +112,6 @@ if ($wpdb->get_results("SELECT * FROM $wpdb->posts WHERE post_parent = '$parent_
 
 </div>
 
-<!-- ADVERT -->
-
-<a href="http://www.headsetoptions.org/"><img src="http://i71.photobucket.com/albums/i136/headsetop/336by280Ad.gif" border="0" alt="FAKE ADVERTISEMENT" align="middle"></img></a>
-
 </div>
 </div>
 
@@ -129,7 +120,6 @@ if ($wpdb->get_results("SELECT * FROM $wpdb->posts WHERE post_parent = '$parent_
 <div id="left_side">
 
 			<div class="intro">
-				<div class="pad">This is where you can add an intro to the site, some <a href="#">links</a> or anything else you fancy! Edit this from sidebar.php at the very bottom of the file.
-			
+				<div class="pad">Keeping a tab on those who are elected to represent us. 			
 				</div>
 </div>

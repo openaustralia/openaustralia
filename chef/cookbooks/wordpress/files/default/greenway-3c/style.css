@@ -1,5 +1,5 @@
 /*
-Theme Name: Greenway 3C
+Theme Name: greenway 3c
 Theme URI: http://www.headsetoptions.org/
 Description: Greenway 3C is the 3 column "widget" ready WordPress theme based on <a href="http://www.headsetoptions.org/2007/04/03/greenway-sleek-and-sophisticated-web-2o-wordpress-theme/">Greenway</a> by <a href="http://www.headsetoptions.org">headsetoptions.org</a> and <a href="http://www.mandarinmusing.com/">MandarinMusing</a> using original design by <a href="http://www.free-css-templates.com">David Herreman</a>. The CSS (stylesheet) and images are released under a <a href="http://creativecommons.org/licenses/by/2.5/">Creative Commons Attribution 2.5 License</a>, while the rest of the theme files are released under a <a href="http://www.gnu.org/licenses/gpl.html">GNU GPL License</a>. What this means is, if you are to use this CSS/images to redesign or redistribute, you are required to link back to the authors in the footer. You can make any changes to the php files any way you like. However, we require you to leave the credits for theme authors intact. If you plan on redistributing this theme, ask for permission first.
 Version: 
@@ -14,37 +14,91 @@ Author URI: http://www.headsetoptions.org/
 body {
 padding : 0;
 margin : 0;
-font : 0.74em Arial, sans-serif;
-line-height : 1.5em;
+font-size: 0.77em;
+font-family: Arial, Helvetica, sans-serif;
 background : #fff url(images/bg.jpg) repeat-x top;
 color : #454545;
 }
+
 a {
 color : #7a9833;
 background : inherit;
 text-decoration : none;
 }
+
 a:hover {
 color : #7a9833;
 background : inherit;
 text-decoration : underline;
 }
+
+center, blockquote, quote, pre {
+margin: 0px 0px 20px;
+}
+
 p {
-margin : 5px 0;
+line-height: 1.5em;
 }
+
+.reduced p, .reduced center, .reduced blockquote, .reduced quote, .reduced pre, .reduced ol, .reduced ul, .reduced table, .reduced dl, .reduced dd, .reduced dt {
+	font-size: 95%;
+}
+
+blockquote, quote {
+margin: 30px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+margin: 0px 0px 5px;
+}
+
 h1 {
-font : bold 1.8em Arial, Sans-Serif;
-padding : 8px 0 4px 0;
-margin : 0;
-letter-spacing : -1px;
+	font-size: 250%;
+	line-height: 100%;
 }
+
 h2 {
-font : bold 1.6em Arial, Sans-Serif;
-letter-spacing : -1px;
+	font-size: 200%;
+	line-height: 100%;
+	margin: 0px 0px 5px;
 }
+
+.lead h3.title, #loop_single h3.title, #loop_page h3.title {
+	font-size: 200%;
+	line-height: 100%;
+}
+
 h3 {
-padding : 4px 0;
-margin : 0;
+	font-size: 100%;
+	line-height: 100%;
+}
+h4 {
+	font-size: 90%;
+	padding : 0;
+}
+h5 {
+	font-size: 80%;
+	line-height: 100%;
+}
+h6 {
+	font-size: 100%;
+	line-height: 100%;
+}
+ul li {
+	list-style-type: square;
+}
+dt {
+	margin: 0px 0px 5px 0px;
+	padding: 0px;
+}
+h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
+	text-decoration: none;
+}
+#header a {
+	text-decoration: none;
+}
+#tagline {
+	font-size: 120%;
 }
 ul {
 margin : 0;
@@ -71,18 +125,17 @@ background : transparent;
 height : 80px;
 }
 #top h1 {
-font : bold 1.8em Arial, Sans-Serif;
 padding : 20px 0 0 0;
 margin : 0;
-letter-spacing : 1px;
 color : #616161;
+font-size: 250%;
 }
 #top h2 {
-font : 0.9em Arial, Sans-Serif;
 letter-spacing : 0;
 color : #868686;
 margin : 0;
 padding : 0;
+font-size: 170%;
 }
 #top #icons {
 float : right;
@@ -167,6 +220,9 @@ color : #949494;
 font : bold 1.2em Arial, Sans-Serif;
 margin-top : 10px;
 }
+#right_side h2 {
+font-size: 120%;
+}
 #left_side {
 background : inherit;
 margin-bottom : 10px;
@@ -196,14 +252,21 @@ padding : 40px 0 0 0;
 background : inherit;
 padding : 0;
 margin : 0;
-font : bold 1.4em Arial, Sans-Serif;
+font : 1.4em Arial, Sans-Serif;
 }
-#left_side .mpart h2 {
+
+#left_side .mpart h4 {
 background : url(images/lrline.gif) no-repeat bottom left;
-height : 20px;
 padding : 0;
-margin : 0 0 15px 0;
-font : 0.9em verdana, Arial, Sans-Serif;
+margin : 0;
+font-weight: normal;
+}
+
+#left_side .mpart h2 {
+
+padding : 0 0 4px 0;
+margin : 0;
+font-size: 170%;
 }
 #left_side p {
 color : #454545;
@@ -289,5 +352,3 @@ a img{ border:none; }
         {
 	width:350px;
 }
-
-

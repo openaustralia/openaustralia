@@ -15,8 +15,8 @@ get_header();
 <?php $postCount++;?>
 
 
-<h1><a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title(); ?>"><?php the_title(); ?></a></h1>
-<h2>Published by <?php the_author() ?> | Filed under <?php the_category(', ') ?></h2>
+<h2><a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title(); ?>"><?php the_title(); ?></a></h2>
+<h4>Published by <?php the_author() ?> | Filed under <?php the_category(', ') ?></h4>
 
 
 <?php the_content ('Read the rest of this entry &raquo;'); ?>
