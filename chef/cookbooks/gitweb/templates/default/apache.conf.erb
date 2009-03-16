@@ -1,0 +1,18 @@
+<Directory /www/git/>
+    Order allow,deny
+    Allow from all
+    Options Indexes FollowSymlinks +ExecCGI
+    DirectoryIndex gitweb.cgi
+    AddHandler cgi-script .cgi
+</Directory>
+
+<VirtualHost *:80>
+    ServerName git.test.org
+    ErrorLog "/var/log/git-error_log"
+    CustomLog /var/log/git-access_log common
+
+    DocumentRoot /www/git
+
+    RewriteEngine on
+    RewriteRule ^([?].*)$ gitweb.cgi$1
+</VirtualHost>
