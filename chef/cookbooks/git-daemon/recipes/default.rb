@@ -22,3 +22,4 @@ end
 # To enable a repository to be exported by git_daemon must touch a file called git-daemon-export-ok in the
 # root directory of the repository.
 # For instance: touch /home/git/repositories/openaustralia.git/git-daemon-export-ok
+# Note: this is easily done by using gitosis. Just put daemon=yes in the [repo <repo name>] section.
