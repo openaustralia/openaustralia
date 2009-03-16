@@ -16,14 +16,14 @@ end
 
 #user "git" do
 #  shell "/bin/sh"
-#  comment "gitosis server"
+#  comment "git version control"
 #  home "/home/git"
 #end
 
 =begin
 $ sudo adduser -w no
 Username: git
-Full name: gitosis server
+Full name: git version control
 Uid (Leave empty for default): 
 Login group [git]: 
 Login group is git. Invite gitosis into other groups? []: 
@@ -52,6 +52,11 @@ execute "echo '#{node[:gitosis_admin_public_ssh_key]}' | gitosis-init" do
   environment "HOME" => "/home/git"
   user "git"
   creates "/home/git/gitosis"
+end
+
+# Fix up problem caused by old version of python-setup (make it executable)
+file "/home/git/repositories/gitosis-admin.git/hooks/post-update" do
+  mode 0755
 end
 
 # Can now create repositories by doing the following on your local machine:
