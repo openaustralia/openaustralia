@@ -22,7 +22,12 @@ set :stage, "test" unless exists? :stage
 
 set :user, "matthewl"
 
-ssh_options[:port] = 2506
+# A great little trick I learned recently. If you have a machine running on a non-standard ssh port
+# put the following in your ~/.ssh/config file:
+# Host myserver.com
+#   Port 1234
+# This will change the port for all ssh commands on that server which saves a whole lot of typing
+
 role :web, "www.openaustralia.org"
 
 if stage == "production"
