@@ -54,3 +54,12 @@ execute "echo '#{node[:gitosis_admin_public_ssh_key]}' | gitosis-init" do
   creates "/home/git/gitosis"
 end
 
+# Can now create repositories by doing the following on your local machine:
+# git clone git@test.org:gitosis-admin.git
+# Add something like the following to gitosis.conf:
+#   [group openaustralia]
+#   writable = openaustralia openaustralia-parser perllib phplib rblib shlib twfy 
+#   members = matthew
+# Which will allow writing to the repositories in 'writable' by the people mentioned in 'members'
+# Then commit the changes and push them out
+
