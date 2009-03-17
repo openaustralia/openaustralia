@@ -1,4 +1,4 @@
-<Directory /www/git/>
+<Directory <%= @node[:gitweb_root] %>>
     Order allow,deny
     Allow from all
     Options Indexes FollowSymlinks +ExecCGI
@@ -7,11 +7,11 @@
 </Directory>
 
 <VirtualHost *:80>
-    ServerName git.test.org
-    ErrorLog "/var/log/git-error_log"
-    CustomLog /var/log/git-access_log common
+    ServerName <%= @node[:gitweb_domain] %>
+    ErrorLog "/var/log/<%= @node[:gitweb_subdomain] %>-error_log"
+    CustomLog /var/log/<%= @node[:gitweb_subdomain] %>-access_log common
 
-    DocumentRoot /www/git
+    DocumentRoot <%= @node[:gitweb_root] %>
 
     RewriteEngine on
     RewriteRule ^([?].*)$ gitweb.cgi$1

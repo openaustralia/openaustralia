@@ -1,6 +1,6 @@
 require_recipe "apache"
 
-unless File.exists?("/www/git/gitweb.cgi")
+unless File.exists?("#{node[:gitweb_root]}/gitweb.cgi")
   execute "make configure" do
     cwd "/usr/ports/devel/git"
     creates "/usr/ports/devel/git/work"
@@ -11,11 +11,11 @@ unless File.exists?("/www/git/gitweb.cgi")
     creates "/usr/ports/devel/git/work/git-1.6.1.3/gitweb/gitweb.cgi"
   end
 
-  directory "/www/git"
+  directory node[:gitweb_root]
 
-  execute "cp git-favicon.png git-logo.png gitweb.cgi gitweb.css /www/git" do
+  execute "cp git-favicon.png git-logo.png gitweb.cgi gitweb.css #{node[:gitweb_root]}" do
     cwd "/usr/ports/devel/git/work/git-1.6.1.3/gitweb"
-    creates "/www/git/gitweb.cgi"
+    creates "#{node[:gitweb_root]}/gitweb.cgi"
   end
 
   execute "make clean" do
@@ -24,7 +24,7 @@ unless File.exists?("/www/git/gitweb.cgi")
 end
 
 # The configuration file for gitweb
-template "/www/git/gitweb_config.perl" do
+template "#{node[:gitweb_root]}/gitweb_config.perl" do
   source "gitweb_config.perl.erb"
   mode 0644
 end

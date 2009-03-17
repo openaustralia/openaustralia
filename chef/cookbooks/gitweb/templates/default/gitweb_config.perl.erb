@@ -2,7 +2,7 @@
 $GIT = "/usr/local/bin/git";
 
 # Where the actual repositories are located.
-$projectroot = "/home/git/repositories";
+$projectroot = "<%= @node[:git_root] %>";
 $home_link_str = "repositories";
 $site_name = "OpenAustralia source code";
 
@@ -11,4 +11,4 @@ $export_ok = "git-daemon-export-ok";
 
 # A list of base urls where all the repositories can be cloned from.
 # Easier than having per-repository cloneurl files.
-@git_base_url_list = ('git://git.openaustralia.org');
+@git_base_url_list = ('git://<%= @node[:gitweb_domain] %>');

@@ -3,11 +3,11 @@ require_recipe "git"
 # Add some options to /etc/rc.conf for the git-daemon
 # TODO: Need to restart the daemon anytime we change these options
 remote_file_line "/etc/rc.conf" do
-  line 'git_daemon_directory="/home/git/repositories"'
+  line "git_daemon_directory='#{node[:git_root]}'"
 end
 
 remote_file_line "/etc/rc.conf" do
-  line 'git_daemon_flags="--syslog --base-path=/home/git/repositories"'
+  line "git_daemon_flags='--syslog --base-path=#{node[:git_root]}'"
 end
 
 remote_file_line "/etc/rc.conf" do

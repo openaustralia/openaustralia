@@ -17,7 +17,7 @@ end
 #user "git" do
 #  shell "/bin/sh"
 #  comment "git version control"
-#  home "/home/git"
+#  home node[:gitosis_home]
 #end
 
 =begin
@@ -49,13 +49,13 @@ Goodbye!
 
 # Initialise the gitosis setup
 execute "echo '#{node[:gitosis_admin_public_ssh_key]}' | gitosis-init" do
-  environment "HOME" => "/home/git"
+  environment "HOME" => node[:gitosis_home]
   user "git"
-  creates "/home/git/gitosis"
+  creates node[:git_root]
 end
 
 # Fix up problem caused by old version of python-setup (make it executable)
-file "/home/git/repositories/gitosis-admin.git/hooks/post-update" do
+file "#{node[:git_root]}/gitosis-admin.git/hooks/post-update" do
   mode 0755
 end
 
@@ -64,7 +64,7 @@ end
 # Add something like the following to gitosis.conf:
 #   [group openaustralia]
 #   writable = openaustralia openaustralia-parser perllib phplib rblib shlib twfy 
-#   members = matthew
+#   members = matthewl
 # Which will allow writing to the repositories in 'writable' by the people mentioned in 'members'
 # Then commit the changes and push them out
 
