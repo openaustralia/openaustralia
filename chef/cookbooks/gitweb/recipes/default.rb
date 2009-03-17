@@ -69,3 +69,4 @@ apache_site "git"
 # Also need to ensure that the apache server has read access to the repository
 # pw group mod git -m www
 # TODO: Replace this with group resource or the like
+# REMEMBER to restart Apache after doing this
