@@ -21,14 +21,13 @@ set :deploy_via, :remote_cache
 set :stage, "test" unless exists? :stage
 
 set :user, "matthewl"
+role :web, "openaustralia.org"
 
 # A great little trick I learned recently. If you have a machine running on a non-standard ssh port
 # put the following in your ~/.ssh/config file:
 # Host myserver.com
 #   Port 1234
 # This will change the port for all ssh commands on that server which saves a whole lot of typing
-
-role :web, "www.openaustralia.org"
 
 if stage == "production"
   set :deploy_to, "/www/www/#{application}"
@@ -46,8 +45,8 @@ task :chef do
   upload("chef", "/tmp/chef")
   # Using "sudo -E" to ensure that environment variables are propogated to new environment
   # so that pkg_add knows to use passive ftp. What a PITA.
-  sudo "-E chef-solo -l debug -c /tmp/chef/config/solo.rb -j /tmp/chef/config/dna.json"
-  #sudo "-E chef-solo -c /tmp/chef/config/solo.rb -j /tmp/chef/config/dna.json"
+  #run "chef-solo -l debug -c /tmp/chef/config/solo.rb -j /tmp/chef/config/dna.json"
+  sudo "-E chef-solo -c /tmp/chef/config/solo.rb -j /tmp/chef/config/dna.json"
 end
 
 namespace :deploy do
