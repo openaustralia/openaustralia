@@ -25,4 +25,7 @@ end
   
 apache_site "blog"
 
-
+# Install Greenway 3c theme
+remote_directory "/usr/local/www/data/wordpress/wp-content/themes/greenway-3c" do
+  source "greenway-3c"
+end
