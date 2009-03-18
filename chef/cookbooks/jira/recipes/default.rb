@@ -100,4 +100,10 @@ service "jira" do
   action [:enable, :start]
 end
 
+# Install Jira plugin for Git
+remote_file "#{node[:jira_install_path]}/atlassian-jira/WEB-INF/lib/jira_git_plugin-0.3-SNAPSHOT.jar" do
+  source "http://confluence.atlassian.com/download/attachments/170001263/jira_git_plugin-0.3-SNAPSHOT.jar?version=1"
+  owner "www"
+  notifies :restart, resources(:service => "jira")
+end
 
