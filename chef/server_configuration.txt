@@ -8,12 +8,9 @@ A rough guide to setting up and configuring the openaustralia server:
 # gem update
 # gem update --system
 # mv /usr/local/bin/gem18 /usr/local/bin/gem
-* Install Chef dependencies:
+* Install Chef:
 # gem sources -a http://gems.opscode.com
-# gem install chef --version 0.5.4 (make sure that there is no chef-0.5.5.gem in the current directory)
-* Create the chef gem on another machine (rake gem)
-* copy it here: scp chef-0.5.5.gem root@test.org:
-* Install chef: gem install chef-0.5.5.gem
+* gem install chef
 * Synchronise the clock a little better than before: ntpdate tick.ucla.edu
 * Ensure that in Capfile, port for ssh is at the default and the user is set to root
 * cap chef
