@@ -50,6 +50,9 @@ define ("TIMEZONE", "Australia/Sydney");
 define ("RAWDATA", "<%= @stage_config[:install_path] %>/shared/pwdata/");
 define ('PWMEMBERS', '<%= @stage_config[:install_path] %>/shared/pwdata/members/');
 
+// Path to directory where automated database backups are stored (by scripts/dumpallforbackup)
+define ("DBBACKUP", "<%= @stage_config[:install_path] %>/shared/backup/");
+
 // *******************************************************************************
 // If you've unpacked the tar file normally, and set the paths correctly above, 
 // you shouldn't change these.
