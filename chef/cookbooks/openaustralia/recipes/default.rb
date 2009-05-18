@@ -134,49 +134,49 @@ apache_site "data"
 #PATH=/usr/local/bin
 
 # daily update at night for MP data (regmem, data from Public Whip etc.)
-cron "dailyupdate" do
-  provider Chef::Provider::Cron
-  hour 1
-  minute 37
-  command "HOME=#{@node[:openaustralia][:production][:install_path]}/current/twfy/scripts $HOME/dailyupdate"
-  user "matthewl"
-end
+#cron "dailyupdate" do
+#  provider Chef::Provider::Cron
+#  hour 1
+#  minute 37
+#  command "HOME=#{@node[:openaustralia][:production][:install_path]}/current/twfy/scripts $HOME/dailyupdate"
+#  user "matthewl"
+#end
 
 # every week early Sunday grab weekly range of data
-cron "weeklyupdate" do
-  provider Chef::Provider::Cron
-  weekday "Sun"
-  hour 4
-  minute 23
-  command "HOME=#{@node[:openaustralia][:production][:install_path]}/current/twfy/scripts $HOME/weeklyupdate"
-  user "matthewl"
-end
+#cron "weeklyupdate" do
+#  provider Chef::Provider::Cron
+#  weekday "Sun"
+#  hour 4
+#  minute 23
+#  command "HOME=#{@node[:openaustralia][:production][:install_path]}/current/twfy/scripts $HOME/weeklyupdate"
+#  user "matthewl"
+#end
 
 # daily backup of database
-cron "dumpallforbackup" do
-  provider Chef::Provider::Cron
-  hour 2
-  minute 30
-  command "HOME=#{@node[:openaustralia][:production][:install_path]}/current/twfy/scripts $HOME/dumpallforbackup"
-  user "matthewl"
-end
+#cron "dumpallforbackup" do
+#  provider Chef::Provider::Cron
+#  hour 2
+#  minute 30
+#  command "HOME=#{@node[:openaustralia][:production][:install_path]}/current/twfy/scripts $HOME/dumpallforbackup"
+#  user "matthewl"
+#end
 
 # Morning update (Australian Hansard is supposed to be up by 9am the next working day)
-cron "morningupdate" do
-  provider Chef::Provider::Cron
-  hour 9
-  minute 5
-  weekday "Mon-Fri"
-  command "HOME=#{@node[:openaustralia][:production][:install_path]}/current/twfy/scripts VERBOSE=true $HOME/morningupdate"
-  user "matthewl"
-end
+#cron "morningupdate" do
+#  provider Chef::Provider::Cron
+#  hour 9
+#  minute 5
+#  weekday "Mon-Fri"
+#  command "HOME=#{@node[:openaustralia][:production][:install_path]}/current/twfy/scripts VERBOSE=true $HOME/morningupdate"
+#  user "matthewl"
+#end
 
 # Email updates (Going at 10am to give me time to fix things if necessary)
-cron "alertmailer" do
-  provider Chef::Provider::Cron
-  weekday "Mon-Fri"
-  hour 10
-  minute 0
-  command "HOME=#{@node[:openaustralia][:production][:install_path]}/current/twfy/scripts php -q alertmailer.php"
-  user "matthewl"
-end
+#cron "alertmailer" do
+#  provider Chef::Provider::Cron
+#  weekday "Mon-Fri"
+#  hour 10
+#  minute 0
+#  command "HOME=#{@node[:openaustralia][:production][:install_path]}/current/twfy/scripts php -q alertmailer.php"
+#  user "matthewl"
+#end
