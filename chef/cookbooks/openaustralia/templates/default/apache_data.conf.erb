@@ -1,0 +1,14 @@
+<Directory "/www/www/openaustralia/shared/pwdata">
+    Options Indexes
+    IndexOptions FancyIndexing
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+</Directory>
+
+<VirtualHost *:80>
+    DocumentRoot "/www/www/openaustralia/shared/pwdata"
+    ServerName data.<%= @node[:oa_domain] %>
+    ErrorLog "/var/log/data-error_log"
+    CustomLog /var/log/data-access_log common
+</VirtualHost>

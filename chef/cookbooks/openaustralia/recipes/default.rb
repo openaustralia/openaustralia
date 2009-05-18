@@ -88,6 +88,8 @@ package "p5-XML-Twig"
 apache_module "authn_file"
 apache_module "auth_basic"
 apache_module "authz_user"
+# Needed to display directory listings for data.openaustralia.org
+apache_module "autoindex"
 
 remote_file @node[:openaustralia][:test][:apache_password_file] do
   source "htpasswd"
@@ -115,9 +117,17 @@ template "#{@node[:apache][:dir]}/sites-available/software" do
   group "wheel"
 end
 
+template "#{@node[:apache][:dir]}/sites-available/data" do
+  source "apache_data.conf.erb"
+  mode 0644
+  owner "root"
+  group "wheel"
+end
+
 apache_site "default"
 apache_site "test"
 apache_site "software"
+apache_site "data"
 
 #MAILTO=matthew@openaustralia.org
 #HOME=/www/www/openaustralia/current/twfy/scripts
