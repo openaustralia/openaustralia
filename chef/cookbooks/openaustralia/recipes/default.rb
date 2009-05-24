@@ -90,6 +90,8 @@ apache_module "auth_basic"
 apache_module "authz_user"
 # Needed to display directory listings for data.openaustralia.org
 apache_module "autoindex"
+# Needed to use "Options MultiViews" (which is required for /api/key to find /api/key.php)
+apache_module "negotiation"
 
 remote_file @node[:openaustralia][:test][:apache_password_file] do
   source "htpasswd"
