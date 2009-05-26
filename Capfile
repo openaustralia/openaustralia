@@ -76,7 +76,8 @@ namespace :deploy do
 			"#{release_path}/twfy/www/docs/images/mpsL"               => "../../../../../../shared/images/mpsL",
 			"#{release_path}/twfy/www/docs/regmem/scan"               => "../../../../../../shared/regmem_scan",
 			"#{release_path}/twfy/www/docs/rss/mp"                    => "../../../../../../shared/rss/mp",
-			"#{release_path}/twfy/www/docs/debates/debates.rss"       => "../../../../../../shared/rss/debates.rss"
+			"#{release_path}/twfy/www/docs/debates/debates.rss"       => "../../../../../../shared/rss/senate.rss",
+			"#{release_path}/twfy/www/docs/senate/senate.rss"       => "../../../../../../shared/rss/senate.rss"
 		}
 		# First copy any images that have been checked into the repository to the shared area
 		run "cp #{release_path}/twfy/www/docs/images/mps/* #{shared_path}/images/mps"
