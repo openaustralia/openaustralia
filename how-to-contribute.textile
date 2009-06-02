@@ -11,8 +11,8 @@ h2. Setting up
 2. Tell git your name and email address with:
 
 <pre>
-git config --global user.name "Your Name Comes Here"
-git config --global user.email you@yourdomain.example.com
+$ git config --global user.name "Your Name Comes Here"
+$ git config --global user.email you@yourdomain.example.com
 </pre>
 
 3. Go to github.com and sign up for an account
