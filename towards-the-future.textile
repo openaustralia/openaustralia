@@ -1,0 +1,46 @@
+---
+layout: default
+title: Towards the Future
+---
+Given what we have done so far with OpenAustralia.org there are so many potential directions that we could (and want to) go off in. Here is a sampling of some "big picture" ideas for the future. Some of these are related to expanding openaustralia.org directly, by adding new features or filling in holes that currently exist, while others are for projects not directly related to the current project but still generally lying in the civic/government area.
+
+Of course, all this should spark discussion and that's what our "development email list":http://groups.google.com/group/openaustralia-dev is for. Please "join it":http://groups.google.com/group/openaustralia-dev/subscribe! If you have further ideas or want to discuss something go there and send us an email. There are lots of interesting and engaged people there ready to talk to you.
+
+Expanding OpenAustralia.org:
+
+* Voting information:
+** Create an Australian version of The Public Whip (see "publicwhip.org.uk":http://www.publicwhip.org.uk) which allows people to view the full history of voting in Parliament as well as comparing and contrasting the voting of individual members. "OA-10":http://tickets.openaustralia.org/browse/OA-10 "OA-30":http://tickets.openaustralia.org/browse/OA-30
+** Integrate voting information into OpenAustralia.org.
+* Transcription of Register of Interests to make text searchable and linkable "OA-195":http://tickets.openaustralia.org/browse/OA-195 OA-195
+* Contacting politicians (See the UK's "WriteToThem":http://www.writetothem.com/)
+** No need for people to look up and find their politician's contact details
+** Collect statistics about replies. Add those to the "digital dossier".
+** Create API for organisations to use this
+* Committees
+* Written Answers
+* Bills (in progress)
+* States & Territories (in progress)
+* Video (see an example on the UK's "TheyWorkForYou":http://www.theyworkforyou.com/debate/?id=2009-02-03b.706.6)
+* Make more of the historical Hansard available
+* Lobbying records
+* Party donations records
+
+New projects:
+* Tell your local council about problems around your area (See the UK's "FixMyStreet":http://www.fixmystreet.com/)
+* Freedom of information requests (See the UK's "WhatDoTheyKnow":http://www.whatdotheyknow.com/)
+* DoMeAFavour - connect people that need and can help each other with small favours "If you're in Sydney and going to Melbourne could you collect a book from my cousin's?"
+** Incorporate a "kindness league table"
+
+Delivery/Communications
+* Get API up and running "OA-47":http://tickets.openaustralia.org/browse/OA-47
+* Promote/encourage the use of the API (incentive/education)
+** Includes web service postcode lookups and member information
+** Make parsed XML Hansard feeds directly available via rsync
+* Tools for teachers and librarians (education)
+
+Organisation
+* Set up charity for OpenAustralia Foundation Limited (in progress)
+* Establish Advisory Board
+* Pursue project funding
+* Set up a volunteer programme
+* Publish our own records (including financial) on the web

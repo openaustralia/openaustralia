@@ -20,7 +20,7 @@ Our bug database lives at "tickets.openaustralia.org":http://tickets.openaustral
 
 Note that you will need to "signup":http://tickets.openaustralia.org/secure/Signup!default.jspa for an account before you can create or modify tickets.
 
-There is also a "&#8220;big picture&#8221; overview of ideas for the future":http://trac2.assembla.com/openaustralia/wiki/TowardsTheFuture.
+There is also a "&#8220;big picture&#8221; overview of ideas for the future":towards-the-future.html.
 </div>
 <div class="span-7 box last">
 h3. Download and install
