@@ -1,0 +1,59 @@
+---
+layout: default
+title: How to Contribute
+---
+A quick outline of how to contribute code to OpenAustralia:
+
+h2. Setting up
+
+1. Follow the install directions and get the web application and parser up and running
+
+2. Tell git your name and email address with:
+
+<pre>
+git config --global user.name "Your Name Comes Here"
+git config --global user.email you@yourdomain.example.com
+</pre>
+
+3. Go to github.com and sign up for an account
+
+4. Fork the following repositories:
+* "http://github.com/mlandauer/openaustralia-parser/tree/master":http://github.com/mlandauer/openaustralia-parser/tree/master
+* "http://github.com/mlandauer/twfy/tree/master":http://github.com/mlandauer/twfy/tree/master
+
+Go to each repository with the links and click on the "fork" button.
+
+If you plan to modify the perlib, phplib, rblib or shlib libraries as well (fairly unlikely) then you will need to fork these as well:
+* "http://github.com/mlandauer/perllib/tree/master":http://github.com/mlandauer/perllib/tree/master
+* "http://github.com/mlandauer/phplib/tree/master":http://github.com/mlandauer/phplib/tree/master
+* "http://github.com/mlandauer/rblib/tree/master":http://github.com/mlandauer/rblib/tree/master
+* "http://github.com/mlandauer/shlib/tree/master":http://github.com/mlandauer/shlib/tree/master
+
+5. Upload your public SSH key to github. You will need this to be able to push changes to your forked repositories.
+See "http://github.com/guides/providing-your-ssh-key":http://github.com/guides/providing-your-ssh-key
+
+6. Tell git how to push changes to your repository on github
+
+<pre>
+$ cd openaustralia-parser
+$ git remote add github git@github.com:<your username>/openaustralia-parser.git 
+$ cd ../twfy
+$ git remote add github git@github.com:<your username>/twfy.git
+</pre>
+
+h2. Everything interesting happens here
+
+1. Make your changes and commit them
+
+2. Once you are happy to publish the changes, push them to your forked repository on github
+
+<pre>
+$ cd openaustralia-parser
+$ git push github
+</pre>
+
+3. Go to "GitHub":http://github.com and let Matthew know to merge your changes.
+Do this by clicking on "Pull Request" on your forked repository page on github
+
+That's it!
+

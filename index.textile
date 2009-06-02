@@ -44,4 +44,4 @@ git submodule update
 
 h2. Install Instructions
 
-Read the "install instructions online":http://github.com/mlandauer/openaustralia-parser/tree/master/INSTALL.textile, or alternatively read them in INSTALL.textile in the openaustralia-parser download. There is also a "quick guide on how to contribute code":http://trac2.assembla.com/openaustralia/wiki/HowToContribute to OpenAustralia.
+Read the "install instructions online":http://github.com/mlandauer/openaustralia-parser/tree/master/INSTALL.textile, or alternatively read them in INSTALL.textile in the openaustralia-parser download. There is also a "quick guide on how to contribute code":how-to-contribute.html to OpenAustralia.
