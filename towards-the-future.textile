@@ -2,6 +2,8 @@
 layout: default
 title: Towards the Future
 ---
+h1. Towards the Future
+
 Given what we have done so far with OpenAustralia.org there are so many potential directions that we could (and want to) go off in. Here is a sampling of some "big picture" ideas for the future. Some of these are related to expanding openaustralia.org directly, by adding new features or filling in holes that currently exist, while others are for projects not directly related to the current project but still generally lying in the civic/government area.
 
 Of course, all this should spark discussion and that's what our "development email list":http://groups.google.com/group/openaustralia-dev is for. Please "join it":http://groups.google.com/group/openaustralia-dev/subscribe! If you have further ideas or want to discuss something go there and send us an email. There are lots of interesting and engaged people there ready to talk to you.
