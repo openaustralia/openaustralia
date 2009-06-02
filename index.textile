@@ -2,9 +2,7 @@
 layout: default
 title: Open Australia development of website and parser
 ---
-h1. Open Australia development of website and parser
-
-Welcome to the development site for "openaustralia.org":http://www.openaustralia.org/. This is where we host the bug database for openaustralia.org.
+Welcome to the development site for "openaustralia.org":http://www.openaustralia.org/. This is your kicking off point for all things to do with the development of "openaustralia.org":http://www.openaustralia.org/, including the reporting and browsing of bugs and development ideas, documentation on installing and configuring the software for yourself and a guide to contributing to the codebase.
 
 The Open Australia software consists of two main components, the web application which is based on code from the UK site "theyworkforyou.com":http://theyworkforyou.com and a web scraper / parser which was written from scratch for downloading and parsing the Hansard data from the "Australian Parliament website":http://www.aph.gov.au.
 
@@ -12,22 +10,20 @@ All of the software is *free* and *open source*.
 
 The web application code is licensed under a "BSD type license":https://secure.mysociety.org/cvstrac/fileview?f=mysociety/twfy/LICENSE.txt&v=1.1. The web scraper / parser is licensed under the "GNU Affero General Public License":http://github.com/mlandauer/openaustralia-parser/tree/master%2FLICENSE.txt?raw=true.
 
-h2. Mailing List
+<div class="span-7 box colborder">
+h3. Report bugs & suggest features
 
-We have a mailing list for discussions about OpenAustralia software development. If you’re interested, please do sign up or visit the group on your right.
+Our bug database lives at "tickets.openaustralia.org":http://tickets.openaustralia.org/.
 
-h2. Bug Database
-
-*Latest news*: We've just migrated from "Trac":http://trac.edgewall.org/ to "Jira":http://www.atlassian.com/software/jira/ for maintaining a list of bugs and desired features. Everything is now available at "tickets.openaustralia.org":http://tickets.openaustralia.org/.
-
+* To report a bug or suggest a new feature please "create a new ticket":http://tickets.openaustralia.org/secure/CreateIssue!default.jspa.
 * You can "view the tickets":http://tickets.openaustralia.org/browse/OA.
-* If you find a bug or want to suggest a new feature please "create a new ticket":http://tickets.openaustralia.org/secure/CreateIssue!default.jspa.
 
 Note that you will need to "signup":http://tickets.openaustralia.org/secure/Signup!default.jspa for an account before you can create or modify tickets.
 
 There is also a "&#8220;big picture&#8221; overview of ideas for the future":http://trac2.assembla.com/openaustralia/wiki/TowardsTheFuture.
-
-h2. Download the software
+</div>
+<div class="span-7 box last">
+h3. Download and install
 
 You can browse the source code on "GitHub":http://www.github.com/ for the "parser":http://github.com/mlandauer/openaustralia-parser/tree/master and the "web application":http://github.com/mlandauer/twfy/tree/master.
 
@@ -42,6 +38,5 @@ $ git submodule init
 $ git submodule update
 </pre>
 
-h2. Install Instructions
-
-Read the "install instructions online":http://github.com/mlandauer/openaustralia-parser/tree/master/INSTALL.textile, or alternatively read them in INSTALL.textile in the openaustralia-parser download. There is also a "quick guide on how to contribute code":how-to-contribute.html to OpenAustralia.
+Then, set everything up using the "install instructions":install.html and when you're ready to start contributing code read a "quick guide on how to contribute code":how-to-contribute.html.
+</div>
