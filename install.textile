@@ -234,21 +234,13 @@ $ ./parse-member-links.rb
 
 You should now parse the speeches and you would have a full database.
 
-To download the Hansard data (the speeches) for one day, say Sept 20th, 2007:
+To download the Hansard data (the speeches) for one day, say Sept 20th, 2007 and load them into the database:
 
 <pre>
 $ ./parse-speeches.rb 2007.09.20
- INFO HansardParser: Parsing speeches for Thu 20 Sep 2007...
- WARN HansardParser: Not yet supporting: Procedural text: CROSS-BORDER INSOLVENCY BILL 2007: First Reading
- WARN HansardParser: Not yet supporting: Procedural text: TRADEX SCHEME AMENDMENT BILL 2007: First Reading
- WARN HansardParser: Not yet supporting: Procedural text: FAMILIES, COMMUNITY SERVICES AND INDIGENOUS AFFAIRS AND OTHER LEGISLATION AMENDMENT (EMERGENCY RESPONSE CONSOLIDATION) BILL 2007: First Reading
- WARN HansardParser: Not yet supporting: Procedural text: TAX LAWS AMENDMENT (TAXATION OF FINANCIAL ARRANGEMENTS) BILL 2007: First Reading
- WARN HansardParser: Not yet supporting: Procedural text: VETERANS' ENTITLEMENTS AMENDMENT (DISABILITY, WAR WIDOW AND WAR WIDOWER PENSIONS) BILL 2007: First Reading
- WARN HansardParser: Not yet supporting: Procedural text: COMMITTEES: Legal and Constitutional Affairs Committee: Report > 09:46:00
- WARN HansardParser: Not yet supporting: Procedural text: COMMITTEES: Legal and Constitutional Affairs Committee: Report: Referral to Main Committee
- WARN HansardParser: Not yet supporting: Procedural text: NATIONAL HEALTH AMENDMENT (PHARMACEUTICAL BENEFITS) BILL 2007: Referred to Main Committee
-[...]
-db loading debates 2007-09-20
+parse-speeche: 100% |oooooooooooooooooooooooooooooooooooooooooo| Time: 00:01:27
+db loading  2007-09-20
+db loading  2007-09-20
 </pre>
 
 You should now be able to view the results at "Your Webserver URL":http://localhost/openaustralia/twfy/www/docs/
