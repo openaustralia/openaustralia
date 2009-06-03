@@ -10,3 +10,6 @@ pre {
   word-wrap: break-word;       /* Internet Explorer 5.5+ */
 }
 
+body {
+	font-size: 90%
+}
