@@ -19,9 +19,9 @@
 		RewriteRule ^/U/(.*)$     /user/confirm/index.php?t=$1 [QSA]
 
 		# API
-		#RewriteRule ^/api/((get|convert).*)$ /api/index.php?method=$1 [QSA]
-		#RewriteRule ^/api/docs/?$            /api/ [R]
-		#RewriteRule ^/api/docs/(.*)$         /api/index.php?docs=1&method=$1 [QSA]
+		RewriteRule ^/api/((get|convert).*)$ /api/index.php?method=$1 [QSA]
+		RewriteRule ^/api/docs/?$            /api/ [R]
+		RewriteRule ^/api/docs/(.*)$         /api/index.php?docs=1&method=$1 [QSA]
 
 		# Other people types
 		RewriteRule ^/senator/(.*)   /mp/$1?peer=1 [QSA]
