@@ -1,0 +1,28 @@
+---
+title: How to edit these pages
+layout: default
+---
+h1. How to edit these pages
+
+These documentation pages are stored under version control alongside the source code for the project. We take advantage of github pages so that when we push changes to the github repository, the documentation gets automatically updated.
+
+This gives us the advantage of ensuring that the documentation in the source code and what's available online is in sync. Also, since these pages are for developers why not use the same tool (version control) for collaboration? So, the steps for contributing changes is very similar to those described in the "'how to contribute'":how-to-contribute.html document.
+
+If you already have the openaustralia repository checkout out, skip to the next step. Otherwise:
+
+<pre>
+$ git clone git://github.com/mlandauer/openaustralia.git
+$ cd openaustralia
+</pre>
+
+Now, you have the master branch checked out. You want to check out (and track) the gh-pages branch where the documentation lives
+
+<pre>
+$ git checkout --track -b gh-pages origin/gh-pages
+</pre>
+
+The main files to edit are <code>*.textile</code> which are all in "Textile":http://hobix.com/textile/ markup. When edited, committed and pushed back to your github fork of the openaustralia repository, the Textile is converted to html and combined with the layouts to produce static html which is then served at http://<strong>your_name</strong>.github.com/openaustralia/
+
+For more information on how this magic works see the "pages documentation":http://pages.github.com/.
+
+"http://software.openaustralia.org":http://software.openaustralia.org redirects to "http://mlandauer.github.com/openaustralia":http://mlandauer.github.com/openaustralia so to get your changes merged into the "official" documentation make a pull request on github to mlandauer.
