@@ -92,6 +92,8 @@ apache_module "authz_user"
 apache_module "autoindex"
 # Needed to use "Options MultiViews" (which is required for /api/key to find /api/key.php)
 apache_module "negotiation"
+# Required for ProxyPass on software.openaustralia.org
+apache_module "proxy"
 
 remote_file @node[:openaustralia][:test][:apache_password_file] do
   source "htpasswd"
