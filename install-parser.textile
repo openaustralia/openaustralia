@@ -1,0 +1,146 @@
+---
+layout: default
+title: How to Install
+---
+h1. How to Install
+
+This document explains how to install the openaustralia parser. The parser generates XML files which get loaded into the database of the web application. If all you need is the XML files and aren't interested particularly in installing and configuring the parser then you can just "download the XML files from data.openaustralia.org":download-xml-data.html.
+
+h2. Requirements
+
+*  Ruby (we've used the included version in Leopard)
+*  the following rubygems
+**  mechanize (version 0.9.2)
+**  builder
+**  rmagick
+   (this has dependencies like GraphicsMagick/ImageMagick, which in turn needs
+   ghostscript)
+**  rcov
+** htmlentities
+**  rspec
+**  activesupport
+**  log4r
+
+h2. Install the dependencies
+
+h3. Max OS X Leopard
+
+Install "DarwinPorts":http://darwinports.com/ and then install ImageMagick and ghostscript:
+
+<pre>
+$ sudo port install ImageMagick
+$ sudo port install ghostscript
+</pre>
+
+Note: the previous step takes a long while to complete, make yourself a coffee (or two)
+
+Install the required rubygems:
+
+<pre>
+$ sudo gem install mechanize -v 0.9.2
+$ sudo gem install builder
+$ sudo gem install rmagick
+$ sudo gem install rcov
+$ sudo gem install htmlentities
+$ sudo gem install rspec
+$ sudo gem install activesupport
+$ sudo gem install log4r
+</pre>
+
+Note: Currently OpenAustralia requires an older version of mechanize (0.9.2), but this might change in the future.
+
+h3. Ubuntu 8.04
+
+Use apt-get to install the requirements:
+
+<pre>
+$ sudo apt-get install imagemagick libmagick9-dev ghostscript ruby rubygems ruby1.8-dev
+</pre>
+
+Install the required rubygems:
+
+<pre>
+$ sudo gem install mechanize -v 0.9.2
+$ sudo gem install builder
+$ sudo gem install rmagick
+$ sudo gem install rcov
+$ sudo gem install htmlentities
+$ sudo gem install rspec
+$ sudo gem install activesupport
+$ sudo gem install log4r
+</pre>
+
+Note: Currently OpenAustralia requires an older version of mechanize (0.9.2), but this might change in the future.
+
+h3. For Windows
+
+Ruby has its own Windows versions that you need to get from "Ruby Downloads":http://www.ruby-lang.org/en/downloads/ (choose the one-click installer option).
+
+In addition to the Ruby gems required above you'll need to install Ruby-MySQL, which can be downloaded from "http://www.tmtm.org/en/ruby/mysql/":http://www.tmtm.org/en/ruby/mysql/.
+
+h2. Configure the Parser
+
+The only configuration necessary is to change the web-root if you have installed the web application in another location. That value is <code>web_root</code> in <code>openaustralia/openaustralia-parser/configuration.yml</code>.
+
+h2. Run the Parser
+
+Before you can run the parser, you will need to create the directories that will hold the images of the MPs.
+
+<pre>
+$ mkdir -p pwdata/images/mps pwdata/images/mpsL
+</pre>
+
+You are now ready to create the members information. You should just use:
+
+<pre>
+$ ./parse-members.rb
+# you should see messages on the console similar to the following
+Reading members data...
+Running consistency checks...
+Writing XML...
+Replacing existing member with new data for 5
+This is for your information only, just check it looks OK.
+
+$VAR1 = [
+          '5',
+          '10006',
+          1,
+          '',
+          'Albert',
+          'Adermann',
+          'Fisher',
+          'National Party',
+          '1972-12-02',
+          '1984-12-01',
+          'general_election',
+          'elected_elsewhere'
+        ];
+[...]
+</pre>
+
+To download the members images (this will take a while):
+
+<pre>
+$ ./member-images.rb 
+</pre>
+
+If you want, though it is not particularly important initially, you can also download the links information (which goes on the Representatives' and Senators' pages) by running:
+
+<pre>
+$ ./parse-member-links.rb
+</pre>
+
+To download the Hansard data (the speeches) for one day, say Sept 20th, 2007 and load them into the database:
+
+<pre>
+$ ./parse-speeches.rb 2007.09.20
+parse-speeche: 100% |oooooooooooooooooooooooooooooooooooooooooo| Time: 00:01:27
+db loading  2007-09-20
+db loading  2007-09-20
+</pre>
+
+You should now be able to view the results at your webserver URL, "http://localhost/openaustralia/twfy/www/docs/":http://localhost/openaustralia/twfy/www/docs/
+
+You should now see a version of openaustralia.org populated with data.
+
+Congratulations, you've got a mostly complete running version of OpenAustralia! Give yourself a big pat on the back.
