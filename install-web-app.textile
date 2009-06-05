@@ -4,13 +4,11 @@ title: How to install the web application
 ---
 h1. How to install the web application
 
+This document goes over how we have set up the OpenAustralia web application on our development machines.
+
 h2. Assumptions
 
-This document goes over how we have set up OpenAustralia on our development machines. For a server set up, you can use this as a base however it might require a different approach unless you have complete control (i.e. you are root) on the server and can install all the dependencies, secure the machine, etc.
-
-Configuring Apache, PHP, MySQL or any other application for optimal performance is beyond the scope of this document. You should be able to find enough information online to help you along the way.
-
-These steps have only been tested on Mac OS X 10.5 (leopard). They might work as well on other Unix derivatives.
+For a server set up, you can use this as a base however it might require a different approach unless you have complete control (i.e. you are root) on the server and can install all the dependencies, secure the machine, etc. So, use these instructions as a starting point rather than a definitive "this is the ultimate way" step-by-step guide.
 
 h2. Download
 
