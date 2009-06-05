@@ -1,0 +1,59 @@
+---
+layout: default
+title: Download XML data
+---
+h1. Download XML data
+
+To make life easier for you at "data.openaustralia.org":http://data.openaustralia.org we've put up all the source data (in XML form) that's required to get an instance of openaustralia.org up and running.
+
+All you need to do is download the files (keeping the same directory structure) and put them in a directory called <code>openaustralia/pwdata</code>. So, you should end up with a directory tree that looks something like this:
+
+<pre>
+pwdata/
+|-- members
+|   |-- divisions.xml
+|   |-- links-abc-qanda.xml
+|   |-- ministers.xml
+|   |-- people.xml
+|   |-- representatives.xml
+|   |-- senators.xml
+|   |-- twitter.xml
+|   `-- websites.xml
+`-- scrapedxml
+    |-- representatives_debates
+    |   `-- 2007-09-20.xml
+    `-- senate_debates
+        `-- 2007-09-20.xml
+</pre>
+
+Note that there are a lot of files under <code>scrapedxml</code>. There is one file for each day that each house sat since the beginning of 2006. You probably don't want to download them all at once. To test things out just start with a couple.
+
+If you have the commandline tool <code>wget</code> installed you can easily download a sample of XML files:
+
+<pre>
+$ wget -r http://data.openaustralia.org -I members -A *.xml
+$ wget -r http://data.openaustralia.org -I scrapedxml -A 2007-09-20.xml
+$ mv data.openaustralia openaustralia/pwdata
+</pre>
+
+h2. Load data into the database
+
+Move to the directory with the database loading scripts:
+
+<pre>
+$ cd openaustralia/twfy/scripts
+</pre>
+
+To load the data in <code>members/ministers.xml</code>, <code>members/people.xml</code>, <code>members/representatives.xml</code>, <code>members/senators.xml</code> and <code>scrapedxml</code>:
+
+<pre>
+$ ./xml2db.pl --debates --lordsdebates --members --all
+</pre>
+
+To load the data in <code>members/links-abc-qanda.xml</code>, <code>members/twitter.xml</code> and <code>members/websites.xml</code>:
+
+<pre>
+$ ./mpinfo.pl links
+</pre>
+
+
