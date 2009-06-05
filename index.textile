@@ -10,6 +10,8 @@ All of the software is *free* and *open source*.
 
 The web application code is licensed under a "BSD type license":https://secure.mysociety.org/cvstrac/fileview?f=mysociety/twfy/LICENSE.txt&v=1.1. The web scraper / parser is licensed under the "GNU Affero General Public License":http://github.com/mlandauer/openaustralia-parser/tree/master%2FLICENSE.txt?raw=true.
 
+API & XML
+
 <div class="span-7 box colborder">
 h3. Report bugs & suggest features
 
@@ -38,5 +40,5 @@ $ git submodule init
 $ git submodule update
 </pre>
 
-Then, set everything up using the "install instructions":install.html and when you're ready to start contributing code read a "quick guide on how to contribute code":how-to-contribute.html.
+Then, set everything up using the "install instructions for the web application":install-web-app.html and when you're ready to start contributing code read a "quick guide on how to contribute code":how-to-contribute.html.
 </div>
