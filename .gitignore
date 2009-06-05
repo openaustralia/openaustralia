@@ -5,3 +5,5 @@ phplib/*
 rblib/*
 shlib/*
 twfy/*
+pwdata/*
+html_cache/*
