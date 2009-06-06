@@ -60,7 +60,14 @@ h3. Ubuntu 8.04
 Use apt-get to install the requirements:
 
 <pre>
-$ sudo apt-get install apache2 php5 php5-cli mysql-server libmysqlclient15-dev
+$ sudo apt-get install apache2 php5 php5-cli mysql-server libmysqlclient15-dev php5-mysql
+</pre>
+
+To carry out the install tests for the Perl module DBD::mysql, a database in MySQL 'test' is required:
+
+<pre>
+$ mysqladmin -u root -p create test
+Enter password: ******
 </pre>
 
 As the parsing of XML files to insert into the database is done with Perl (and there's quite a few scripts in Perl), you will need a few Perl CPAN modules:
@@ -126,7 +133,7 @@ Enter password: ******
 
 h2. Apache
 
-Edit your Apache httpd.conf file to include the httpd.conf file in openaustralia/twfy/conf/.
+Edit your Apache httpd.conf file to include the httpd.conf file in openaustralia/twfy/conf/ and ensure mod-rewrite is enabled.
 
 h2. Configure the web application itself
 
