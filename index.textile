@@ -10,8 +10,6 @@ All of the software is *free* and *open source*.
 
 The web application code is licensed under a "BSD type license":https://secure.mysociety.org/cvstrac/fileview?f=mysociety/twfy/LICENSE.txt&v=1.1. The web scraper / parser is licensed under the "GNU Affero General Public License":http://github.com/mlandauer/openaustralia-parser/tree/master%2FLICENSE.txt?raw=true.
 
-API & XML
-
 <div class="span-7 box colborder">
 h3. Report bugs & suggest features
 
