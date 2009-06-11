@@ -33,7 +33,7 @@ If you have the commandline tool <code>wget</code> installed you can easily down
 <pre>
 $ wget -r http://data.openaustralia.org -I members -A *.xml
 $ wget -r http://data.openaustralia.org -I scrapedxml -A 2007-09-20.xml
-$ mv data.openaustralia openaustralia/pwdata
+$ mv data.openaustralia.org openaustralia/pwdata
 </pre>
 
 h2. Load data into the database
@@ -53,7 +53,7 @@ $ ./xml2db.pl --debates --lordsdebates --members --all
 To load the data in <code>members/links-abc-qanda.xml</code>, <code>members/twitter.xml</code> and <code>members/websites.xml</code>:
 
 <pre>
-$ ./mpinfo.pl links
+$ ./mpinfoin.pl links
 </pre>
 
 
