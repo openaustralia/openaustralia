@@ -61,23 +61,7 @@ Use apt-get to install the requirements:
 
 <pre>
 $ sudo apt-get install apache2 php5 php5-cli mysql-server libmysqlclient15-dev php5-mysql
-</pre>
-
-To carry out the install tests for the Perl module DBD::mysql, a database in MySQL 'test' is required:
-
-<pre>
-$ mysqladmin -u root -p create test
-Enter password: ******
-</pre>
-
-As the parsing of XML files to insert into the database is done with Perl (and there's quite a few scripts in Perl), you will need a few Perl CPAN modules:
-
-<pre>
-$ sudo perl -MCPAN -e shell
-cpan> install Error
-cpan> install XML::Twig
-cpan> install DBD::mysql
-cpan> install XML::RSS
+$ sudo apt-get install liberror-perl libxml-twig-perl libdbd-mysql-perl libxml-rss-perl 
 </pre>
 
 h3. Windows
