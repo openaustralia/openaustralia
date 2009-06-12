@@ -173,7 +173,40 @@ Enter password: ******
 
 h2. Apache
 
-Edit your Apache httpd.conf file to include the httpd.conf file in openaustralia/twfy/conf/ and ensure mod-rewrite is enabled.
+Next, configure your Apache server using the example configuration files in <code>openaustralia/twfy/conf/httpd.conf.*</code>.
+The configurations are to setup a virtual host at "dev.openaustralia.org":http://dev.openaustralia.org.
+
+You will also need to ensure <code>mod-rewrite</code> is enabled.
+
+<div class="forubuntu">
+
+h3. Ubuntu
+
+<pre>
+# in openaustralia/twfy/conf
+cp general-example.ubuntu general
+cp httpd.conf.ubuntu /etc/apache2/sites-available/
+</pre>
+
+</div>
+
+<div class="formac">
+
+h3. Mac
+
+<pre>
+# in openaustralia/twfy/conf
+cp general-example.mac general
+cat httpd.conf.mac >> /etc/apache2/extra/httpd-vhosts.conf
+</pre>
+
+</div>
+
+Make sure that the name "dev.openaustralia.org":http://dev.openaustralia.org resolves to your localhost by doing the following:
+
+<pre>
+echo "127.0.0.1 dev.openaustralia.org" >> /etc/hosts
+</pre>
 
 Restart Apache to make your changes active:
 
@@ -183,19 +216,29 @@ sudo apachectl restart
 
 h2. Configure the web application itself
 
-There is a file that you need to edit (and remember NOT to commit your changes on that file) on the web application: <code>openaustralia/twfy/conf/general</code>
-
-It's well documented and quite self-explanatory. It contains the configuration for MySQL (database name, host, username, etc) as well as the URL and paths for the web application on your machine.
-
-Just for initial testing you probably don't want to install Xapian, the search engine, so if that's the case make sure that you set
+<div class="formac">
 
 <pre>
-define ("XAPIANDB", '');
+# On Mac
+cp openaustralia/twfy/conf/general-example.mac openaustralia/twfy/conf/general
 </pre>
+
+</div>
+
+<div class="forubuntu">
+
+<pre>
+# On Ubuntu
+cp openaustralia/twfy/conf/general-example.ubuntu openaustralia/twfy/conf/general
+</pre>
+
+</div>
+
+The configuration file <code>openaustralia/twfy/conf/general</code> is well documented and quite self-explanatory. It contains the configuration for MySQL (database name, host, username, etc) as well as the URL and paths for the web application on your machine.
 
 h2. Look at the result
 
-You should now be able to view the results at your webserver URL, "http://localhost/openaustralia/twfy/www/docs/":http://localhost/openaustralia/twfy/www/docs/
+You should now be able to view the results at your webserver URL, "dev.openaustralia.org":http://dev.openaustralia.org
 
 Hopefully, you should see a working version of openaustralia.org but without any data in it. This is because we haven't loaded anything into the database yet. This is what we're going to do next.
 
