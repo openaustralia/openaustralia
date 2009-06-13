@@ -2,6 +2,34 @@
 layout: default
 title: How to install the web application
 ---
+
+<div id="style"></div>
+<script>
+var platforms = new Array();
+platforms[0] = "ubuntu";
+platforms[1] = "mac";
+platforms[2] = "windows";
+
+function enable(name) {
+	var s = "	<style type='text/css'>";
+
+	for (var i in platforms) {
+		var platform = platforms[i];
+		if (name != platform) {
+			s += "div.for"+platform+" { display: none; }\n";
+			s += "pre.for"+platform+" { display: none; }\n";
+			s += "span.for"+platform+" { display: none; }\n";
+		}
+	}
+
+  s += "</style>";
+
+  document.getElementById('style').innerHTML = s;
+}
+</script>
+
+_Only show instructions for your platform: <a href="javascript: enable('ubuntu')">Ubuntu</a> <a href="javascript: enable('mac')">Mac</a> <a href="javascript: enable('windows')">Windows</a>_
+
 h1. How to install the web application
 
 This document goes over how we have set up the OpenAustralia web application on our development machines.
@@ -17,10 +45,10 @@ If you don't have the version control system "git":http://git.or.cz/ you'll need
 Then:
 
 <pre>
-$ git clone git://github.com/mlandauer/openaustralia.git
-$ cd openaustralia
-$ git submodule init
-$ git submodule update
+git clone git://github.com/mlandauer/openaustralia.git
+cd openaustralia
+git submodule init
+git submodule update
 </pre>
 
 h2. Install the dependencies
@@ -33,6 +61,8 @@ We need the following bits and pieces
 * Perl (with a few CPAN modules)
 
 (we've tested with Apache 2.X.X, PHP5, MySQL 5.0.x)
+
+<div class="formac">
 
 h3. Max OS X Leopard
 
@@ -48,37 +78,32 @@ You should also be able to get MySQL from "MySQL's website":http://www.mysql.com
 As the parsing of XML files to insert into the database is done with Perl (and there's quite a few scripts in Perl), you will need a few Perl CPAN modules:
 
 <pre>
-$ sudo perl -MCPAN -e shell
+sudo perl -MCPAN -e shell
 cpan> install Error
 cpan> install XML::Twig
 cpan> install DBD::mysql
 cpan> install XML::RSS
 </pre>
+
+</div>
+
+<div class="forubuntu">
 
 h3. Ubuntu 8.04
 
 Use apt-get to install the requirements:
 
 <pre>
-$ sudo apt-get install apache2 php5 php5-cli mysql-server libmysqlclient15-dev php5-mysql
+sudo apt-get install apache2 php5 php5-cli mysql-server libmysqlclient15-dev php5-mysql liberror-perl libxml-twig-perl libdbd-mysql-perl libxml-rss-perl
+
+# Enable the apache modules.
+a2enmod php
+a2enmod rewrite
 </pre>
 
-To carry out the install tests for the Perl module DBD::mysql, a database in MySQL 'test' is required:
+</div>
 
-<pre>
-$ mysqladmin -u root -p create test
-Enter password: ******
-</pre>
-
-As the parsing of XML files to insert into the database is done with Perl (and there's quite a few scripts in Perl), you will need a few Perl CPAN modules:
-
-<pre>
-$ sudo perl -MCPAN -e shell
-cpan> install Error
-cpan> install XML::Twig
-cpan> install DBD::mysql
-cpan> install XML::RSS
-</pre>
+<div class="forwindows">
 
 h3. Windows
 
@@ -94,24 +119,39 @@ If DBD-mysql fails to install try installing it manually with
 ppm install http://cpan.uwinnipeg.ca/PPMPackages/10xx/DBD-mysql.ppd
 </pre>
 
-Reference http://dev.mysql.com/doc/refman/5.0/en/activestate-perl.html (bottom of page).
+Reference "http://dev.mysql.com/doc/refman/5.0/en/activestate-perl.html":http://dev.mysql.com/doc/refman/5.0/en/activestate-perl.html (bottom of page).
+
+</div>
 
 h2. Putting the web application in the correct spot
 
-For development purposes we have our web application and the parser under <code>/Library/WebServer/Documents/</code> and, unless you want to patch the configuration too much, we recommend that you install it there (also, if you do it this way, you have the application available under the root of your webserver on your Mac).
+For development purposes we have our web application and the parser under <span class="formac"><code>/Library/WebServer/Documents/</code> (Mac)</span> <span class="forubuntu"><code>/var/www/</code> (Ubuntu)</span> and, unless you want to patch the configuration too much, we recommend that you install it there.
 
-Note for Ubuntu/Linux users: rather than <code>/Library/WebServer/Documents/</code>, the web application should go under <code>/var/www/</code>. The rest of this document will refer to <code>/Library/WebServer/Documents/</code> however, so substitute as necessary.
+Move the <code>openaustralia</code> directory that you previously downloaded to <span class="formac"><code>/Library/WebServer/Documents/</code> (Mac)</span> <span class="forubuntu"><code>/var/www/</code> (Ubuntu)</span>.
 
-<pre>
-$ sudo chown -R $USER:staff /Library/WebServer/Documents
-</pre>
-This is necessary so that you don't always have use sudo when editing files or coding on the website.
-
-Move the <code>openaustralia</code> directory that you previously downloaded to <code>/Library/WebServer/Documents/</code>
-
-<pre>
+<pre class="formac">
+# For Mac
 mv openaustralia /Library/WebServer/Documents
 </pre>
+
+<pre class="forubuntu">
+# For Ubuntu
+mv openaustralia /var/www
+</pre>
+
+Fix the permissions, this is necessary so that you don't always have use sudo when editing files or coding on the website.
+
+<pre class="formac">
+# For Mac
+sudo chown -R $USER:staff /Library/WebServer/Documents
+</pre>
+
+<pre class="forubuntu">
+# For Ubuntu
+find /var/www/openaustralia -type f | xargs chmod a+r
+find /var/www/openaustralia -type d | xargs chmod a+rx
+</pre>
+
 
 h2. MySQL
 
@@ -120,38 +160,85 @@ We now need to create a database in MySQL and load the schema. We assume that yo
 Step one. Create the database. This is pretty simple:
 
 <pre>
-$ mysqladmin -u root -p create openaustralia
+mysqladmin -u root -p create openaustralia
 Enter password: ******
 </pre>
 
 Step two. Import the schema:
 
 <pre>
-$ mysql -u root -p openaustralia < openaustralia/twfy/db/schema.sql
+mysql -u root -p openaustralia < openaustralia/twfy/db/schema.sql
 Enter password: ******
 </pre>
 
 h2. Apache
 
-Edit your Apache httpd.conf file to include the httpd.conf file in openaustralia/twfy/conf/ and ensure mod-rewrite is enabled.
+Next, configure your Apache server using the example configuration files in <code>openaustralia/twfy/conf/httpd.conf.*</code>.
+The configurations are to setup a virtual host at "dev.openaustralia.org":http://dev.openaustralia.org.
+
+You will also need to ensure <code>mod-rewrite</code> is enabled.
+
+<div class="forubuntu">
+
+h3. Ubuntu
+
+<pre>
+# in openaustralia/twfy/conf
+cp general-example.ubuntu general
+cp httpd.conf.ubuntu /etc/apache2/sites-available/
+</pre>
+
+</div>
+
+<div class="formac">
+
+h3. Mac
+
+<pre>
+# in openaustralia/twfy/conf
+cp general-example.mac general
+cat httpd.conf.mac >> /etc/apache2/extra/httpd-vhosts.conf
+</pre>
+
+</div>
+
+Make sure that the name "dev.openaustralia.org":http://dev.openaustralia.org resolves to your localhost by doing the following:
+
+<pre>
+echo "127.0.0.1 dev.openaustralia.org" >> /etc/hosts
+</pre>
+
+Restart Apache to make your changes active:
+
+<pre>
+sudo apachectl restart
+</pre>
 
 h2. Configure the web application itself
 
-There is a file that you need to edit (and remember NOT to commit your changes on that file) on the web application:
-
-<code>openaustralia/twfy/conf/general</code>
-
-It's well documented and quite self-explanatory. It contains the configuration for MySQL (database name, host, username, etc) as well as the URL and paths for the web application on your machine.
-
-Just for initial testing you probably don't want to install Xapian, the search engine, so if that's the case make sure that you set
+<div class="formac">
 
 <pre>
-define ("XAPIANDB", '');
+# On Mac
+cp openaustralia/twfy/conf/general-example.mac openaustralia/twfy/conf/general
 </pre>
+
+</div>
+
+<div class="forubuntu">
+
+<pre>
+# On Ubuntu
+cp openaustralia/twfy/conf/general-example.ubuntu openaustralia/twfy/conf/general
+</pre>
+
+</div>
+
+The configuration file <code>openaustralia/twfy/conf/general</code> is well documented and quite self-explanatory. It contains the configuration for MySQL (database name, host, username, etc) as well as the URL and paths for the web application on your machine.
 
 h2. Look at the result
 
-You should now be able to view the results at your webserver URL, "http://localhost/openaustralia/twfy/www/docs/":http://localhost/openaustralia/twfy/www/docs/
+You should now be able to view the results at your webserver URL, "dev.openaustralia.org":http://dev.openaustralia.org
 
 Hopefully, you should see a working version of openaustralia.org but without any data in it. This is because we haven't loaded anything into the database yet. This is what we're going to do next.
 

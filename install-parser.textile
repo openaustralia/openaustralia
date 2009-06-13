@@ -139,7 +139,7 @@ db loading  2007-09-20
 db loading  2007-09-20
 </pre>
 
-You should now be able to view the results at your webserver URL, "http://localhost/openaustralia/twfy/www/docs/":http://localhost/openaustralia/twfy/www/docs/
+You should now be able to view the results at your webserver URL, "dev.openaustralia.org":http://dev.openaustralia.org
 
 You should now see a version of openaustralia.org populated with data.
 
