@@ -77,6 +77,7 @@ gem_package "mechanize" do
 end
 gem_package "htmlentities"
 gem_package "log4r"
+gem_package "rspec"
 
 # Perl bits and pieces
 package "p5-XML-Twig"
