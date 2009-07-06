@@ -1,0 +1,152 @@
+<Directory "/www/test/html">
+    Options Indexes FollowSymLinks MultiViews
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+
+    AuthType Basic
+    AuthName "OpenAustralia Staging Server"
+    AuthUserFile <%= @node[:openaustralia][:test][:apache_password_file] %>
+    Require user test    
+</Directory>
+
+<VirtualHost *:80>
+    DocumentRoot "/www/test/html"
+    ServerName test.<%= @node[:oa_domain] %>
+    ErrorLog "/var/log/test-error_log"
+    CustomLog /var/log/test-access_log common
+
+    RewriteEngine on
+
+    # Links in emails
+    RewriteRule ^/A/(.*)$     /alert/confirm/index.php?t=$1 [QSA]
+    RewriteRule ^/D/(.*)$     /alert/delete/index.php?t=$1 [QSA]
+    RewriteRule ^/U/(.*)$     /user/confirm/index.php?t=$1 [QSA]
+
+    # API
+    RewriteRule ^/api/((get|convert).*)$ /api/index.php?method=$1 [QSA]
+    RewriteRule ^/api/docs/?$            /api/ [R]
+    RewriteRule ^/api/docs/(.*)$         /api/index.php?docs=1&method=$1 [QSA]
+
+    # Other people types
+    RewriteRule ^/senator/(.*)   /mp/$1?peer=1 [QSA]
+
+    ##########################################################################################
+    ## See http://smartmobtoolkit.wordpress.com/2008/10/16/not-device-detection/ for more info
+    ## NOTE: May also need conds/rules for specific transcoders that lie
+    ##       e.g. Google\sWireless\sTranscoder & MG\(Novarra-Vision
+    ## NOTE: This is pretty rough and is just to get the first version working
+    ##########################################################################################
+    # /mp/ URL Mobile redirection (by exclusion)
+    #RewriteCond         %{QUERY_STRING}         !^pc$ [NC]
+    # NOTE: May want to add other bot patterns here
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*(spider|crawl|slurp|bot).*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*Linux.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*Win.*$ [NC,OR]
+    RewriteCond         %{HTTP_USER_AGENT}      ^.*Windows\s+CE.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*OS\s+(X|9).*$ [NC,OR]
+    RewriteCond         %{HTTP_USER_AGENT}      ^.*iPhone.*$ [NC,OR]
+    RewriteCond         %{HTTP_USER_AGENT}      ^.*iPod.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*Solaris.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*BSD.*$
+    RewriteRule         ^/mp/(['a-zA-Z_+-]+)/([\(\)\.a-zA-Z_+,'-]+)$      /mp/mobile.php?n=$1&c=$2 [QSA]
+
+    # MP pages
+    RewriteRule ^/mp/(['a-zA-Z_+-]+)/([\(\)\.a-zA-Z_+,'-]+)$      /mp/index.php?n=$1&c=$2 [QSA]
+    RewriteRule ^/mp/(['a-zA-Z_\ +-]+)\ mp/?$  /mp/index.php?n=$1 [QSA]
+    RewriteRule ^/mp/(['a-zA-Z_\ +-]+)/?$       /mp/index.php?n=$1 [QSA]
+
+    # Public Bill Committees
+    #RewriteRule ^/pbc/([0-9][0-9][0-9][0-9]-[0-9][0-9])/$               /pbc/index.php?session=$1   [QSA]
+    #RewriteRule ^/pbc/([0-9][0-9][0-9][0-9]-[0-9][0-9])/([^/]*)$        /pbc/index.php?session=$1&bill=$2   [QSA]
+    #RewriteRule ^/pbc/([0-9][0-9][0-9][0-9]-[0-9][0-9])/([^/]*)/(.*)$   /pbc/index.php?session=$1&bill=$2&id=$3   [QSA]
+
+    #RewriteRule ^/alerts/.*$ /alert/ [R]
+
+    # News
+    RewriteRule ^/news/archives/(.*)$  /news/index.php/archives/$1 [QSA]
+    RewriteRule ^/news/index.rdf$      /news/rdf.php [QSA]
+
+    # default top level / URL Mobile redirection (by exclusion)
+    RewriteCond         %{QUERY_STRING}         !^pc$ [NC]
+    # NOTE: May want to add other bot patters here
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*(spider|crawl|slurp|bot).*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*Linux.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*Win.*$ [NC,OR]
+    RewriteCond         %{HTTP_USER_AGENT}      ^.*Windows\s+CE.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*OS\s+(X|9).*$ [NC,OR]
+    RewriteCond         %{HTTP_USER_AGENT}      ^.*iPhone.*$ [NC,OR]
+    RewriteCond         %{HTTP_USER_AGENT}      ^.*iPod.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*Solaris.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*BSD.*$
+    RewriteRule         ^/$                     /mobile.php [PT]
+
+    # help/ URL Mobile redirection (by exclusion)
+    #RewriteCond         %{QUERY_STRING}         !^pc$ [NC]
+    # NOTE: May want to add other bot patters here
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*(spider|crawl|slurp|bot).*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*Linux.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*Win.*$ [NC,OR]
+    RewriteCond         %{HTTP_USER_AGENT}      ^.*Windows\s+CE.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*OS\s+(X|9).*$ [NC,OR]
+    RewriteCond         %{HTTP_USER_AGENT}      ^.*iPhone.*$ [NC,OR]
+    RewriteCond         %{HTTP_USER_AGENT}      ^.*iPod.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*Solaris.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*BSD.*$
+    RewriteRule         ^/help/(.*)$            /help/mobile.php$1 [PT]
+
+    # search/ URL Mobile redirection (by exclusion)
+    #RewriteCond         %{QUERY_STRING}         !^pc$ [NC]
+    # NOTE: May want to add other bot patters here
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*(spider|crawl|slurp|bot).*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*Linux.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*Win.*$ [NC,OR]
+    RewriteCond         %{HTTP_USER_AGENT}      ^.*Windows\s+CE.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*OS\s+(X|9).*$ [NC,OR]
+    RewriteCond         %{HTTP_USER_AGENT}      ^.*iPhone.*$ [NC,OR]
+    RewriteCond         %{HTTP_USER_AGENT}      ^.*iPod.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*Solaris.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*BSD.*$
+    RewriteRule         ^/search/(.*)$            /search/mobile.php$1 [PT]
+
+    # senate/ URL Mobile redirection (by exclusion)
+    #RewriteCond         %{QUERY_STRING}         !^pc$ [NC]
+    # NOTE: May want to add other bot patters here
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*(spider|crawl|slurp|bot).*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*Linux.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*Win.*$ [NC,OR]
+    RewriteCond         %{HTTP_USER_AGENT}      ^.*Windows\s+CE.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*OS\s+(X|9).*$ [NC,OR]
+    RewriteCond         %{HTTP_USER_AGENT}      ^.*iPhone.*$ [NC,OR]
+    RewriteCond         %{HTTP_USER_AGENT}      ^.*iPod.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*Solaris.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*BSD.*$
+    RewriteRule         ^/senate/(.*)$            /senate/mobile.php$1 [QSA]
+
+    # debates/ URL Mobile redirection (by exclusion)
+    #RewriteCond         %{QUERY_STRING}         !^pc$ [NC]
+    # NOTE: May want to add other bot patters here
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*(spider|crawl|slurp|bot).*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*Linux.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*Win.*$ [NC,OR]
+    RewriteCond         %{HTTP_USER_AGENT}      ^.*Windows\s+CE.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*OS\s+(X|9).*$ [NC,OR]
+    RewriteCond         %{HTTP_USER_AGENT}      ^.*iPhone.*$ [NC,OR]
+    RewriteCond         %{HTTP_USER_AGENT}      ^.*iPod.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*Solaris.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*BSD.*$
+    RewriteRule         ^/debates/(.*)$            /debates/mobile.php$1 [QSA]
+
+    # Department (not ready)
+    #RewriteRule ^/departments/(.*)/questions$     /departments/questions.php?dept=$1
+    #RewriteRule ^/departments/(.*)/statements$    /departments/statements.php?dept=$1
+
+    # Make a file down.html in the DocumentRoot bring down the whole site and
+    # display itself.
+    #RewriteCond %{DOCUMENT_ROOT}/down.html -s
+    #RewriteRule /(.+).php /down.html [R]
+    #RewriteCond %{DOCUMENT_ROOT}/down.html -s
+    #RewriteRule /(.+).cgi /down.html [R]
+    #RewriteCond %{DOCUMENT_ROOT}/down.html !-s
+    #RewriteRule /down.html / [R]
+</VirtualHost>

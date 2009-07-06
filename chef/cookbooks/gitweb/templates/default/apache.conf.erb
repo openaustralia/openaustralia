@@ -1,0 +1,18 @@
+<Directory <%= @node[:gitweb_root] %>>
+    Order allow,deny
+    Allow from all
+    Options Indexes FollowSymlinks +ExecCGI
+    DirectoryIndex gitweb.cgi
+    AddHandler cgi-script .cgi
+</Directory>
+
+<VirtualHost *:80>
+    ServerName <%= @node[:gitweb_domain] %>
+    ErrorLog "/var/log/<%= @node[:gitweb_subdomain] %>-error_log"
+    CustomLog /var/log/<%= @node[:gitweb_subdomain] %>-access_log common
+
+    DocumentRoot <%= @node[:gitweb_root] %>
+
+    RewriteEngine on
+    RewriteRule ^([?].*)$ gitweb.cgi$1
+</VirtualHost>

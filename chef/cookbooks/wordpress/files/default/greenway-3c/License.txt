@@ -1,0 +1,52 @@
+LICENSE:
+
+This theme is released for free under a dual license. The CSS (stylesheet)/images of this theme are released under a <a href="http://creativecommons.org/licenses/by/2.5/">Creative Commons Attribution 2.5 License</a>, while the rest of the theme files are released under a <a href="http://www.gnu.org/licenses/gpl.html">GNU GPL License</a>. 
+
+Licensing Information:
+If you use any of our themes, it will be assumed that you have read and accepted the following terms and conditions: 
+  	
+DONT'S:
+  	
+
+1. Selling is strictly prohibited. You are NOT allowed to sell/giveaway our theme(s) to 3rd parties. 
+2. You CANNOT claim that you or any of your associates have designed our theme(s).
+3. You CANNOT include/bundle our theme(s) within your products or sell them without written permission from us.
+4. You CANNOT re-distribute our theme(s) without prior permission. You may modify the theme for personal use, however, credits to all the designers in the footer should be left intact, under Creative Commons Attribution 2.5 License.
+5. You CANNOT resell our theme(s) in any sort of collection, such as distributing to a third party via CD, diskette, or letting others download them from your own sites or any sites linked to you.
+
+Do'S:
+
+1. You can freely use the templates for your personal website OR company/corporate website, as long as you leave the designer credits intact. You may modify the theme, the php files as you please for your own use. If you plan on re-distributing the modified template, pls ensure that you make significant changes, changing a few graphics and images does not authorize you to claim designer credits and if you do so, you are required to link back to the designers in the footer, as your new theme would be considered a "derivative". 
+
+You may get the designer links removed for a small fee by contacting us. Failing to do so is illegal and your site could be reported to DMCA. You may re-design the footer links without removing the designer links. 
+
+
+
+TERMS AND CONDITIONS:
+  	All our themes are copyrighted. 
+1.) IMPORTANT INFORMATION
+	You should carefully read the Terms and Conditions for usage of our free themes and custom themes.
+	We reserve the right to change, and/or modify the current Terms without prior notice.
+2.) LICENSE
+	 	 
+  	MODIFICATIONS
+	You are empowered to make all necessary change(s) to the theme(s) to suit your designs. All we request in return is a visible link back to the designers.
+  	 
+  	UNAUTHORIZED USE
+	CD, DISKETTE & OTHERS Please do NOT place any of our products on a diskette, CD, website or any other medium and offer them for redistribution or resale, without prior consent from us.
+	
+        WARNINGS
+        If any misuse or re-distribution of our templates/content is reported or hinted, then it might result in serious penalties. Although reluctantly, we might report your site to DMCA if we find you abusing our copyrights. 
+
+	TRANSFERABILITY TERMS
+  	If you modify and re-distribute our themes (after getting permission from us), you need to add this license document to your new zip file, and ensure protection for all designer credits under the License the theme is released under.
+  	 
+  	OWNERSHIP CONDITIONS
+  	You may choose and modify your theme at your own will and responsibility. We would recommend you to keep an original copy before you modify anything, just to ensure you don't lose original data. If you have high traffic on your site and new content uploaded frequently, a weekly database backup is highly recommended. We are not responsible for content, quality or appearance of your theme once you modify it. You may not claim either intellectual or undivided ownership to any of our theme designs, changed or unadapted.
+  	Our themes are provided on "as is" basis without warranty of any kind, either communicated or understood.
+  	Please accept full responsibility to assess independently the accuracy, completeness, quality and usefulness of any information or other content before using our themes or services. Please ensure that at all your doubts are clarified before opting to use our themes or services.
+  	
+        
+Feel free to contact us at Headsetoptions.org for theme support, theme customization, premium templates, suggestions, etc. Thanks for your interest, and happy blogging!
+
+

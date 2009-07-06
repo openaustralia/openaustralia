@@ -1,0 +1,10 @@
+{
+  "recipes": ["openaustralia", "sudo", "ntp", "ssh", "git", "phpmyadmin", "jira", "wordpress", "mediawiki"],
+  "authorization": {
+    "sudo": {
+      "users": ["matthewl"]
+    }
+  },
+  "ssh_port": "1111",
+  "oa_domain": "test.org"
+}

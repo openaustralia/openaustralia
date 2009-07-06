@@ -14,45 +14,45 @@ set :application, "openaustralia"
 set :use_sudo, false
 
 set :scm, :git
-set :repository, "git://github.com/mlandauer/openaustralia.git"
+set :repository, "git://git.openaustralia.org/openaustralia.git"
 set :git_enable_submodules, true
 set :deploy_via, :remote_cache
 
-ssh_options[:port] = 2506
+set :stage, "test" unless exists? :stage
 
-local_deploy = false
-set :stage, "" unless exists? :stage
+set :user, "matthewl"
+role :web, "openaustralia.org"
 
-if local_deploy
-	set :deploy_to, "/Library/WebServer/Documents/test-deploy/#{application}"
-	role :web, "localhost"
-	set :user, "matthewl"
-	set :scm_command, "/opt/local/bin/git"
-else
-  set :user, "matthewl"
-  if stage == "production"
-	  set :deploy_to, "/www/www.openaustralia.org/#{application}"
-	  role :web, "www.openaustralia.org"
-  elsif stage == "test"
-	  set :deploy_to, "/www/test.openaustralia.org/#{application}"
-	  role :web, "test.openaustralia.org"
-	  set :branch, "test"
-  end
+# A great little trick I learned recently. If you have a machine running on a non-standard ssh port
+# put the following in your ~/.ssh/config file:
+# Host myserver.com
+#   Port 1234
+# This will change the port for all ssh commands on that server which saves a whole lot of typing
+
+if stage == "production"
+  set :deploy_to, "/www/www/#{application}"
+elsif stage == "test"
+  set :deploy_to, "/www/test/#{application}"
+  set :branch, "test"
 end
 
 load 'deploy' if respond_to?(:namespace) # cap2 differentiator
 
-namespace :deploy do
-	task :setup do
-		dirs = [deploy_to, releases_path, shared_path]
-		shared_images_path = File.join(shared_path, "images")
-		dirs += ["mps", "mpsL"].map {|d| File.join(shared_images_path, d)}
-		dirs << File.join(shared_path, "rss", "mp")
-		run "umask 02 && mkdir -p #{dirs.join(' ')}"
-	end
+# Using Chef (http://wiki.opscode.com/display/chef/Home) configure the server to
+# have all the software we need. WORK IN PROGRESS
+task :chef do
+  run "rm -rf /tmp/chef"
+  upload("chef", "/tmp/chef")
+  # Using "sudo -E" to ensure that environment variables are propogated to new environment
+  # so that pkg_add knows to use passive ftp. What a PITA.
+  #run "chef-solo -l debug -c /tmp/chef/config/solo.rb -j /tmp/chef/config/dna.json"
+  sudo "-E chef-solo -c /tmp/chef/config/solo.rb -j /tmp/chef/config/dna.json"
+end
 
-	# Do nothing for deploy:restart
+namespace :deploy do
+	# Restart Apache because for some reason a deploy can cause trouble very occasionally (which is fixed by a restart). So, playing safe
 	task :restart do
+	  sudo "apachectl restart"
 	end
 
 	task :finalize_update do
@@ -61,19 +61,24 @@ namespace :deploy do
 
 	desc "After a code update, we link the images directories to the shared ones"
 	task :after_update_code do
-		links = {"#{release_path}/twfy/www/docs/images/mps" => "#{shared_path}/images/mps",
-			"#{release_path}/twfy/www/docs/images/mpsL" => "#{shared_path}/images/mpsL",
-			"#{release_path}/twfy/conf/general" => "#{shared_path}/general",
-			"#{release_path}/twfy/www/docs/.htaccess" => "#{shared_path}/root_htaccess",
-			"#{release_path}/openaustralia-parser/configuration.yml" => "#{shared_path}/parser_configuration.yml",
-			"#{release_path}/searchdb" => "#{shared_path}/searchdb",
-			"#{release_path}/twfy/www/docs/rss/mp" => "#{shared_path}/rss/mp",
-			"#{release_path}/twfy/www/docs/debates/debates.rss" => "#{shared_path}/rss/debates.rss",
-			"#{release_path}/twfy/scripts/alerts-lastsent" => "#{shared_path}/alerts-lastsent",
-			"#{release_path}/twfy/www/docs/sitemap.xml" => "#{shared_path}/sitemap.xml",
-			"#{release_path}/twfy/www/docs/sitemaps" => "#{shared_path}/sitemaps",
-			"#{release_path}/twfy/www/docs/regmem/scan" => "#{shared_path}/regmem_scan"}
-		
+		links = {
+			"#{release_path}/searchdb"                                => "../../shared/searchdb",
+
+			"#{release_path}/openaustralia-parser/configuration.yml"  => "../../../shared/parser_configuration.yml",
+
+			"#{release_path}/twfy/conf/general"                       => "../../../../shared/general",
+			"#{release_path}/twfy/scripts/alerts-lastsent"            => "../../../../shared/alerts-lastsent",
+
+			"#{release_path}/twfy/www/docs/sitemap.xml"               => "../../../../../shared/sitemap.xml",
+			"#{release_path}/twfy/www/docs/sitemaps"                  => "../../../../../shared/sitemaps",
+
+		  "#{release_path}/twfy/www/docs/images/mps"                => "../../../../../../shared/images/mps",
+			"#{release_path}/twfy/www/docs/images/mpsL"               => "../../../../../../shared/images/mpsL",
+			"#{release_path}/twfy/www/docs/regmem/scan"               => "../../../../../../shared/regmem_scan",
+			"#{release_path}/twfy/www/docs/rss/mp"                    => "../../../../../../shared/rss/mp",
+			"#{release_path}/twfy/www/docs/debates/debates.rss"       => "../../../../../../shared/rss/senate.rss",
+			"#{release_path}/twfy/www/docs/senate/senate.rss"       => "../../../../../../shared/rss/senate.rss"
+		}
 		# First copy any images that have been checked into the repository to the shared area
 		run "cp #{release_path}/twfy/www/docs/images/mps/* #{shared_path}/images/mps"
 		run "cp #{release_path}/twfy/www/docs/images/mpsL/* #{shared_path}/images/mpsL"
@@ -84,10 +89,4 @@ namespace :deploy do
 		# Now compile twfy/scripts/run-with-lockfile.c
 		run "gcc -o #{release_path}/twfy/scripts/run-with-lockfile #{release_path}/twfy/scripts/run-with-lockfile.c"
 	end
-	
-	desc "Upload member images from local machine"
-	task :images do
-		put_directory "../pwdata/images/mps", "#{shared_path}/images/mps"
-		put_directory "../pwdata/images/mpsL", "#{shared_path}/images/mpsL"
-	end	
 end
