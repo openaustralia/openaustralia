@@ -16,47 +16,47 @@
     ErrorLog "/var/log/test-error_log"
     CustomLog /var/log/test-access_log common
 
-		RewriteEngine on
+    RewriteEngine on
 
-		# Links in emails
-		RewriteRule ^/A/(.*)$     /alert/confirm/index.php?t=$1 [QSA]
-		RewriteRule ^/D/(.*)$     /alert/delete/index.php?t=$1 [QSA]
-		RewriteRule ^/U/(.*)$     /user/confirm/index.php?t=$1 [QSA]
+    # Links in emails
+    RewriteRule ^/A/(.*)$     /alert/confirm/index.php?t=$1 [QSA]
+    RewriteRule ^/D/(.*)$     /alert/delete/index.php?t=$1 [QSA]
+    RewriteRule ^/U/(.*)$     /user/confirm/index.php?t=$1 [QSA]
 
-		# API
-		RewriteRule ^/api/((get|convert).*)$ /api/index.php?method=$1 [QSA]
-		RewriteRule ^/api/docs/?$            /api/ [R]
-		RewriteRule ^/api/docs/(.*)$         /api/index.php?docs=1&method=$1 [QSA]
+    # API
+    RewriteRule ^/api/((get|convert).*)$ /api/index.php?method=$1 [QSA]
+    RewriteRule ^/api/docs/?$            /api/ [R]
+    RewriteRule ^/api/docs/(.*)$         /api/index.php?docs=1&method=$1 [QSA]
 
-		# Other people types
-		RewriteRule ^/senator/(.*)   /mp/$1?peer=1 [QSA]
+    # Other people types
+    RewriteRule ^/senator/(.*)   /mp/$1?peer=1 [QSA]
 
-		# MP pages
-		RewriteRule ^/mp/(['a-zA-Z_+-]+)/([\(\)\.a-zA-Z_+,'-]+)$      /mp/index.php?n=$1&c=$2 [QSA]
-		RewriteRule ^/mp/(['a-zA-Z_\ +-]+)\ mp/?$  /mp/index.php?n=$1 [QSA]
-		RewriteRule ^/mp/(['a-zA-Z_\ +-]+)/?$       /mp/index.php?n=$1 [QSA]
+    # MP pages
+    RewriteRule ^/mp/(['a-zA-Z_+-]+)/([\(\)\.a-zA-Z_+,'-]+)$      /mp/index.php?n=$1&c=$2 [QSA]
+    RewriteRule ^/mp/(['a-zA-Z_\ +-]+)\ mp/?$  /mp/index.php?n=$1 [QSA]
+    RewriteRule ^/mp/(['a-zA-Z_\ +-]+)/?$       /mp/index.php?n=$1 [QSA]
 
-		# Public Bill Committees
-		#RewriteRule ^/pbc/([0-9][0-9][0-9][0-9]-[0-9][0-9])/$               /pbc/index.php?session=$1   [QSA]
-		#RewriteRule ^/pbc/([0-9][0-9][0-9][0-9]-[0-9][0-9])/([^/]*)$        /pbc/index.php?session=$1&bill=$2   [QSA]
-		#RewriteRule ^/pbc/([0-9][0-9][0-9][0-9]-[0-9][0-9])/([^/]*)/(.*)$   /pbc/index.php?session=$1&bill=$2&id=$3   [QSA]
+    # Public Bill Committees
+    #RewriteRule ^/pbc/([0-9][0-9][0-9][0-9]-[0-9][0-9])/$               /pbc/index.php?session=$1   [QSA]
+    #RewriteRule ^/pbc/([0-9][0-9][0-9][0-9]-[0-9][0-9])/([^/]*)$        /pbc/index.php?session=$1&bill=$2   [QSA]
+    #RewriteRule ^/pbc/([0-9][0-9][0-9][0-9]-[0-9][0-9])/([^/]*)/(.*)$   /pbc/index.php?session=$1&bill=$2&id=$3   [QSA]
 
-		#RewriteRule ^/alerts/.*$ /alert/ [R]
+    #RewriteRule ^/alerts/.*$ /alert/ [R]
 
-		# News
-		RewriteRule ^/news/archives/(.*)$  /news/index.php/archives/$1 [QSA]
-		RewriteRule ^/news/index.rdf$      /news/rdf.php [QSA]
+    # News
+    RewriteRule ^/news/archives/(.*)$  /news/index.php/archives/$1 [QSA]
+    RewriteRule ^/news/index.rdf$      /news/rdf.php [QSA]
 
-		# Department (not ready)
-		#RewriteRule ^/departments/(.*)/questions$     /departments/questions.php?dept=$1
-		#RewriteRule ^/departments/(.*)/statements$    /departments/statements.php?dept=$1
+    # Department (not ready)
+    #RewriteRule ^/departments/(.*)/questions$     /departments/questions.php?dept=$1
+    #RewriteRule ^/departments/(.*)/statements$    /departments/statements.php?dept=$1
 
-		# Make a file down.html in the DocumentRoot bring down the whole site and
-		# display itself.
-		#RewriteCond %{DOCUMENT_ROOT}/down.html -s
-		#RewriteRule /(.+).php /down.html [R]
-		#RewriteCond %{DOCUMENT_ROOT}/down.html -s
-		#RewriteRule /(.+).cgi /down.html [R]
-		#RewriteCond %{DOCUMENT_ROOT}/down.html !-s
-		#RewriteRule /down.html / [R]
+    # Make a file down.html in the DocumentRoot bring down the whole site and
+    # display itself.
+    #RewriteCond %{DOCUMENT_ROOT}/down.html -s
+    #RewriteRule /(.+).php /down.html [R]
+    #RewriteCond %{DOCUMENT_ROOT}/down.html -s
+    #RewriteRule /(.+).cgi /down.html [R]
+    #RewriteCond %{DOCUMENT_ROOT}/down.html !-s
+    #RewriteRule /down.html / [R]
 </VirtualHost>
