@@ -31,6 +31,26 @@
     # Other people types
     RewriteRule ^/senator/(.*)   /mp/$1?peer=1 [QSA]
 
+    ##########################################################################################
+    ## See http://smartmobtoolkit.wordpress.com/2008/10/16/not-device-detection/ for more info
+    ## NOTE: May also need conds/rules for specific transcoders that lie
+    ##       e.g. Google\sWireless\sTranscoder & MG\(Novarra-Vision
+    ## NOTE: This is pretty rough and is just to get the first version working
+    ##########################################################################################
+    # /mp/ URL Mobile redirection (by exclusion)
+    #RewriteCond         %{QUERY_STRING}         !^pc$ [NC]
+    # NOTE: May want to add other bot patterns here
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*(spider|crawl|slurp|bot).*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*Linux.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*Win.*$ [NC,OR]
+    RewriteCond         %{HTTP_USER_AGENT}      ^.*Windows\s+CE.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*OS\s+(X|9).*$ [NC,OR]
+    RewriteCond         %{HTTP_USER_AGENT}      ^.*iPhone.*$ [NC,OR]
+    RewriteCond         %{HTTP_USER_AGENT}      ^.*iPod.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*Solaris.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*BSD.*$
+    RewriteRule         ^/mp/(['a-zA-Z_+-]+)/([\(\)\.a-zA-Z_+,'-]+)$      /mp/mobile.php?n=$1&c=$2 [QSA]
+
     # MP pages
     RewriteRule ^/mp/(['a-zA-Z_+-]+)/([\(\)\.a-zA-Z_+,'-]+)$      /mp/index.php?n=$1&c=$2 [QSA]
     RewriteRule ^/mp/(['a-zA-Z_\ +-]+)\ mp/?$  /mp/index.php?n=$1 [QSA]
@@ -46,6 +66,76 @@
     # News
     RewriteRule ^/news/archives/(.*)$  /news/index.php/archives/$1 [QSA]
     RewriteRule ^/news/index.rdf$      /news/rdf.php [QSA]
+
+    # default top level / URL Mobile redirection (by exclusion)
+    RewriteCond         %{QUERY_STRING}         !^pc$ [NC]
+    # NOTE: May want to add other bot patters here
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*(spider|crawl|slurp|bot).*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*Linux.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*Win.*$ [NC,OR]
+    RewriteCond         %{HTTP_USER_AGENT}      ^.*Windows\s+CE.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*OS\s+(X|9).*$ [NC,OR]
+    RewriteCond         %{HTTP_USER_AGENT}      ^.*iPhone.*$ [NC,OR]
+    RewriteCond         %{HTTP_USER_AGENT}      ^.*iPod.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*Solaris.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*BSD.*$
+    RewriteRule         ^/$                     /mobile.php [PT]
+
+    # help/ URL Mobile redirection (by exclusion)
+    #RewriteCond         %{QUERY_STRING}         !^pc$ [NC]
+    # NOTE: May want to add other bot patters here
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*(spider|crawl|slurp|bot).*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*Linux.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*Win.*$ [NC,OR]
+    RewriteCond         %{HTTP_USER_AGENT}      ^.*Windows\s+CE.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*OS\s+(X|9).*$ [NC,OR]
+    RewriteCond         %{HTTP_USER_AGENT}      ^.*iPhone.*$ [NC,OR]
+    RewriteCond         %{HTTP_USER_AGENT}      ^.*iPod.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*Solaris.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*BSD.*$
+    RewriteRule         ^/help/(.*)$            /help/mobile.php$1 [PT]
+
+    # search/ URL Mobile redirection (by exclusion)
+    #RewriteCond         %{QUERY_STRING}         !^pc$ [NC]
+    # NOTE: May want to add other bot patters here
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*(spider|crawl|slurp|bot).*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*Linux.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*Win.*$ [NC,OR]
+    RewriteCond         %{HTTP_USER_AGENT}      ^.*Windows\s+CE.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*OS\s+(X|9).*$ [NC,OR]
+    RewriteCond         %{HTTP_USER_AGENT}      ^.*iPhone.*$ [NC,OR]
+    RewriteCond         %{HTTP_USER_AGENT}      ^.*iPod.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*Solaris.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*BSD.*$
+    RewriteRule         ^/search/(.*)$            /search/mobile.php$1 [PT]
+
+    # senate/ URL Mobile redirection (by exclusion)
+    #RewriteCond         %{QUERY_STRING}         !^pc$ [NC]
+    # NOTE: May want to add other bot patters here
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*(spider|crawl|slurp|bot).*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*Linux.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*Win.*$ [NC,OR]
+    RewriteCond         %{HTTP_USER_AGENT}      ^.*Windows\s+CE.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*OS\s+(X|9).*$ [NC,OR]
+    RewriteCond         %{HTTP_USER_AGENT}      ^.*iPhone.*$ [NC,OR]
+    RewriteCond         %{HTTP_USER_AGENT}      ^.*iPod.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*Solaris.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*BSD.*$
+    RewriteRule         ^/senate/(.*)$            /senate/mobile.php$1 [QSA]
+
+    # debates/ URL Mobile redirection (by exclusion)
+    #RewriteCond         %{QUERY_STRING}         !^pc$ [NC]
+    # NOTE: May want to add other bot patters here
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*(spider|crawl|slurp|bot).*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*Linux.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*Win.*$ [NC,OR]
+    RewriteCond         %{HTTP_USER_AGENT}      ^.*Windows\s+CE.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*OS\s+(X|9).*$ [NC,OR]
+    RewriteCond         %{HTTP_USER_AGENT}      ^.*iPhone.*$ [NC,OR]
+    RewriteCond         %{HTTP_USER_AGENT}      ^.*iPod.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*Solaris.*$ [NC]
+    RewriteCond         %{HTTP_USER_AGENT}      !^.*BSD.*$
+    RewriteRule         ^/debates/(.*)$            /debates/mobile.php$1 [QSA]
 
     # Department (not ready)
     #RewriteRule ^/departments/(.*)/questions$     /departments/questions.php?dept=$1
