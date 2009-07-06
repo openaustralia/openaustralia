@@ -42,7 +42,7 @@ load 'deploy' if respond_to?(:namespace) # cap2 differentiator
 # have all the software we need. WORK IN PROGRESS
 task :chef do
   run "rm -rf /tmp/chef"
-  upload("chef", "/tmp/chef")
+  upload("openaustralia-chef", "/tmp/chef")
   # Using "sudo -E" to ensure that environment variables are propogated to new environment
   # so that pkg_add knows to use passive ftp. What a PITA.
   #run "chef-solo -l debug -c /tmp/chef/config/solo.rb -j /tmp/chef/config/dna.json"
