@@ -41,19 +41,34 @@ $ cd ../twfy
 $ git remote add github git@github.com:<your username>/twfy.git
 </pre>
 
+7. Sign up for an account on "tickets.openaustralia.org (JIRA)":http://tickets.openaustralia.org
+
+8. Email the developers mailing list, giving your JIRA username, asking to be given developer permissions.
+
+This will give you extra priviliges including being able to assign tickets to yourself
+
 h2. Everything interesting happens here
 
-1. Make your changes and commit them
+1. Assign the ticket to yourself
 
-2. Once you are happy to publish the changes, push them to your forked repository on github
+This says to everyone "I'm working on it" unless you hear otherwise.
+
+2. Make your changes and commit them
+
+3. Once you are happy to publish the changes, push them to your forked repository on github
 
 <pre>
 $ cd openaustralia-parser
 $ git push github
 </pre>
 
-3. Go to "GitHub":http://github.com and let Matthew know to merge your changes.
-Do this by clicking on "Pull Request" on your forked repository page on github
+3. Set the state of the ticket to "Resolved" and add a comment saying where to get the changes from
+
+This is probably most easily just a link to commit/commits on github.
+
+4. Reassign the ticket to "Matthew Landauer", so that it can get merged in and released
+
+When the change is merged in and released the ticket will be set to "Closed".
 
 That's it!
 
