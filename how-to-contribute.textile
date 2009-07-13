@@ -18,16 +18,16 @@ $ git config --global user.email you@yourdomain.example.com
 3. Go to github.com and sign up for an account
 
 4. Fork the following repositories:
-* "http://github.com/mlandauer/openaustralia-parser/tree/master":http://github.com/mlandauer/openaustralia-parser/tree/master
-* "http://github.com/mlandauer/twfy/tree/master":http://github.com/mlandauer/twfy/tree/master
+* "http://github.com/openaustralia/openaustralia-parser/tree/master":http://github.com/openaustralia/openaustralia-parser/tree/master
+* "http://github.com/openaustralia/twfy/tree/master":http://github.com/openaustralia/twfy/tree/master
 
 Go to each repository with the links and click on the "fork" button.
 
 If you plan to modify the perlib, phplib, rblib or shlib libraries as well (fairly unlikely) then you will need to fork these as well:
-* "http://github.com/mlandauer/perllib/tree/master":http://github.com/mlandauer/perllib/tree/master
-* "http://github.com/mlandauer/phplib/tree/master":http://github.com/mlandauer/phplib/tree/master
-* "http://github.com/mlandauer/rblib/tree/master":http://github.com/mlandauer/rblib/tree/master
-* "http://github.com/mlandauer/shlib/tree/master":http://github.com/mlandauer/shlib/tree/master
+* "http://github.com/openaustralia/perllib/tree/master":http://github.com/openaustralia/perllib/tree/master
+* "http://github.com/openaustralia/phplib/tree/master":http://github.com/openaustralia/phplib/tree/master
+* "http://github.com/openaustralia/rblib/tree/master":http://github.com/openaustralia/rblib/tree/master
+* "http://github.com/openaustralia/shlib/tree/master":http://github.com/openaustralia/shlib/tree/master
 
 5. Upload your public SSH key to github. You will need this to be able to push changes to your forked repositories.
 See "http://github.com/guides/providing-your-ssh-key":http://github.com/guides/providing-your-ssh-key
