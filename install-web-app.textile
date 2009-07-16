@@ -148,8 +148,7 @@ sudo chown -R $USER:staff /Library/WebServer/Documents
 
 <pre class="forubuntu">
 # For Ubuntu
-find /var/www/openaustralia -type f | xargs chmod a+r
-find /var/www/openaustralia -type d | xargs chmod a+rx
+chmod -R a+rX /var/www/openaustralia
 </pre>
 
 
