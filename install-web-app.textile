@@ -45,7 +45,7 @@ If you don't have the version control system "git":http://git.or.cz/ you'll need
 Then:
 
 <pre>
-git clone git://github.com/mlandauer/openaustralia.git
+git clone git://github.com/openaustralia/openaustralia.git
 cd openaustralia
 git submodule init
 git submodule update

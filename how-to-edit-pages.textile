@@ -11,7 +11,7 @@ This gives us the advantage of ensuring that the documentation in the source cod
 If you already have the openaustralia repository checkout out, skip to the next step. Otherwise:
 
 <pre>
-$ git clone git://github.com/mlandauer/openaustralia.git
+$ git clone git://github.com/openaustralia/openaustralia.git
 $ cd openaustralia
 </pre>
 
@@ -25,4 +25,4 @@ The main files to edit are <code>*.textile</code> which are all in "Textile":htt
 
 For more information on how this magic works see the "pages documentation":http://pages.github.com/.
 
-"http://software.openaustralia.org":http://software.openaustralia.org redirects to "http://mlandauer.github.com/openaustralia":http://mlandauer.github.com/openaustralia so to get your changes merged into the "official" documentation make a pull request on github to mlandauer.
+"http://software.openaustralia.org":http://software.openaustralia.org redirects to "http://openaustralia.github.com/openaustralia":http://openaustralia.github.com/openaustralia so to get your changes merged into the "official" documentation make a pull request on github to openaustralia.
