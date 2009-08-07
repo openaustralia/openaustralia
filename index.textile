@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Open Australia development of website and parser
+title: OpenAustralia development of website and parser
 ---
 Welcome to the development site for "openaustralia.org":http://www.openaustralia.org/. This is your kicking off point for all things to do with the development of "openaustralia.org":http://www.openaustralia.org/, including the reporting and browsing of bugs and development ideas, documentation on installing and configuring the software for yourself and a guide to contributing to the codebase.
 
