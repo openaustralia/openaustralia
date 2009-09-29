@@ -37,10 +37,10 @@ Delivery/Communications
 * Promote/encourage the use of the API (incentive/education)
 ** Includes web service postcode lookups and member information
 ** Make parsed XML Hansard feeds directly available via rsync
-* Tools for teachers and librarians (education)
+* Tools for teachers and librarians (education) "OAF-15":http://tickets.openaustralia.org/browse/OAF-15
 
 OpenAustralia Foundation
-* Establish Advisory Board
+* Establish Advisory Board "OAF-16":http://tickets.openaustralia.org/browse/OAF-16
 * Pursue project funding
-* Set up a volunteer programme
-* Publish our own records (including financial) on the web
+* Set up a volunteer programme "OAF-14":http://tickets.openaustralia.org/browse/OAF-14 "OAF-15":http://tickets.openaustralia.org/browse/OAF-15
+* Publish our own records (including financial) on the web "OAF-17":http://tickets.openaustralia.org/browse/OAF-17
