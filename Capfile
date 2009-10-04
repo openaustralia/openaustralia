@@ -9,6 +9,8 @@ require 'tempfile'
 # SHA and OpenSSL required for encryption/decryption
 require 'digest/sha2'
 require 'openssl'
+# Required for processing JSON input to Chef
+require 'json'
 
 set :application, "openaustralia"
 
@@ -76,6 +78,8 @@ end
 set :chef_private_password_file, File.expand_path("~/.chef_private_data_password")
 set :chef_private_decrypted, "openaustralia-chef/config/dna.json"
 set :chef_private_encrypted, "openaustralia-chef/config/dna.json.encrypted"
+set :chef_public_data, "openaustralia-chef/config/dna.json.public"
+set :chef_private_data, "openaustralia-chef/config/dna.json.private"
 
 if File.exists?(fetch(:chef_private_password_file))
   password = File.read(fetch(:chef_private_password_file))
@@ -96,6 +100,14 @@ namespace :chef do
     # so that pkg_add knows to use passive ftp. What a PITA.
     #run "chef-solo -l debug -c /tmp/chef/config/solo.rb -j /tmp/chef/config/dna.json"
     sudo "-E chef-solo -c /tmp/chef/config/solo.rb -j /tmp/chef/config/dna.json"
+  end
+  
+  task :combine_public_and_private_data do
+    pub = JSON.parse(File.read(fetch(:chef_public_data)))
+    pri = JSON.parse(File.read(fetch(:chef_private_data)))
+    File.open(fetch(:chef_private_decrypted), "w") do |f|
+      f << JSON.generate(pub.merge(pri))
+    end
   end
 
   desc "Decrypt/Encrypt the private chef data"
