@@ -94,8 +94,16 @@ namespace :chef do
   # have all the software we need. WORK IN PROGRESS
   desc "Update the server configuration using Chef"
   task :default do
+    upload_recipes
+    run
+  end
+  
+  task :upload_recipes do
     run "rm -rf /tmp/chef"
     upload("openaustralia-chef", "/tmp/chef")
+  end
+  
+  task :run do
     # Using "sudo -E" to ensure that environment variables are propogated to new environment
     # so that pkg_add knows to use passive ftp. What a PITA.
     #run "chef-solo -l debug -c /tmp/chef/config/solo.rb -j /tmp/chef/config/dna.json"
