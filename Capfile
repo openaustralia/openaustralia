@@ -76,10 +76,10 @@ module SymmetricCrypto
 end
 
 set :chef_private_password_file, File.expand_path("~/.chef_private_data_password")
-set :chef_private_decrypted, "openaustralia-chef/config/dna.json"
-set :chef_private_encrypted, "openaustralia-chef/config/dna.json.encrypted"
-set :chef_public_data, "openaustralia-chef/config/dna.json.public"
-set :chef_private_data, "openaustralia-chef/config/dna.json.private"
+set :chef_public, "openaustralia-chef/config/dna.json.public"
+set :chef_private, "openaustralia-chef/config/dna.json.private"
+set :chef_private_encrypted, "openaustralia-chef/config/dna.json.private.encrypted"
+set :chef_public_and_private, "openaustralia-chef/config/dna.json"
 
 if File.exists?(fetch(:chef_private_password_file))
   password = File.read(fetch(:chef_private_password_file))
@@ -94,8 +94,10 @@ namespace :chef do
   # have all the software we need. WORK IN PROGRESS
   desc "Update the server configuration using Chef"
   task :default do
+    private_data
+    combine_public_and_private_data
     upload_recipes
-    run
+    run_chef
   end
   
   task :upload_recipes do
@@ -103,7 +105,7 @@ namespace :chef do
     upload("openaustralia-chef", "/tmp/chef")
   end
   
-  task :run do
+  task :run_chef do
     # Using "sudo -E" to ensure that environment variables are propogated to new environment
     # so that pkg_add knows to use passive ftp. What a PITA.
     #run "chef-solo -l debug -c /tmp/chef/config/solo.rb -j /tmp/chef/config/dna.json"
@@ -111,20 +113,20 @@ namespace :chef do
   end
   
   task :combine_public_and_private_data do
-    pub = JSON.parse(File.read(fetch(:chef_public_data)))
-    pri = JSON.parse(File.read(fetch(:chef_private_data)))
-    File.open(fetch(:chef_private_decrypted), "w") do |f|
+    pub = JSON.parse(File.read(fetch(:chef_public)))
+    pri = JSON.parse(File.read(fetch(:chef_private)))
+    File.open(fetch(:chef_public_and_private), "w") do |f|
       f << JSON.generate(pub.merge(pri))
     end
   end
 
   desc "Decrypt/Encrypt the private chef data"
   task :private_data do
-    unless File.exists?(fetch(:chef_private_decrypted))
-      SymmetricCrypto.decrypt_file(fetch(:chef_private_encrypted), fetch(:chef_private_decrypted), fetch(:chef_encryption_password))      
+    unless File.exists?(fetch(:chef_private))
+      SymmetricCrypto.decrypt_file(fetch(:chef_private_encrypted), fetch(:chef_private), fetch(:chef_encryption_password))      
     end
     # Always encrypt the file
-    SymmetricCrypto.encrypt_file(fetch(:chef_private_decrypted), fetch(:chef_private_encrypted), fetch(:chef_encryption_password))
+    SymmetricCrypto.encrypt_file(fetch(:chef_private), fetch(:chef_private_encrypted), fetch(:chef_encryption_password))
   end
 end
 
