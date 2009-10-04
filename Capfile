@@ -6,6 +6,9 @@
 # cap -S stage=<production|test> task
 
 require 'tempfile'
+# SHA and OpenSSL required for encryption/decryption
+require 'digest/sha2'
+require 'openssl'
 
 set :application, "openaustralia"
 
@@ -38,15 +41,71 @@ end
 
 load 'deploy' if respond_to?(:namespace) # cap2 differentiator
 
-# Using Chef (http://wiki.opscode.com/display/chef/Home) configure the server to
-# have all the software we need. WORK IN PROGRESS
-task :chef do
-  run "rm -rf /tmp/chef"
-  upload("openaustralia-chef", "/tmp/chef")
-  # Using "sudo -E" to ensure that environment variables are propogated to new environment
-  # so that pkg_add knows to use passive ftp. What a PITA.
-  #run "chef-solo -l debug -c /tmp/chef/config/solo.rb -j /tmp/chef/config/dna.json"
-  sudo "-E chef-solo -c /tmp/chef/config/solo.rb -j /tmp/chef/config/dna.json"
+# Symmetric encryption using AES and arbitrary length alpha key
+module SymmetricCrypto
+  def SymmetricCrypto.decrypt(data, key)
+    aes = OpenSSL::Cipher::Cipher.new("AES-256-ECB")
+    aes.decrypt
+    # This ensures we get the correct length key out of an arbitrary password
+    aes.key = Digest::SHA256.digest(key)
+    aes.update(data) + aes.final  
+  end
+  
+  def SymmetricCrypto.encrypt(data, key)
+    aes = OpenSSL::Cipher::Cipher.new("AES-256-ECB")
+    aes.encrypt
+    # This ensures we get the correct length key out of an arbitrary password
+    aes.key = Digest::SHA256.digest(key)
+    aes.update(data) + aes.final      
+  end
+  
+  # Little convenience methods
+  def SymmetricCrypto.encrypt_file(file_in, file_out, key)
+    File.open(file_out, "w") do |f|
+      f << SymmetricCrypto.encrypt(File.read(file_in), key)
+    end
+  end
+  
+  def SymmetricCrypto.decrypt_file(file_in, file_out, key)
+    File.open(file_out, "w") do |f|
+      f << SymmetricCrypto.decrypt(File.read(file_in), key)
+    end
+  end
+end
+
+set :chef_private_password_file, File.expand_path("~/.chef_private_data_password")
+set :chef_private_decrypted, "openaustralia-chef/config/dna.json"
+set :chef_private_encrypted, "openaustralia-chef/config/dna.json.encrypted"
+
+if File.exists?(fetch(:chef_private_password_file))
+  password = File.read(fetch(:chef_private_password_file))
+else
+  password = Capistrano::CLI.password_prompt("Type in your password for decrypting secret chef data: ")
+  File.open(fetch(:chef_private_password_file), "w") {|f| f << password }
+end
+set(:chef_encryption_password) { password }
+
+namespace :chef do
+  # Using Chef (http://wiki.opscode.com/display/chef/Home) configure the server to
+  # have all the software we need. WORK IN PROGRESS
+  desc "Update the server configuration using Chef"
+  task :default do
+    run "rm -rf /tmp/chef"
+    upload("openaustralia-chef", "/tmp/chef")
+    # Using "sudo -E" to ensure that environment variables are propogated to new environment
+    # so that pkg_add knows to use passive ftp. What a PITA.
+    #run "chef-solo -l debug -c /tmp/chef/config/solo.rb -j /tmp/chef/config/dna.json"
+    sudo "-E chef-solo -c /tmp/chef/config/solo.rb -j /tmp/chef/config/dna.json"
+  end
+
+  desc "Decrypt/Encrypt the private chef data"
+  task :private_data do
+    unless File.exists?(fetch(:chef_private_decrypted))
+      SymmetricCrypto.decrypt_file(fetch(:chef_private_encrypted), fetch(:chef_private_decrypted), fetch(:chef_encryption_password))      
+    end
+    # Always encrypt the file
+    SymmetricCrypto.encrypt_file(fetch(:chef_private_decrypted), fetch(:chef_private_encrypted), fetch(:chef_encryption_password))
+  end
 end
 
 namespace :deploy do
