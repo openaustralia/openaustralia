@@ -101,8 +101,10 @@ namespace :chef do
   end
   
   task :upload_recipes do
-    run "rm -rf /tmp/chef"
-    upload("openaustralia-chef", "/tmp/chef")
+    run "rm -rf /tmp/chef; mkdir -p /tmp/chef"
+    # Ensures that openaustralia-chef/.git isn't transferred needlessly
+    upload("openaustralia-chef/config", "/tmp/chef/config", :via => :scp, :recursive => true)
+    upload("openaustralia-chef/cookbooks", "/tmp/chef/cookbooks", :via => :scp, :recursive => true)
   end
   
   task :run_chef do
