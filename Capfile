@@ -89,6 +89,23 @@ else
 end
 set(:chef_encryption_password) { password }
 
+# Takes two hashes and merges them - but has special handling for where the keys are the same. It will
+# merge the values using the same method
+def merge_values(h1, h2)
+  out = {}
+  (h1.keys + h2.keys).uniq.each do |key|
+    # If the key is present in both hashes
+    if h1.key?(key) && h2.key?(key)
+      out[key] = merge_values(h1[key], h2[key])
+    elsif h1.key?(key)
+      out[key] = h1[key]
+    else
+      out[key] = h2[key]
+    end
+  end
+  out
+end
+
 namespace :chef do
   # Using Chef (http://wiki.opscode.com/display/chef/Home) configure the server to
   # have all the software we need. WORK IN PROGRESS
@@ -117,8 +134,9 @@ namespace :chef do
   task :combine_public_and_private_data do
     pub = JSON.parse(File.read(fetch(:chef_public)))
     pri = JSON.parse(File.read(fetch(:chef_private)))
+    # Need to merge the public and private data so that where the same keys exist in both, the values get merged as well
     File.open(fetch(:chef_public_and_private), "w") do |f|
-      f << JSON.generate(pub.merge(pri))
+      f << JSON.generate(merge_values(pub, pri))
     end
   end
 
