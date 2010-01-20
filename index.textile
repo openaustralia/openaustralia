@@ -25,6 +25,8 @@ There is also a "&#8220;big picture&#8221; overview of ideas for the future":tow
 <div class="span-7 box last">
 h3. Download and install
 
+If you'd like to get up-and-running quickly, you can use our live development environment, "DevLive":http://www.henaredegan.com/blog/openaustralia-devlive/.
+
 You can browse the source code on "GitHub":http://www.github.com/ for the "parser":http://github.com/openaustralia/openaustralia-parser/tree/master and the "web application":http://github.com/openaustralia/twfy/tree/master.
 
 To download the software that runs OpenAustralia you will need to it to get it from our source code repository. We use "git":http://git.or.cz/ for version control.
