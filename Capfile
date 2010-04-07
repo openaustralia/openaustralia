@@ -87,7 +87,7 @@ else
   password = Capistrano::CLI.password_prompt("Type in your password for decrypting secret chef data: ")
   File.open(fetch(:chef_private_password_file), "w") {|f| f << password }
 end
-set(:chef_encryption_password) { password }
+set(:chef_encryption_password) { password.strip }
 
 # Takes two hashes and merges them - but has special handling for where the keys are the same. It will
 # merge the values using the same method
