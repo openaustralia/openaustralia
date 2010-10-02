@@ -12,7 +12,7 @@ require 'openssl'
 # Required for processing JSON input to Chef
 require 'json'
 
-set :application, "openaustralia"
+set :application, "openaustralia.org"
 
 # default_run_options[:pty] = true
 
@@ -25,8 +25,8 @@ set :deploy_via, :remote_cache
 
 set :stage, "test" unless exists? :stage
 
-set :user, "matthewl"
-role :web, "openaustralia.org"
+role :web, "openaustralia2"
+set :user, "deploy"
 
 # A great little trick I learned recently. If you have a machine running on a non-standard ssh port
 # put the following in your ~/.ssh/config file:
@@ -35,9 +35,9 @@ role :web, "openaustralia.org"
 # This will change the port for all ssh commands on that server which saves a whole lot of typing
 
 if stage == "production"
-  set :deploy_to, "/www/www/#{application}"
+  set :deploy_to, "/srv/www/www.#{application}"
 elsif stage == "test"
-  set :deploy_to, "/www/test/#{application}"
+  set :deploy_to, "/srv/www/test.#{application}"
   set :branch, "test"
 end
 
@@ -153,7 +153,7 @@ end
 namespace :deploy do
 	# Restart Apache because for some reason a deploy can cause trouble very occasionally (which is fixed by a restart). So, playing safe
 	task :restart do
-	  sudo "apachectl restart"
+	#  sudo "apache2ctl restart"
 	end
 
 	task :finalize_update do
