@@ -25,7 +25,7 @@ set :deploy_via, :remote_cache
 
 set :stage, "test" unless exists? :stage
 
-role :web, "openaustralia2"
+role :web, "kedumba.openaustraliafoundation.org.au"
 set :user, "deploy"
 
 # A great little trick I learned recently. If you have a machine running on a non-standard ssh port
