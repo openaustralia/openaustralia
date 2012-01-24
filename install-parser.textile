@@ -4,7 +4,7 @@ title: How to Install
 ---
 h1. How to Install
 
-This document explains how to install the openaustralia parser. The parser generates XML files which get loaded into the database of the web application. If all you need is the XML files and aren't interested particularly in installing and configuring the parser then you can just "download the XML files from data.openaustralia.org":download-xml-data.html.
+This document explains how to install the openaustralia parser, it assumes you've already installed the web application. The parser generates XML files which get loaded into the database of the web application. If all you need is the XML files and aren't interested particularly in installing and configuring the parser then you can just "download the XML files from data.openaustralia.org":download-xml-data.html.
 
 h2. Requirements
 
@@ -64,53 +64,24 @@ Note: Currently OpenAustralia requires an older version of mechanize (0.9.2), bu
 h3. For Windows
 
 Ruby has its own Windows versions that you need to get from "RubyInstaller for Windows":http://rubyinstaller.org/downloads (choose the one-click installer option).
-   
-Download and install Ruby 1.8.7-p357 (compatible with hpricot 0.6.164)
-Download and install DevKit-tdm-32-4.5.2-20111229-1559-sfx.exe
-Download and install ftp://ftp.imagemagick.org/pub/ImageMagick/binaries/ImageMagick-6.7.4-8-Q16-windows-dll.exe
-Download and install RMagick from https://github.com/rmagick/rmagick/zipball/master and extract it into "C:\Ruby187\lib\ruby\gems\1.8\gems\rmagick-rmagick\" folder.
-gem install rmagick
-gem install bundler
-bundle
+
+* Download and install Ruby 1.8.7-p357 (compatible with hpricot 0.6.164)
+* Download and install DevKit-tdm-32-4.5.2-20111229-1559-sfx.exe
+* Download and install ftp://ftp.imagemagick.org/pub/ImageMagick/binaries/ImageMagick-6.7.4-8-Q16-windows-dll.exe
+* Download and install RMagick from https://github.com/rmagick/rmagick/zipball/master and extract it into "C:\Ruby187\lib\ruby\gems\1.8\gems\rmagick-rmagick\" folder.
+* gem install rmagick
+* gem install bundler
+* bundle
 
 In addition to the Ruby gems required above you'll need to install Ruby-MySQL, which can be downloaded from "http://www.tmtm.org/en/ruby/mysql/":http://www.tmtm.org/en/ruby/mysql/.
 
-There is an error connecting to MySQL 5.0+ with Ruby due to change in password hash length so you will have to recompile with the include path set to the new MySQL C library
+There is an error connecting to MySQL 5.0+ with Ruby due to change in password hash length so you will have to recompile with the include path set to the new MySQL C library.
 
 h2. Configure the Parser
 
-The only configuration necessary is to change the web-root if you have installed the web application in another location. That value is <code>web_root</code> in <code>openaustralia/openaustralia-parser/configuration.yml</code>:
-web_root: "c:\xampp\htdocs\oa"
-
-Copy https://github.com/mysociety/theyworkforyou/blob/master/conf/general-example to c:\xampp\htdocs\oa\twfy\conf\general.
-
-Edit the define to have:
-
-define ("DB_HOST", "localhost");
-define ("DB_USER", "root");
-define ("DB_PASSWORD", "");
-define ("DB_NAME", "openaustralia");
-define ("FILEIMAGEPATH", "c:\xampp\htdocs\oa\openaustralia-parser\pwdata\images");
-define ("PWMEMBERS", "c:\xampp\htdocs\oa\openaustralia-parser\data");
-define ("RAWDATA", "c:\xampp\htdocs\oa\openaustralia-parser\data");
-define ("REGMEMPDFPATH", "c:\xampp\htdocs\oa\openaustralia-parser\data");
-define ("BASEDIR", "c:\xampp\htdocs\oa");
-
-Download and install XAMPP from http://www.apachefriends.org/en/xampp.html.
-
-This includes MySQL, Apache and PHP.
+The only configuration necessary is to change the web-root if you have installed the web application in another location. That value is <code>web_root</code> in <code>openaustralia/openaustralia-parser/configuration.yml</code>
 
 h2. Run the Parser
-
-In Windows, copy:
-
-https://github.com/openaustralia/rblib/blob/master/config.rb
-
-to
-
-c:\xampp\htdocs\oa\rblib\config.rb
-
-Edit config.rb to have c:\xampp\php\php.exe as PHP executable (currently only for UNIX).
 
 Before you can run the parser, you will need to create the directories that will hold the images of the MPs.
 
