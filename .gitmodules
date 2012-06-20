@@ -1,21 +1,21 @@
 [submodule "perllib"]
 	path = perllib
-	url = git://git.openaustralia.org/perllib.git
+	url = git://github.com/openaustralia/perllib.git
 [submodule "phplib"]
 	path = phplib
-	url = git://git.openaustralia.org/phplib.git
+	url = git://github.com/openaustralia/phplib.git
 [submodule "rblib"]
 	path = rblib
-	url = git://git.openaustralia.org/rblib.git
+	url = git://github.com/openaustralia/rblib.git
 [submodule "twfy"]
 	path = twfy
-	url = git://git.openaustralia.org/twfy.git
+	url = git://github.com/openaustralia/twfy.git
 [submodule "openaustralia-parser"]
 	path = openaustralia-parser
-	url = git://git.openaustralia.org/openaustralia-parser.git
+	url = git://github.com/openaustralia/openaustralia-parser.git
 [submodule "shlib"]
 	path = shlib
-	url = git://git.openaustralia.org/shlib.git
+	url = git://github.com/openaustralia/shlib.git
 [submodule "openaustralia-chef"]
 	path = openaustralia-chef
-	url = git://git.openaustralia.org/openaustralia-chef.git
+	url = git://github.com/openaustralia/openaustralia-chef.git
