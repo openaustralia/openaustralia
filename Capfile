@@ -19,7 +19,7 @@ set :application, "openaustralia.org"
 set :use_sudo, false
 
 set :scm, :git
-set :repository, "git://git.openaustralia.org/openaustralia.git"
+set :repository, "git://github.com/openaustralia/openaustralia.git"
 set :git_enable_submodules, true
 set :deploy_via, :remote_cache
 
