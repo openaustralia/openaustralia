@@ -161,7 +161,7 @@ namespace :deploy do
 	end
 
 	desc "After a code update, we link the images directories to the shared ones"
-	task :after_update_code do
+	after "deploy:update_code" do
 		links = {
 			"#{release_path}/searchdb"                                => "../../shared/searchdb",
 
