@@ -79,7 +79,14 @@ There is an error connecting to MySQL 5.0+ with Ruby due to change in password h
 
 h2. Configure the Parser
 
-The only configuration necessary is to change the web-root if you have installed the web application in another location. That value is <code>web_root</code> in <code>openaustralia/openaustralia-parser/configuration.yml</code>
+Copy the example configuration:
+
+<pre>
+$ cd openaustralia-parser
+$ cp configuration.yml.example configuration.yml
+</pre>
+
+The only configuration necessary is to change the web-root if you have installed the web application in another location. That value is <code>web_root</code> in the file you just copied: <code>configuration.yml</code>
 
 h2. Run the Parser
 
