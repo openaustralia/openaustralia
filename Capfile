@@ -77,3 +77,10 @@ namespace :deploy do
 		run "gcc -o #{release_path}/twfy/scripts/run-with-lockfile #{release_path}/twfy/scripts/run-with-lockfile.c"
 	end
 end
+
+namespace :parse do
+	desc 'Parses data about MPs & Senators and loads it into OpenAustralia'
+	task :members do
+		run "#{current_path}/openaustralia-parser/parse-members.rb"
+	end
+end
