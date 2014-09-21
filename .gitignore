@@ -3,4 +3,4 @@ xapiandb/*
 searchdb-lastupdated
 searchdb-previous/*
 searchdb/*
-
+.vagrant/
