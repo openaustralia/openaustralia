@@ -16,6 +16,3 @@
 [submodule "shlib"]
 	path = shlib
 	url = https://github.com/openaustralia/shlib.git
-[submodule "openaustralia-chef"]
-	path = openaustralia-chef
-	url = https://github.com/openaustralia/openaustralia-chef.git
