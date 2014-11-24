@@ -213,6 +213,14 @@ Restart Apache to make your changes active:
 sudo apachectl restart
 </pre>
 
+h2. PHP
+
+Ensure that <code>short_open_tag = On</code> is set in your <code>php.ini</code> file.
+
+<div class="forubuntu">
+This file is located in <code>/etc/php5/apache2/php.ini</code>.
+</div>
+
 h2. Configure the web application itself
 
 <div class="formac">
