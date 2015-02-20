@@ -80,6 +80,10 @@ namespace :deploy do
 		# Now compile twfy/scripts/run-with-lockfile.c
 		run "gcc -o #{release_path}/twfy/scripts/run-with-lockfile #{release_path}/twfy/scripts/run-with-lockfile.c"
 	end
+
+  task :setup_db do
+    run "mysql -u root openaustralia < #{current_path}/twfy/db/schema.sql"
+  end
 end
 
 namespace :parse do
