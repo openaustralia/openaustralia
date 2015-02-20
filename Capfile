@@ -18,7 +18,6 @@ set :deploy_via, :remote_cache
 
 set :stage, "test" unless exists? :stage
 
-role :web, "kedumba.openaustraliafoundation.org.au"
 set :user, "deploy"
 
 # A great little trick I learned recently. If you have a machine running on a non-standard ssh port
@@ -28,10 +27,15 @@ set :user, "deploy"
 # This will change the port for all ssh commands on that server which saves a whole lot of typing
 
 if stage == "production"
+  role :web, "kedumba.openaustraliafoundation.org.au"
   set :deploy_to, "/srv/www/www.#{application}"
 elsif stage == "test"
+  role :web, "kedumba.openaustraliafoundation.org.au"
   set :deploy_to, "/srv/www/test.#{application}"
   set :branch, "test"
+elsif stage == "development"
+  role :web, "openaustralia.org.au.dev"
+  set :deploy_to, "/srv/www"
 end
 
 load 'deploy' if respond_to?(:namespace) # cap2 differentiator
