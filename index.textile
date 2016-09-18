@@ -13,12 +13,12 @@ The web application code is licensed under a "BSD type license":https://secure.m
 <div class="span-7 box colborder">
 h3. Report bugs & suggest features
 
-Our bug database lives at "tickets.openaustralia.org":http://tickets.openaustralia.org/.
+Our bug database lives on GitHub at "github.com/openaustralia/openaustralia/issues":https://github.com/openaustralia/openaustralia/issues.
 
-* To report a bug or suggest a new feature please "create a new ticket":http://tickets.openaustralia.org/secure/CreateIssue!default.jspa.
-* You can "view the tickets":http://tickets.openaustralia.org/browse/OA.
+* "View the open issues":https://github.com/openaustralia/openaustralia/issues, or
+* "create a new issue":https://github.com/openaustralia/openaustralia/issues/new to report a bug or suggest a new feature. 
 
-Note that you will need to "signup":http://tickets.openaustralia.org/secure/Signup!default.jspa for an account before you can create or modify tickets.
+Note that you will need to "create a GitHub account":https://github.com/join before you can create or modify issues.
 
 There is also a "&#8220;big picture&#8221; overview of ideas for the future":towards-the-future.html.
 </div>
