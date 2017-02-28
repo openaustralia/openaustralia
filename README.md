@@ -64,3 +64,7 @@ If you've updated data about members you'll need to parse that and import it. Th
 `bundle exec cap --set-before stage=production parse:members`
 
 For other things, like attempting to parse a day's speeches after a parsing error, you'll need to log into the server to run the script(s) manually.
+
+## Copyright & License
+
+Copyright OpenAustralia Foundation Limited. Licensed under the Affero GPL. See LICENSE file for more details.
