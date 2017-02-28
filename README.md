@@ -1,7 +1,7 @@
 OpenAustralia.org
 =================
 
-This is the main OpenAustralia.org repository. The code you see here isn't interesting, it's just the submodules (which are interesting!), however this repository is used for [issue tracking](https://github.com/openaustralia/openaustralia/issues) across the whole project.
+This is the master OpenAustralia.org repository. Here you'll find [issue tracking](https://github.com/openaustralia/openaustralia/issues) for the whole project and how to deploy it. This repository doesn't contain much code, those are stored in the submodules.
 
 If you're interesting in contributing code, check out these projects:
 
