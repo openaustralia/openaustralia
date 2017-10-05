@@ -56,46 +56,21 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # View the documentation for the provider you're using for more
   # information on available options.
 
-  config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "provisioning/development.yml"
+  hostname = "openaustralia.org.au.dev"
+  config.vm.define hostname do |development|
+    development.vm.hostname = hostname
+    development.vm.synced_folder ".", "/vagrant", disabled: true
 
-    # Doing this here so we don't need to put in the playbook
-    ansible.sudo = true
+    development.vm.provider "virtualbox" do |v|
+      v.memory = 1024
+      # Uncomment this and crank up the memory for a faster build
+      # v.cpus = 2
+    end
 
-    # Uncomment the following line if you want some verbose output from ansible
-    #ansible.verbose = "vv"
-
-    ansible.groups = {
-      "righttoknow"      => ["righttoknow.org.au.dev"],
-      "planningalerts"   => ["planningalerts.org.au.dev"],
-      "electionleaflets" => ["electionleaflets.org.au.dev"],
-      "theyvoteforyou"   => ["theyvoteforyou.org.au.dev"],
-      "oaf"              => ["oaf.org.au.dev"],
-      "openaustralia"    => ["openaustralia.org.au.dev"],
-      "morph"            => ["morph.io.dev"]
-    }
-  end
-
-  config.vm.provider "virtualbox" do |v|
-    v.memory = 1024
-    # Uncomment this and crank up the memory for a faster build
-    # v.cpus = 2
-  end
-
-  hosts = {
-    "righttoknow.org.au.dev"      => "192.168.10.10",
-    "planningalerts.org.au.dev"   => "192.168.10.11",
-    "electionleaflets.org.au.dev" => "192.168.10.12",
-    "theyvoteforyou.org.au.dev"   => "192.168.10.14",
-    "oaf.org.au.dev"              => "192.168.10.15",
-    "openaustralia.org.au.dev"    => "192.168.10.16",
-    "morph.io.dev"                => "192.168.10.17"
-  }
-
-  hosts.each do |hostname, ip|
-    config.vm.define hostname do |host|
-      host.vm.network :private_network, ip: ip
-      host.vm.hostname = hostname
+    development.vm.provision :ansible do |ansible|
+      ansible.playbook = "provisioning/development.yml"
+      ansible.sudo = true
+      ansible.verbose = "v"
     end
   end
 end
