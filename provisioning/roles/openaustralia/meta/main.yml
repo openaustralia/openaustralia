@@ -5,7 +5,7 @@ dependencies:
     mysql_root_password: ''
     mysql_databases:
       - name: openaustralia
-  - role: rvm_io.rvm1-ruby
+  - role: rvm_io.ruby
     rvm1_rubies:
       # Picking similar one installed on the old server (and used by openaustralia.org)
       - ruby-1.8.7-p374
