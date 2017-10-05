@@ -1,6 +1,4 @@
 ---
-- include_vars: encrypted.yml
-
 - name: Install required packages
   apt: name={{ item }} state=present
   with_items:
