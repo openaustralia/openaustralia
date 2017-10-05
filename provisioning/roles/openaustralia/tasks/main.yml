@@ -13,7 +13,6 @@
     - ghostscript
     - libxslt1-dev
     - libxml-twig-perl
-    - msmtp
 
 - name: Install required gems
   gem: name={{ item.name }} version={{ item.version }} user_install=no state=present
@@ -56,6 +55,3 @@
 - name: Disable default virtual host
   file: dest="/etc/apache2/sites-enabled/000-default.conf" state=absent
   notify: reload apache
-
-- name: Copy msmtp configuration
-  template: src=msmtprc dest=/etc/
