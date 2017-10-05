@@ -65,10 +65,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # Uncomment the following line if you want some verbose output from ansible
     #ansible.verbose = "vv"
 
-    # Don't try to setup DNS stuff when running things through vagrant
-    # because chances are we're just doing things with development VMs anyway
-    ansible.skip_tags = "dns"
-
     ansible.groups = {
       "righttoknow"      => ["righttoknow.org.au.dev"],
       "planningalerts"   => ["planningalerts.org.au.dev"],
