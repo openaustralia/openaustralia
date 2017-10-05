@@ -1,0 +1,23 @@
+driftfile {{ntp_driftfile}}
+# statistics will be logged
+statsdir {{ntp_statsdir}}
+
+leapfile {{ntp_leapfile}}
+
+statistics loopstats peerstats clockstats
+filegen loopstats file loopstats type day enable
+filegen peerstats file peerstats type day enable
+filegen clockstats file clockstats type day enable
+
+# Specification of one or more NTP servers
+{% for ntp_server in ntp_servers %}
+server {{ntp_server}}
+{% endfor %}
+
+# Use Ubuntu's ntp server as a fallback.
+server ntp.ubuntu.com
+
+# ntp restricts
+{% for restrict in ntp_restricts %}
+{{restrict}}
+{% endfor %}

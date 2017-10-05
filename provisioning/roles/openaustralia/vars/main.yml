@@ -1,0 +1,8 @@
+---
+# TODO These keys are replicated in the roles. Remove this duplication
+dnsmadeeasy_key: "{{ encrypted_dnsmadeeasy_key }}"
+dnsmadeeasy_secret: "{{ encrypted_dnsmadeeasy_secret }}"
+
+morph_api_key: "{{ encrypted_morph_api_key }}"
+cuttlefish_username: php_14
+cuttlefish_password: "{{ encrypted_cuttlefish_password }}"

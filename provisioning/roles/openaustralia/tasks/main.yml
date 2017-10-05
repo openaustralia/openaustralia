@@ -1,0 +1,133 @@
+---
+- include_vars: encrypted.yml
+- include_vars: encrypted_vars/dnsmadeeasy.yml
+
+- name: Ensure that directories exist
+  file: path={{ item }} owner=deploy group=deploy state=directory
+  with_items:
+    - "/srv/www/log"
+    - "/srv/www/releases"
+    - "/srv/www/shared/config"
+    - "/srv/www/shared/images/mps"
+    - "/srv/www/shared/images/mpsL"
+
+# TODO Extract php-mysql-apache role
+- name: Install required packages
+  apt: name={{ item }} state=present
+  with_items:
+    - php5
+    - php5-curl
+    - php5-mysql
+    - apache2
+    - libapache2-mod-php5
+    - imagemagick
+    - libmagickcore-dev
+    - libmagickwand-dev
+    - ghostscript
+    - libxslt1-dev
+    - libxml-twig-perl
+    - msmtp
+
+- name: Install required gems
+  gem: name={{ item.name }} version={{ item.version }} user_install=no state=present
+  with_items:
+    - {name: nokogiri,      version: 1.4.4}
+    - {name: mechanize,     version: 0.9.2}
+    - {name: activesupport, version: 3.0.4}
+    - {name: builder,       version: 2.1.2}
+    - {name: rmagick,       version: 2.13.1}
+    - {name: htmlentities,  version: 4.2.1}
+    - {name: log4r,         version: 1.1.8}
+    - {name: json,          version: 1.8.0}
+    - {name: hpricot,       version: 0.6.164}
+    - {name: rspec,         version: 2.5.0}
+    - {name: rcov,          version: 0.9.9}
+    - {name: i18n,          version: 0.5.0}
+
+- name: Enable apache modules
+  apache2_module: state=present name={{ item }}
+  notify: reload apache
+  with_items:
+    - expires
+    - rewrite
+
+- name: Copy across the php config
+  template: src=php.ini dest=/etc/php5/{{ item }}/
+  notify: reload apache
+  with_items:
+    - apache2
+    - cli
+
+- name: Copy across the apache config
+  template: src=openaustralia.org.au.dev.conf dest=/etc/apache2/sites-available/
+  notify: reload apache
+
+- name: Copy across the application config
+  template: src=general dest=/srv/www/shared/
+  notify: reload apache
+
+- name: Copy across the parser config
+  template: src=configuration.yml dest=/srv/www/shared/parser_configuration.yml
+
+- name: Enable virtual host
+  file: src="../sites-available/openaustralia.org.au.dev.conf" dest="/etc/apache2/sites-enabled/openaustralia.org.au.dev.conf" state=link
+  notify: reload apache
+
+- name: Disable default virtual host
+  file: dest="/etc/apache2/sites-enabled/000-default.conf" state=absent
+  notify: reload apache
+
+- name: Copy msmtp configuration
+  template: src=msmtprc dest=/etc/
+
+- name: DNS setup for openaustralia.org.au
+  dnsmadeeasy: account_key={{ dnsmadeeasy_key }} account_secret={{ dnsmadeeasy_secret }} domain="openaustralia.org.au" record_ttl=1800 state=present record_name="{{ item.name }}" record_type="{{ item.type }}" record_value='{{ item.value }}'
+  tags:
+    - dns
+  with_items:
+    - {type: "A", name: "",        value: "103.243.244.10"}
+    - {type: "CNAME", name: "www", value:  ""}
+    - {type: "CNAME", name: "data", value: ""}
+    - {type: "MX", name: "", value: "10 aspmx.l.google.com."}
+    - {type: "MX", name: "", value: "20 alt1.aspmx.l.google.com."}
+    - {type: "MX", name: "", value: "20 alt2.aspmx.l.google.com."}
+    - {type: "MX", name: "", value: "30 aspmx2.googlemail.com."}
+    - {type: "MX", name: "", value: "30 aspmx3.googlemail.com."}
+    - {type: "MX", name: "", value: "30 aspmx4.googlemail.com."}
+    - {type: "MX", name: "", value: "30 aspmx5.googlemail.com."}
+    - {type: "TXT", name: "", value: '"v=spf1 a include:_spf.google.com ~all"'}
+
+- name: DNS setup for openaustralia.org
+  dnsmadeeasy: account_key={{ dnsmadeeasy_key }} account_secret={{ dnsmadeeasy_secret }} domain="openaustralia.org" record_ttl=1800 state=present record_name="{{ item.name }}" record_type="{{ item.type }}" record_value='{{ item.value }}'
+  tags:
+    - dns
+  with_items:
+    - {type: "A", name: "",        value: "103.243.244.10"}
+    - {type: "A", name: "kedumba", value: "103.243.244.10"}
+    - {type: "CNAME", name: "www",      value: "kedumba"}
+    - {type: "CNAME", name: "test",     value: "kedumba"}
+    # TODO Do blog redirect here rather than on the server
+    - {type: "CNAME", name: "blog",     value: "kedumba"}
+    - {type: "CNAME", name: "data",     value: "kedumba"}
+    # TODO Redirect git here rather than on the server
+    - {type: "CNAME", name: "git",      value: "kedumba"}
+    - {type: "CNAME", name: "software", value: "kedumba"}
+    # TODO Redirect wiki here rather than on the server
+    - {type: "CNAME", name: "wiki",     value: "kedumba"}
+    # TODO Do we need any of these google CNAMEs anymore?
+    - {type: "CNAME", name: "calendar", value: "ghs.google.com."}
+    - {type: "CNAME", name: "groups",   value: "ghs.google.com."}
+    - {type: "CNAME", name: "hackfest", value: "ghs.google.com."}
+    - {type: "CNAME", name: "mail",     value: "ghs.google.com."}
+    - {type: "CNAME", name: "start",    value: "ghs.google.com."}
+    - {type: "CNAME", name: "wave",     value: "ghs.google.com."}
+    - {type: "HTTPRED", name: "tickets", value: "http://tickets.openaustraliafoundation.org.au"}
+    - {type: "MX", name: "", value: "10 aspmx.l.google.com."}
+    - {type: "MX", name: "", value: "20 alt1.aspmx.l.google.com."}
+    - {type: "MX", name: "", value: "20 alt2.aspmx.l.google.com."}
+    - {type: "MX", name: "", value: "30 aspmx2.googlemail.com."}
+    - {type: "MX", name: "", value: "30 aspmx3.googlemail.com."}
+    - {type: "MX", name: "", value: "30 aspmx4.googlemail.com."}
+    - {type: "MX", name: "", value: "30 aspmx5.googlemail.com."}
+    - {type: "TXT", name: "", value: '"v=spf1 a include:_spf.google.com ~all"'}
+    - {type: "TXT", name: "cuttlefish._domainkey", value: '"k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnTduUSfwRbdTef45qgzmJ75zTtwiFgtadq/KFfY18/1plQiSSvzpOTNZQjuPW+5X9AeHQhPGtrxLd26ho/V/8FTj2YiAkpi0uwjPBMiERNhOYT9AJzImNpTmFaa9Sq2JXnhYJQHZhlEVu2iE3ZQEZ+3gIbgvS23vFSYwv3n3HwcbAo3epYCekVglKBZvbGvChXZvmN90wz""5ovTv74VPOiq96xPWkzcbA5CEiEGfJT8VqNdciQlbEy3Mpijyj/2qPvwZzDCG2xVS47FUr7xYXPRd/JUx7qDw+xlaFUQuT9S6/6zYWwJW7qJ4REIPvC/paORPfnsyqk8c6MIOH9nMXzQIDAQAB"'}

@@ -1,0 +1,37 @@
+---
+# tasks file for base-server
+- name: Enable firewall and deny traffic by default
+  ufw:
+    state: enabled
+    policy: deny
+
+- name: Allow rate-limited SSH trafic
+  ufw:
+    rule: limit
+    port: ssh
+    proto: tcp
+
+- name: Allow HTTP traffic
+  ufw:
+    rule: allow
+    port: http
+    proto: tcp
+
+- name: Allow HTTPS traffic
+  ufw:
+    rule: allow
+    port: https
+    proto: tcp
+
+- name: Ensure git is installed
+  apt:
+    pkg: git
+
+# Setup timezone stuff
+
+- name: Install tzdata package
+  apt: pkg=tzdata state=present
+
+- name: Set timezone in /etc/timezone
+  copy: content="Australia/Sydney\n" dest=/etc/timezone
+  notify: Update timezone

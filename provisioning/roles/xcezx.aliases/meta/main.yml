@@ -1,0 +1,12 @@
+---
+galaxy_info:
+  author: xcezx
+  description: update mail aliases database
+  license: BSD
+  min_ansible_version: 1.2
+  platforms:
+    - name: EL
+      versions:
+        - 6
+  categories:
+    - system

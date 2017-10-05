@@ -1,0 +1,42 @@
+#
+# Edit this file to control the behaviour of the parser
+#
+
+# The root directory of the patched Australian version of the TheyWorkForYou
+# website.
+web_root: "/srv/www/current"
+
+html_cache_path: "/srv/www/shared/html_cache"
+log_path: "/srv/www/shared/parser.log"
+
+# Should hopefully not have to change anything below here
+
+# This is where the parser looks for Hansard data
+parlinfo_web_root: "http://parlinfoweb.aph.gov.au/piweb"
+# This is the path to the Hansard data that is used for generating links
+permalink_parlinfo_web_root: "http://parlinfoweb.aph.gov.au/piweb"
+
+# Links to the biographies of all *current* house members and senators
+current_house_members_url: "http://parlinfoweb.aph.gov.au/piwebtemp/browse.aspx?path=Parliamentary%20Handbook%20%3E%20Biographies%20%3E%20Current%20Members"
+current_senate_members_url: "http://parlinfoweb.aph.gov.au/piwebtemp/browse.aspx?path=Parliamentary%20Handbook%20%3E%20Biographies%20%3E%20Current%20Senators"
+# Links to the biographies of all *former* senators and representatives
+former_members_house_and_senate_url: "http://parlinfoweb.aph.gov.au/piwebtemp/browse.aspx?path=Parliamentary%20Handbook%20%3E%20Biographies%20%3E%20Former%20Senators%20and%20Members"
+
+# Alternative version of biography pages for current representatives and senators
+alternative_current_house_members_url: "http://www.aph.gov.au/house/members/mi-alpha.asp"
+alternative_current_senate_members_url: "http://www.aph.gov.au/Senate/senators/homepages/index.asp"
+
+# List of electorates from website for the ABC's Q&A programme
+qanda_electorate_url: "http://www.abc.net.au/tv/qanda/find-your-local-mp.htm"
+qanda_all_senators_url: "http://www.abc.net.au/tv/qanda/find-a-senate-member-by-a-z.htm"
+
+# ABC 2007 election results
+election_web_root: "http://www.abc.net.au/elections/federal/2007"
+
+# Selectively allows us to turn off and on the writing of the XML
+write_xml_representatives: true
+write_xml_senators: true
+
+# Morph API key
+morph_api_key: {{ morph_api_key }}
+

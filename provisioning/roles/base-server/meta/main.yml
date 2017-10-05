@@ -1,0 +1,15 @@
+---
+dependencies:
+  - role: deploy-user
+    github_users: ['mlandauer', 'henare']
+  - role: xcezx.aliases
+    aliases:
+      - {user: deploy, alias: root}
+      - {user: root, alias: web-administrators@openaustralia.org}
+  - role: ANXS.ntp
+  - role: jnv.unattended-upgrades
+    unattended_automatic_reboot: true
+  # Let's always install database backup scripts (even if we're not using one of the databases)
+  # TODO This runs apt update. Fix this
+  - role: MaximeThoonsen.autopostgresqlbackup
+  - role: MaximeThoonsen.automysqlbackup

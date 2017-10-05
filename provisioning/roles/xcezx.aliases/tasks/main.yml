@@ -1,0 +1,13 @@
+- name: Ensure Postfix is installed
+  apt: >
+    name=postfix
+    state=present
+
+- name: configure /etc/aliases
+  lineinfile:
+    dest: /etc/aliases
+    line: "{{ item.user }}: {{ item.alias }}"
+    regexp: "^{{ item.user }}:"
+  with_items: aliases
+  sudo: yes
+  notify: update aliases database
