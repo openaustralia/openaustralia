@@ -12,8 +12,12 @@ If you're interesting in contributing code, check out these projects:
 TODO: OA uses old stuff. The easiest way to get setup is to use Vagrant...but not everything probably works yet.
 
 * [Clone repo]
-* In this directory run `vagrant up`.
-* [Set config]
+* In this directory run `vagrant up`
+* Copy application configuration:
+```
+cp provisioning/configuration.yml.ansible openaustralia-parser/configuration.yml
+cp provisioning/general.ansible twfy/conf/general
+```
 * [Visit web page!]
 
 ## Deployment
