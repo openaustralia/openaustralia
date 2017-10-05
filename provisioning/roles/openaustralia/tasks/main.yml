@@ -1,15 +1,6 @@
 ---
 - include_vars: encrypted.yml
 
-- name: Ensure that directories exist
-  file: path={{ item }} owner=deploy group=deploy state=directory
-  with_items:
-    - "/srv/www/log"
-    - "/srv/www/releases"
-    - "/srv/www/shared/config"
-    - "/srv/www/shared/images/mps"
-    - "/srv/www/shared/images/mpsL"
-
 # TODO Extract php-mysql-apache role
 - name: Install required packages
   apt: name={{ item }} state=present
