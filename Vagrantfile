@@ -60,6 +60,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.define hostname do |development|
     development.vm.hostname = hostname
     development.vm.synced_folder ".", "/vagrant", disabled: true
+    development.vm.synced_folder ".", "/srv/www/openaustralia"
 
     development.vm.provider "virtualbox" do |v|
       v.memory = 1024
