@@ -11,5 +11,6 @@ dependencies:
     unattended_automatic_reboot: true
   # Let's always install database backup scripts (even if we're not using one of the databases)
   # TODO This runs apt update. Fix this
-  - role: MaximeThoonsen.autopostgresqlbackup
-  - role: MaximeThoonsen.automysqlbackup
+  # Commented out for our development system
+  # - role: MaximeThoonsen.autopostgresqlbackup
+  # - role: MaximeThoonsen.automysqlbackup
