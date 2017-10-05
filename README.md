@@ -7,9 +7,14 @@ If you're interesting in contributing code, check out these projects:
 * The web application: [openaustralia/twfy](https://github.com/openaustralia/twfy)
 * The parser: [openaustralia/openaustralia-parser](https://github.com/openaustralia/openaustralia-parser)
 
-## Setting Up Development Environment
+## Development
 
+TODO: OA uses old stuff. The easiest way to get setup is to use Vagrant...but not everything probably works yet.
+
+* [Clone repo]
 * In this directory run `vagrant up`.
+* [Set config]
+* [Visit web page!]
 
 ## Deployment
 
