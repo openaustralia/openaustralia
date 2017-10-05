@@ -1,7 +1,6 @@
 ---
 - include_vars: encrypted.yml
 
-# TODO Extract php-mysql-apache role
 - name: Install required packages
   apt: name={{ item }} state=present
   with_items:
