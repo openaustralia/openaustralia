@@ -1,3 +1,0 @@
-- name: update aliases database
-  command: newaliases
-  sudo: yes
