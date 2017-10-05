@@ -61,13 +61,6 @@
   template: src=openaustralia.org.au.dev.conf dest=/etc/apache2/sites-available/
   notify: reload apache
 
-- name: Copy across the application config
-  template: src=general dest=/srv/www/shared/
-  notify: reload apache
-
-- name: Copy across the parser config
-  template: src=configuration.yml dest=/srv/www/shared/parser_configuration.yml
-
 - name: Enable virtual host
   file: src="../sites-available/openaustralia.org.au.dev.conf" dest="/etc/apache2/sites-enabled/openaustralia.org.au.dev.conf" state=link
   notify: reload apache
