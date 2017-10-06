@@ -18,7 +18,15 @@ TODO: OA uses old stuff. The easiest way to get setup is to use Vagrant...but no
 cp provisioning/configuration.yml.ansible openaustralia-parser/configuration.yml
 cp provisioning/general.ansible twfy/conf/general
 ```
-* [Visit web page!]
+* Setup the database:
+```
+# Login to Vagrant
+vagrant ssh
+# Load the database schema then logout
+mysql -u root openaustralia < /srv/www/openaustralia/twfy/db/schema.sql
+logout
+```
+* Yay, you've done it! Visit http://openaustralia.org.au.dev and you should see your development copy of OpenAustralia.org.au
 
 ## Deployment
 
