@@ -17,7 +17,6 @@
 - name: Install required gems
   gem: name={{ item.name }} version={{ item.version }} user_install=no state=present
   with_items:
-    - {name: nokogiri,      version: 1.4.4}
     - {name: mechanize,     version: 0.9.2}
     - {name: activesupport, version: 3.0.4}
     - {name: builder,       version: 2.1.2}
