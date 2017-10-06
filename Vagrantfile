@@ -58,7 +58,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   hostname = "openaustralia.org.au.dev"
   config.vm.define hostname do |development|
+    # Allow hostupdater to automatically setup openaustralia.org.au.dev for us
+    development.vm.network :private_network, ip: "192.168.3.10"
     development.vm.hostname = hostname
+
     development.vm.synced_folder ".", "/vagrant", disabled: true
     development.vm.synced_folder ".", "/srv/www/openaustralia"
 
