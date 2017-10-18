@@ -9,9 +9,17 @@ The key sub-projects are:
 
 ## Development
 
-TODO: OA uses old stuff. The easiest way to get setup is to use Vagrant...but not everything probably works yet.
+OpenAustralia.org is currently deployed on Ubuntu 12.04 and has a number of quite old dependencies. This means it can be a bit difficult to get it running on a modern machine (if you'd like to try anyway there's [an old website](https://openaustralia.github.io/openaustralia/) that has the details).
 
-* [Clone repo]
+The easiest way to get a development copy running is to use Vagrant, VirtualBox, and Ansible with the Vagrantfile in this repository.
+
+Once you've got them installed, install the following Vagrant plugin to streamline configuration of the hostname:
+
+`vagrant plugin install vagrant-hostsupdater`
+
+Next:
+
+* `git clone --recursive https://github.com/openaustralia/openaustralia.git && cd openaustralia`
 * In this directory run `vagrant up`
 * Copy application configuration:
 ```
