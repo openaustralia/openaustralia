@@ -2,7 +2,7 @@
 
 This is the master OpenAustralia.org repository. Here you'll find [issue tracking](https://github.com/openaustralia/openaustralia/issues) for the whole project and how to deploy it. This repository doesn't contain much code, those are stored in the submodules.
 
-If you're interesting in contributing code, check out these projects:
+The key sub-projects are:
 
 * The web application: [openaustralia/twfy](https://github.com/openaustralia/twfy)
 * The parser: [openaustralia/openaustralia-parser](https://github.com/openaustralia/openaustralia-parser)
