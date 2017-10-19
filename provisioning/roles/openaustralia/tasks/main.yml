@@ -5,6 +5,7 @@
     - php5
     - php5-curl
     - php5-mysql
+    - libmysqlclient-dev
     - apache2
     - libapache2-mod-php5
     - imagemagick
@@ -15,19 +16,7 @@
     - libxml-twig-perl
 
 - name: Install required gems
-  gem: name={{ item.name }} version={{ item.version }} user_install=no state=present
-  with_items:
-    - {name: mechanize,     version: 0.9.2}
-    - {name: activesupport, version: 3.0.4}
-    - {name: builder,       version: 2.1.2}
-    - {name: rmagick,       version: 2.13.1}
-    - {name: htmlentities,  version: 4.2.1}
-    - {name: log4r,         version: 1.1.8}
-    - {name: json,          version: 1.8.0}
-    - {name: hpricot,       version: 0.6.164}
-    - {name: rspec,         version: 2.5.0}
-    - {name: rcov,          version: 0.9.9}
-    - {name: i18n,          version: 0.5.0}
+  bundler: gemfile=/srv/www/openaustralia/openaustralia-parser/Gemfile state=present
 
 - name: Enable apache modules
   apache2_module: state=present name={{ item }}
