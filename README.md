@@ -19,22 +19,22 @@ Once you've got them installed, install the following Vagrant plugin to streamli
 
 Next:
 
-* `git clone --recursive https://github.com/openaustralia/openaustralia.git && cd openaustralia`
-* In this directory run `vagrant up`
-* Copy application configuration:
 ```
+# Clone this repository and all its submodules
+git clone --recursive https://github.com/openaustralia/openaustralia.git && cd openaustralia
+
+# Build and boot the Vagrant machine (this will download a lot and take a long time)
+vagrant up
+
+# Copy application configuration
 cp provisioning/configuration.yml.ansible openaustralia-parser/configuration.yml
 cp provisioning/general.ansible twfy/conf/general
+
+# Setup the database on the Vagrant machine
+vagrant ssh --command 'mysql -u root openaustralia < /srv/www/openaustralia/twfy/db/schema.sql'
 ```
-* Setup the database:
-```
-# Login to Vagrant
-vagrant ssh
-# Load the database schema then logout
-mysql -u root openaustralia < /srv/www/openaustralia/twfy/db/schema.sql
-logout
-```
-* Yay, you've done it! Visit http://openaustralia.org.au.dev and you should see your development copy of OpenAustralia.org.au
+
+Yay, you've done it! Visit http://openaustralia.org.au.dev and you should see your development copy of OpenAustralia.org.au
 
 ## Deployment
 
