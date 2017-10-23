@@ -14,6 +14,7 @@
     - ghostscript
     - libxslt1-dev
     - libxml-twig-perl
+    - liberror-perl
 
 - name: Install required gems
   bundler: gemfile=/srv/www/openaustralia/openaustralia-parser/Gemfile state=present
