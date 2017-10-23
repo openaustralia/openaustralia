@@ -42,5 +42,5 @@
   notify: reload apache
 
 - name: Disable default virtual host
-  file: dest="/etc/apache2/sites-enabled/000-default.conf" state=absent
+  file: dest="/etc/apache2/sites-enabled/000-default" state=absent
   notify: reload apache
