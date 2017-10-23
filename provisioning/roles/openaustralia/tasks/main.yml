@@ -15,6 +15,10 @@
     - libxslt1-dev
     - libxml-twig-perl
     - liberror-perl
+    # FIXME: This package is needed by OA.org
+    #        It's not available in the repos due to a licensing issue so needs
+    #        to be built manually and installed.
+    #- php5-xapian
 
 - name: Install required gems
   bundler: gemfile=/srv/www/openaustralia/openaustralia-parser/Gemfile state=present
