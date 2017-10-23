@@ -73,7 +73,9 @@ define ("REGMEMPDFPATH", "regmem/scan/");
 define ("METADATAPATH", BASEDIR . "/../includes/easyparliament/metadata.php");
 
 // Search related. If non-empty will use XAPIAN search instead of mysql search
-define ("XAPIANDB", '/srv/www/openaustralia/searchdb');
+// Disable Xapian until we can get php5-xapian installed in Vagrant
+// define ("XAPIANDB", '/srv/www/openaustralia/searchdb');
+define ("XAPIANDB", '');
 
 // Location of the parliamentary recess data file. You can access this remotely
 // from the main theyworkforyou site if you use
