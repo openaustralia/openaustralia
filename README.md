@@ -35,6 +35,9 @@ vagrant ssh --command 'mysql -u root openaustralia < /srv/www/openaustralia/twfy
 
 # Load MPs into the database
 vagrant ssh --command '/srv/www/openaustralia/openaustralia-parser/parse-members.rb'
+
+# Download, parse, and load speeches for an example day
+vagrant ssh --command '/srv/www/openaustralia/openaustralia-parser/parse-speeches.rb 2017-08-08'
 ```
 
 Yay, you've done it! Visit http://openaustralia.org.au.dev and you should see your development copy of OpenAustralia.org.au
