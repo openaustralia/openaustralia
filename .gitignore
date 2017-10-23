@@ -4,3 +4,4 @@ searchdb-lastupdated
 searchdb-previous/*
 searchdb/*
 .vagrant/
+provisioning/development.retry

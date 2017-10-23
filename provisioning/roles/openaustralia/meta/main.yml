@@ -1,0 +1,12 @@
+---
+dependencies:
+  - role: ANXS.mysql
+    mysql_bind_address: '127.0.0.1'
+    mysql_root_password: ''
+    mysql_databases:
+      - name: openaustralia
+  - role: rvm_io.ruby
+    rvm1_rubies: ['ruby-1.8.7-p374']
+    rvm1_user: root
+    rvm1_install_flags: '--auto-dotfiles'
+    rvm1_install_path: /usr/local/rvm

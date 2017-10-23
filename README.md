@@ -2,16 +2,45 @@
 
 This is the master OpenAustralia.org repository. Here you'll find [issue tracking](https://github.com/openaustralia/openaustralia/issues) for the whole project and how to deploy it. This repository doesn't contain much code, those are stored in the submodules.
 
-If you're interesting in contributing code, check out these projects:
+The key sub-projects are:
 
 * The web application: [openaustralia/twfy](https://github.com/openaustralia/twfy)
 * The parser: [openaustralia/openaustralia-parser](https://github.com/openaustralia/openaustralia-parser)
 
-## Setting Up Development Environment
+## Development
 
-* In this directory; run "vagrant up"; it will load up a Debian 7.3 host with Docker installed, pull down the twfy Docker web container + MySQL 5.5 DB and deploy
-* Demo site with some data can be found via http://www.192.168.111.66.xip.io
-* To update code: Go to /var/www/openaustralia/ and git pull as well as git submodule update
+OpenAustralia.org is currently deployed on Ubuntu 12.04 and has a number of quite old dependencies. This means it can be a bit difficult to get it running on a modern machine (if you'd like to try anyway there's [an old website](https://openaustralia.github.io/openaustralia/) that has the details).
+
+The easiest way to get a development copy running is to use Vagrant, VirtualBox, and Ansible with the Vagrantfile in this repository.
+
+Once you've got them installed, install the following Vagrant plugin to streamline configuration of the hostname:
+
+`vagrant plugin install vagrant-hostsupdater`
+
+Next:
+
+```
+# Clone this repository and all its submodules
+git clone --recursive https://github.com/openaustralia/openaustralia.git && cd openaustralia
+
+# Build and boot the Vagrant machine (this will download a lot and take a long time)
+vagrant up
+
+# Copy application configuration
+cp provisioning/configuration.yml.ansible openaustralia-parser/configuration.yml
+cp provisioning/general.ansible twfy/conf/general
+
+# Setup the database on the Vagrant machine
+vagrant ssh --command 'mysql -u root openaustralia < /srv/www/openaustralia/twfy/db/schema.sql'
+
+# Load MPs into the database
+vagrant ssh --command '/srv/www/openaustralia/openaustralia-parser/parse-members.rb'
+
+# Download, parse, and load speeches for an example day
+vagrant ssh --command '/srv/www/openaustralia/openaustralia-parser/parse-speeches.rb 2017-08-08'
+```
+
+Yay, you've done it! Visit http://openaustralia.org.au.dev and you should see your development copy of OpenAustralia.org.au
 
 ## Deployment
 
