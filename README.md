@@ -32,6 +32,9 @@ cp provisioning/general.ansible twfy/conf/general
 
 # Setup the database on the Vagrant machine
 vagrant ssh --command 'mysql -u root openaustralia < /srv/www/openaustralia/twfy/db/schema.sql'
+
+# Load MPs into the database
+vagrant ssh --command '/srv/www/openaustralia/openaustralia-parser/parse-members.rb'
 ```
 
 Yay, you've done it! Visit http://openaustralia.org.au.dev and you should see your development copy of OpenAustralia.org.au
