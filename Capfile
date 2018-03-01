@@ -35,7 +35,12 @@ elsif stage == "test"
   set :branch, "test"
 elsif stage == "development"
   role :web, "openaustralia.org.au.dev"
-  set :deploy_to, "/srv/www"
+  set :deploy_to, "/srv/www/production"
+  set :branch, "server-migration"
+elsif stage == "ec2"
+  role :web, "ec2.openaustralia.org.au"
+  set :deploy_to, "/srv/www/production"
+  set :branch, "server-migration"
 end
 
 load 'deploy' if respond_to?(:namespace) # cap2 differentiator
