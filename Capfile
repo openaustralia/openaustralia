@@ -27,15 +27,16 @@ set :user, "deploy"
 # This will change the port for all ssh commands on that server which saves a whole lot of typing
 
 if stage == "production"
-  role :web, "kedumba.openaustraliafoundation.org.au"
-  set :deploy_to, "/srv/www/www.#{application}"
+  role :web, "openaustralia.org.au"
+  set :deploy_to, "/srv/www/production"
 elsif stage == "test"
-  role :web, "kedumba.openaustraliafoundation.org.au"
-  set :deploy_to, "/srv/www/test.#{application}"
+  role :web, "openaustralia.org.au"
+  set :deploy_to, "/srv/www/staging"
   set :branch, "test"
 elsif stage == "development"
   role :web, "openaustralia.org.au.dev"
-  set :deploy_to, "/srv/www"
+  set :deploy_to, "/srv/www/production"
+  set :branch, "server-migration"
 end
 
 load 'deploy' if respond_to?(:namespace) # cap2 differentiator
