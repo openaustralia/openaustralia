@@ -56,9 +56,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # View the documentation for the provider you're using for more
   # information on available options.
 
-  hostname = "openaustralia.org.au.dev"
+  hostname = "openaustralia.org.au.test"
   config.vm.define hostname do |development|
-    # Allow hostupdater to automatically setup openaustralia.org.au.dev for us
+    # Allow hostupdater to automatically setup openaustralia.org.au.test for us
     development.vm.network :private_network, ip: "192.168.3.10"
     development.vm.hostname = hostname
 

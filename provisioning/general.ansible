@@ -12,8 +12,8 @@ define ("DB_NAME", "openaustralia");
 // *******************************************************************************
 // Domains.
 // Set this to the domain you are hosting on. If you're running locally, this will be "localhost"
-define ("DOMAIN", "openaustralia.org.au.dev");
-define ("COOKIEDOMAIN", "openaustralia.org.au.dev");
+define ("DOMAIN", "openaustralia.org.au.test");
+define ("COOKIEDOMAIN", "openaustralia.org.au.test");
 
 // General 'Contact us' type email address. Point this at a real address if you
 // want the site generated email to come to you. Can be overridden for other mails below.

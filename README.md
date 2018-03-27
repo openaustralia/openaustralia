@@ -40,7 +40,7 @@ vagrant ssh --command '/srv/www/openaustralia/openaustralia-parser/parse-members
 vagrant ssh --command '/srv/www/openaustralia/openaustralia-parser/parse-speeches.rb 2017-08-08'
 ```
 
-Yay, you've done it! Visit http://openaustralia.org.au.dev and you should see your development copy of OpenAustralia.org.au
+Yay, you've done it! Visit http://openaustralia.org.au.test and you should see your development copy of OpenAustralia.org.au
 
 ## Deployment
 

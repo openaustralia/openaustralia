@@ -34,7 +34,7 @@ elsif stage == "test"
   set :deploy_to, "/srv/www/staging"
   set :branch, "test"
 elsif stage == "development"
-  role :web, "openaustralia.org.au.dev"
+  role :web, "openaustralia.org.au.test"
   set :deploy_to, "/srv/www/production"
 end
 

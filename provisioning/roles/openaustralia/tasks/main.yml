@@ -38,11 +38,11 @@
     - cli
 
 - name: Copy across the apache config
-  template: src=openaustralia.org.au.dev.conf dest=/etc/apache2/sites-available/
+  template: src=openaustralia.org.au.test.conf dest=/etc/apache2/sites-available/
   notify: reload apache
 
 - name: Enable virtual host
-  file: src="../sites-available/openaustralia.org.au.dev.conf" dest="/etc/apache2/sites-enabled/openaustralia.org.au.dev.conf" state=link
+  file: src="../sites-available/openaustralia.org.au.test.conf" dest="/etc/apache2/sites-enabled/openaustralia.org.au.test.conf" state=link
   notify: reload apache
 
 - name: Disable default virtual host
