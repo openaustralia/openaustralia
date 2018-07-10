@@ -66,7 +66,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     development.vm.synced_folder ".", "/srv/www/openaustralia"
 
     development.vm.provider "virtualbox" do |v|
-      v.memory = 1024
+      v.memory = 2048
       # Uncomment this and crank up the memory for a faster build
       # v.cpus = 2
     end
