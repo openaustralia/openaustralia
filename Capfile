@@ -82,7 +82,7 @@ namespace :deploy do
 	end
 
   task :setup_db do
-    run "mysql -u root openaustralia < #{current_path}/twfy/db/schema.sql"
+    run "mysql < #{current_path}/twfy/db/schema.sql"
   end
 end
 
