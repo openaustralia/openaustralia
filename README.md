@@ -76,7 +76,7 @@ $ git push origin master
 
 Once this is pushed to GitHub you're ready to deploy:
 
-`bundle exec cap --set-before stage=production deploy`
+`bundle exec cap -S stage=production deploy`
 
 Due to [#75 Deploying to openaustralia.org.au in production stops website working](https://github.com/openaustralia/infrastructure/issues/75) you'll need to restart apache
 
@@ -84,7 +84,7 @@ Due to [#75 Deploying to openaustralia.org.au in production stops website workin
 
 If you've updated data about members you'll need to parse that and import it. This happens automatically once a day or you can run it using this Capistrano task:
 
-`bundle exec cap --set-before stage=production parse:members`
+`bundle exec cap -S stage=production parse:members`
 
 For other things, like attempting to parse a day's speeches after a parsing error, you'll need to log into the server to run the script(s) manually.
 
