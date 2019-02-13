@@ -34,9 +34,8 @@ elsif stage == "test"
   set :deploy_to, "/srv/www/staging"
   set :branch, "test"
 elsif stage == "development"
-  role :web, "openaustralia.org.au.dev"
+  role :web, "openaustralia.org.au.test"
   set :deploy_to, "/srv/www/production"
-  set :branch, "server-migration"
 end
 
 load 'deploy' if respond_to?(:namespace) # cap2 differentiator
@@ -83,7 +82,7 @@ namespace :deploy do
 	end
 
   task :setup_db do
-    run "mysql -u root openaustralia < #{current_path}/twfy/db/schema.sql"
+    run "mysql < #{current_path}/twfy/db/schema.sql"
   end
 end
 
