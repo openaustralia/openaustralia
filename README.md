@@ -88,6 +88,30 @@ If you've updated data about members you'll need to parse that and import it. Th
 
 For other things, like attempting to parse a day's speeches after a parsing error, you'll need to log into the server to run the script(s) manually.
 
+## Updating images
+
+OpenAustralia attempts to grab the official profile photo for each MP
+from the APH website. However, it's common for the profile page to go
+up some time before the profile photo is ready. When this happens, we
+cache the photoless page. It's neccessary to manually purge the cache
+in order to detect that a photo has been added.
+
+The cached html files live in
+`/srv/www/production/shared/html_cache/member_images`. To clear out
+the cache for everyone with the surname `Abbot`, cd to that directory
+and `ls *Abbot*`. If you're sure you've got the right list of files,
+you can use `rm` to really get rid of them.
+
+You'll then need to:
+```bash
+$ cd /srv/www/production/current/openaustralia-parser/
+$ ./member-images.rb
+```
+
+to load the new images.
+
+The new images should be picked up by TVFY the next day.
+
 ## Copyright & License
 
 Copyright OpenAustralia Foundation Limited. Licensed under the Affero GPL. See LICENSE file for more details.
