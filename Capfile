@@ -40,6 +40,9 @@ end
 
 load 'deploy' if respond_to?(:namespace) # cap2 differentiator
 
+# Clean up old releases so we don't fill up our disk
+after "deploy:restart", "deploy:cleanup"
+
 namespace :deploy do
 	# Restart Apache because for some reason a deploy can cause trouble very occasionally (which is fixed by a restart). So, playing safe
 	task :restart do
