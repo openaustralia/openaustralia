@@ -5,3 +5,4 @@ searchdb-previous/*
 searchdb/*
 .vagrant/
 provisioning/development.retry
+ubuntu-xenial-16.04-cloudimg-console.log
