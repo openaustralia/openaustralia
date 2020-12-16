@@ -101,5 +101,10 @@ Vagrant.configure("2") do |config|
     gem install rcov --version "0.9.11" --conservative
     gem install pry --version '0.10.4' --conservative
     gem install bundler --version "1.16.2" --conservative
+
+    # Install php5.6 required to run regression tests
+    sudo bash -c 'echo "deb http://ppa.launchpad.net/ondrej/php/ubuntu xenial main" > /etc/apt/sources.list.d/php5.6.list'
+    sudo apt-get update
+    sudo apt-get install -y --allow-unauthenticated php5.6
   SHELL
 end
