@@ -37,8 +37,11 @@ elsif stage == "development"
   role :web, "openaustralia.org.au.test"
   set :deploy_to, "/srv/www/production"
 end
+set :bundle_gemfile, "openaustralia-parser/Gemfile"
 
 load 'deploy' if respond_to?(:namespace) # cap2 differentiator
+
+require "bundler/capistrano"
 
 # Clean up old releases so we don't fill up our disk
 after "deploy:restart", "deploy:cleanup"
