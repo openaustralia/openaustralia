@@ -49,7 +49,7 @@ after "deploy:restart", "deploy:cleanup"
 namespace :deploy do
 	# Restart Apache because for some reason a deploy can cause trouble very occasionally (which is fixed by a restart). So, playing safe
 	task :restart do
-	#  sudo "apache2ctl restart"
+	 sudo "apache2ctl restart"
 	end
 
 	task :finalize_update do
