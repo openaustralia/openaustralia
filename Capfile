@@ -37,8 +37,11 @@ elsif stage == "development"
   role :web, "openaustralia.org.au.test"
   set :deploy_to, "/srv/www/production"
 end
+set :bundle_gemfile, "openaustralia-parser/Gemfile"
 
 load 'deploy' if respond_to?(:namespace) # cap2 differentiator
+
+require "bundler/capistrano"
 
 # Clean up old releases so we don't fill up our disk
 after "deploy:restart", "deploy:cleanup"
@@ -46,7 +49,7 @@ after "deploy:restart", "deploy:cleanup"
 namespace :deploy do
 	# Restart Apache because for some reason a deploy can cause trouble very occasionally (which is fixed by a restart). So, playing safe
 	task :restart do
-	#  sudo "apache2ctl restart"
+	 sudo "apache2ctl restart"
 	end
 
 	task :finalize_update do

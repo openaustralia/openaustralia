@@ -78,10 +78,6 @@ Once this is pushed to GitHub you're ready to deploy:
 
 `bundle exec cap -S stage=production deploy`
 
-Due to [#75 Deploying to openaustralia.org.au in production stops website working](https://github.com/openaustralia/infrastructure/issues/75) you'll need to restart apache
-
-`ssh root@openaustralia.org.au service apache2 restart`
-
 If you've updated data about members you'll need to parse that and import it. This happens automatically once a day or you can run it using this Capistrano task:
 
 `bundle exec cap -S stage=production parse:members`
