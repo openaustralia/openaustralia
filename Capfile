@@ -70,7 +70,8 @@ namespace :deploy do
 			"#{release_path}/twfy/www/docs/sitemaps"                  => "../../../../../shared/sitemaps",
 
 		  "#{release_path}/twfy/www/docs/images/mps"                => "../../../../../../shared/images/mps",
-			"#{release_path}/twfy/www/docs/images/mpsL"               => "../../../../../../shared/images/mpsL",
+      "#{release_path}/twfy/www/docs/images/mpsL"               => "../../../../../../shared/images/mpsL",
+      "#{release_path}/twfy/www/docs/images/mpsXL"              => "../../../../../../shared/images/mpsXL",
 			"#{release_path}/twfy/www/docs/regmem/scan"               => "../../../../../../shared/regmem_scan",
 			"#{release_path}/twfy/www/docs/rss/mp"                    => "../../../../../../shared/rss/mp",
 			"#{release_path}/twfy/www/docs/debates/debates.rss"       => "../../../../../../shared/rss/senate.rss",
