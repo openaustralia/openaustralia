@@ -96,6 +96,6 @@ end
 namespace :parse do
 	desc 'Parses data about MPs & Senators and loads it into OpenAustralia'
 	task :members do
-		run "#{current_path}/openaustralia-parser/parse-members.rb"
+		run "cd #{current_path}/openaustralia-parser && bundle exec parse-members.rb"
 	end
 end
