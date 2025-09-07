@@ -40,7 +40,7 @@ You do this by adding and committing, just like you would with any other change 
 
 ```
 $ git status
-On branch master
+On branch main
 Changes not staged for commit:
   (use "git add <file>..." to update what will be committed)
   (use "git checkout -- <file>..." to discard changes in working directory)
@@ -69,9 +69,9 @@ index 08dcf7a..ee01ada 160000
 Stage this hunk [y,n,q,a,d,/,e,?]? y
 
 $ git commit --message="Update to HEAD of submodules"
-[master 95051d1] Update to HEAD of submodules
+[main 95051d1] Update to HEAD of submodules
  2 files changed, 2 insertions(+), 2 deletions(-)
-$ git push origin master
+$ git push origin main
 ```
 
 Once this is pushed to GitHub you're ready to deploy:
