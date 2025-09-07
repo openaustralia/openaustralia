@@ -22,7 +22,7 @@ update-twfy: init-submodules
 	git commit -m "Update to latest TheyWorkForYou"
 
 update-openaustralia-parser: init-submodules
-	cd openaustralia-parser && git checkout master && git pull origin master
+	cd openaustralia-parser && git checkout main && git pull origin main
 	git status
 	git add --patch openaustralia-parser
 	git commit -m "Update to latest openaustralia-parser"
