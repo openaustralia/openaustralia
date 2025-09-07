@@ -3,14 +3,22 @@
 ALL: vagrant
 SHELL := /usr/bin/env bash
 
-vagrant:
+deploy-local-vagrant:
 	bundle exec cap -S stage=development deploy
 
-staging:
+staging-deploy:
 	bundle exec cap -S stage=test deploy
+	ssh deploy@openaustralia.org.au ls -l /srv/www/staging/releases/
 
-production:
+production-deploy:
 	bundle exec cap -S stage=production deploy
+	ssh deploy@openaustralia.org.au ls -l /srv/www/production/releases/
+
+staging-parse-members:
+	bundle exec cap -S stage=test parse:members
+
+production-parse-members:
+	bundle exec cap -S stage=production parse:members
 
 init-submodules:
 	git submodule update --init
