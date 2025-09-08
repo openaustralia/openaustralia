@@ -1,0 +1,14 @@
+name: Pull submodules
+on:
+  repository_dispatch:
+    types: [source_repo_updated]
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Log event details
+        run: echo "Received event type: ${{ github.event.client_payload.message }}"
+      # ... other steps for building, testing, etc.
