@@ -4,11 +4,13 @@ on:
     types: [source_repo_updated]
 
 jobs:
-  build_and_test:
+  update:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Log event details
         run: echo "Received event type: ${{ github.event.client_payload.message }}"
+      - run: make init-submodules
+      - run: make update-openaustralia-parser
       # ... other steps for building, testing, etc.
