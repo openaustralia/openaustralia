@@ -23,13 +23,13 @@ production-parse-members:
 init-submodules:
 	git submodule update --init
 
-update-twfy: init-submodules
+update-twfy:
 	cd twfy && git checkout master && git pull origin master
 	git status
 	git add --patch twfy
 	git commit -m "Update to latest TheyWorkForYou"
 
-update-openaustralia-parser: init-submodules
+update-openaustralia-parser:
 	cd openaustralia-parser && git checkout main && git pull origin main
 	git status
 	git add --patch openaustralia-parser
