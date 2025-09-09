@@ -51,6 +51,13 @@ Once the submodule change is in `main` branch on github, you're ready to deploy:
 To deploy to ([Staging](https://www.test.openaustralia.org.au/)):
 ```bash
   make staging-deploy
+  ```
+
+If you've updated data about members you'll need to parse that and import it. This happens automatically once a day or you can run it using this Capistrano task:
+```bash
+  make staging-parse-members
+  ```
+
 
 To deploy to ([Production](https://www.openaustralia.org.au/)):
 ```bash
