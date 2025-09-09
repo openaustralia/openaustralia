@@ -51,8 +51,6 @@ Once the submodule change is in `main` branch on github, you're ready to deploy:
 To deploy to ([Staging](https://www.test.openaustralia.org.au/)):
 ```bash
   make staging-deploy
-  make staging-parse-members
-```
 
 To deploy to ([Production](https://www.openaustralia.org.au/)):
 ```bash
