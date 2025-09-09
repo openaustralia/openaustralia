@@ -1,4 +1,4 @@
 source 'https://rubygems.org'
 
-gem 'capistrano', '~> 2'
+gem 'capistrano', '~> 3'
 gem 'capistrano_colors'
