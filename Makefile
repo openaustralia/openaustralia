@@ -32,7 +32,7 @@ init-submodules:
 	git submodule update --init
 
 update-twfy:
-	cd twfy && git checkout master && git pull origin master
+	cd twfy && git checkout main && git pull origin main
 	git status
 	git add --patch twfy
 	git commit -m "Update to latest TheyWorkForYou"
