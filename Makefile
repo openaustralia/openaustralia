@@ -8,12 +8,18 @@ deploy-local-vagrant:
 
 staging-deploy:
 	bundle exec cap -S stage=test deploy
-	git tag staging-$(date +%F) && git push origin staging-$(date +%F)
+	git tag staging-$(date +%F)
+	git push origin staging-$(date +%F)
+	git tag -d STAGING && git tag STAGING && git push origin STAGING
 	ssh deploy@openaustralia.org.au ls -l /srv/www/staging/releases/
 
 production-deploy:
 	bundle exec cap -S stage=production deploy
-	git tag production-$(date +%F) && git push origin production-$(date +%F)
+	git tag production-$(date +%F)
+	git push origin production-$(date +%F)
+	git tag -d PRODUCTION && git tag PRODUCTION && git push origin :PRODUCTION && git push origin PRODUCTION
+	ssh deploy@openaustralia.org.au ls -l /srv/www/production/releases/
+
 	ssh deploy@openaustralia.org.au ls -l /srv/www/production/releases/
 
 staging-parse-members:
