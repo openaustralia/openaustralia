@@ -44,3 +44,4 @@ daily:
 
 parse-members:
 	cd openaustralia-parser && bundle exec parse-member-links.rb
+
