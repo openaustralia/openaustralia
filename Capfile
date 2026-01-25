@@ -26,18 +26,29 @@ set :user, "deploy"
 #   Port 1234
 # This will change the port for all ssh commands on that server which saves a whole lot of typing
 
-if stage == "production"
-  role :web, "openaustralia.org.au"
-  set :deploy_to, "/srv/www/production"
+case stage
+when "staging-new"
+	role :web, "staging.openaustralia.org.au"
+	set :deploy_to, "/srv/www/staging"
+	set :branch, "staging"
+when "production-new"
+	role :web, "staging.openaustralia.org.au" # TODO: Change this once DNS points to the new server
+	set :deploy_to, "/srv/www/production"
+	set :branch, "staging"
+when "production"
+	role :web, "openaustralia.org.au"
+	set :deploy_to, "/srv/www/production"
 	set :branch, "main"
-elsif stage == "test"
-  role :web, "openaustralia.org.au"
-  set :deploy_to, "/srv/www/staging"
-  set :branch, "test"
-elsif stage == "development"
-  role :web, "openaustralia.org.au.test"
-  set :deploy_to, "/srv/www/production"
+when "test"
+	role :web, "openaustralia.org.au"
+	set :deploy_to, "/srv/www/staging"
+	set :branch, "main"
+when "development"
+	role :web, "openaustralia.org.au.test"
+	set :deploy_to, "/srv/www/production"
+	# Uses the user's current branch
 end
+
 set :bundle_gemfile, "openaustralia-parser/Gemfile"
 
 load 'deploy' if respond_to?(:namespace) # cap2 differentiator
