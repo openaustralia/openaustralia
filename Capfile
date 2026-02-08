@@ -27,7 +27,7 @@ set :user, "deploy"
 # This will change the port for all ssh commands on that server which saves a whole lot of typing
 
 case stage
-when "staging-new"
+when "staging"
 	role :web, "staging.openaustralia.org.au"
 	set :deploy_to, "/srv/www/staging"
 	set :branch, "staging"
