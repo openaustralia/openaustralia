@@ -55,13 +55,22 @@ load 'deploy' if respond_to?(:namespace) # cap2 differentiator
 
 require "bundler/capistrano"
 
+# install the bundler gem if it's not already installed
+namespace :bundler do
+	task :install do
+		run "cd #{release_path} && gem list bundler -i || gem install bundler --no-ri --no-rdoc"
+	end
+end
+
+before "bundle:install", "bundler:install"
+
 # Clean up old releases so we don't fill up our disk
 after "deploy:restart", "deploy:cleanup"
 
 namespace :deploy do
 	# Restart Apache because for some reason a deploy can cause trouble very occasionally (which is fixed by a restart). So, playing safe
 	task :restart do
-	 sudo "apache2ctl restart"
+		sudo "apache2ctl restart"
 	end
 
 	task :finalize_update do
