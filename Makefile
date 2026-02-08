@@ -3,6 +3,9 @@
 ALL: vagrant
 SHELL := /usr/bin/env bash
 
+twfy/.git:
+	git submodule init && git submodule update
+
 deploy-local-vagrant:
 	bundle exec cap -S stage=development deploy
 
@@ -30,9 +33,8 @@ old-production-parse-members:
 init-submodules:
 	git submodule update --init
 
-
 # pull in latest changes from submodules
-update-twfy:
+update-twfy: twfy/.git
 	cd twfy && git checkout main && git pull origin main
 	git status
 	git add --patch twfy
