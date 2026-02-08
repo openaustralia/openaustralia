@@ -16,7 +16,7 @@ set :repository, "https://github.com/openaustralia/openaustralia.git"
 set :git_enable_submodules, true
 set :deploy_via, :remote_cache
 
-set :stage, "test" unless exists? :stage
+raise "Stage not specified" unless exists? :stage
 
 set :user, "deploy"
 
@@ -31,10 +31,10 @@ when "staging-new"
 	role :web, "staging.openaustralia.org.au"
 	set :deploy_to, "/srv/www/staging"
 	set :branch, "staging"
-when "production-new"
-	role :web, "staging.openaustralia.org.au" # TODO: Change this once DNS points to the new server
-	set :deploy_to, "/srv/www/production"
-	set :branch, "staging"
+# when "production-new"
+# 	role :web, "staging.openaustralia.org.au" # TODO: Change this once DNS points to the new server
+# 	set :deploy_to, "/srv/www/production"
+# 	set :branch, "staging"
 when "production"
 	role :web, "openaustralia.org.au"
 	set :deploy_to, "/srv/www/production"
