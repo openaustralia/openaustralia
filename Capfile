@@ -58,6 +58,9 @@ require "bundler/capistrano"
 # install the bundler gem if it's not already installed
 namespace :bundler do
 	task :install do
+		# install ruby version from .ruby-version
+		run "cd #{release_path} && rbenv install -s $(cat .ruby-version)"
+		# install bundler if it's not already installed
 		run "cd #{release_path} && gem list bundler -i || gem install bundler --no-ri --no-rdoc"
 	end
 end
