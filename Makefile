@@ -11,7 +11,7 @@ deploy-local-vagrant:
 
 new-staging-deploy:
 	bundle exec cap -S stage=staging deploy
-	ssh deploy@openaustralia.org.au ls -l /srv/www/staging/releases/
+	ssh deploy@staging.openaustralia.org.au ls -l /srv/www/staging/releases/
 	./scripts/tag-staging.sh
 
 old-staging-deploy:
