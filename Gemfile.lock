@@ -1,6 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    bcrypt_pbkdf (1.1.2)
     capistrano (2.15.11)
       highline
       net-scp (>= 1.0.0)
@@ -8,6 +9,7 @@ GEM
       net-ssh (>= 2.0.14)
       net-ssh-gateway (>= 1.1.0)
     capistrano_colors (0.5.5)
+    ed25519 (1.4.0)
     highline (3.1.2)
       reline
     io-console (0.8.1)
@@ -25,8 +27,10 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bcrypt_pbkdf (>= 1.0, < 2.0)
   capistrano (~> 2)
   capistrano_colors
+  ed25519 (>= 1.2, < 2.0)
 
 BUNDLED WITH
    2.1.4
