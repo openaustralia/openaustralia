@@ -10,25 +10,22 @@ deploy-local-vagrant:
 	bundle exec cap -S stage=development deploy
 
 new-staging-deploy:
-	bundle exec cap -S stage=staging deploy
+	bundle exec cap staging deploy
 	ssh deploy@staging.openaustralia.org.au ls -l /srv/www/staging/releases/
-	./scripts/tag-staging.sh
 
 old-staging-deploy:
-	bundle exec cap -S stage=test deploy
-	ssh deploy@openaustralia.org.au ls -l /srv/www/staging/releases/
-	./scripts/tag-staging.sh
+	bundle exec cap staging deploy
+	ssh deploy@staging.openaustralia.org.au ls -l /srv/www/staging/releases/
 
 old-production-deploy:
-	bundle exec cap -S stage=production deploy
+	bundle exec cap production deploy
 	ssh deploy@openaustralia.org.au ls -l /srv/www/production/releases/
-	./scripts/tag-prod.sh
 
 old-staging-parse-members:
-	bundle exec cap -S stage=test parse:members
+	bundle exec cap staging parse:members
 
 old-production-parse-members:
-	bundle exec cap -S stage=production parse:members
+	bundle exec cap production parse:members
 
 init-submodules:
 	git submodule update --init
