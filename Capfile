@@ -11,8 +11,12 @@ set :application, "openaustralia.org"
 
 set :use_sudo, false
 
+# Ensure SSH uses login shell to properly set PATH
+default_run_options[:shell] = '/bin/bash -l'
+
 set :scm, :git
 set :repository, "https://github.com/openaustralia/openaustralia.git"
+set :git, "/usr/bin/git"  # Explicitly set git path for staging server
 set :git_enable_submodules, true
 set :deploy_via, :remote_cache
 
