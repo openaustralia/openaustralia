@@ -35,7 +35,7 @@ init-submodules:
 
 # pull in latest changes from submodules
 update-twfy: twfy/.git
-	cd twfy && git checkout staging && git pull origin main
+	cd twfy && git checkout staging && git pull origin staging
 	git status
 	git add --patch twfy
 	git commit -m "Update to latest TheyWorkForYou"
