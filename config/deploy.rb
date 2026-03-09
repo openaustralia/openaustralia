@@ -24,7 +24,7 @@ set :ssh_options, {
   user: 'deploy',
   keys: %w[~/.ssh/id_rsa],
   verify_host_key: :accept_new_or_local_tunnel,
-  verbose: :info
+  # verbose: :info
 }
 
 # Load stage-specific configuration
