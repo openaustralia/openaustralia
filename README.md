@@ -72,7 +72,7 @@ For other things, like attempting to parse a day's speeches after a parsing erro
 OpenAustralia attempts to grab the official profile photo for each MP
 from the APH website. However, it's common for the profile page to go
 up some time before the profile photo is ready. When this happens, we
-cache the photoless page. It's neccessary to manually purge the cache
+cache the photoless page. It's necessary to manually purge the cache
 in order to detect that a photo has been added.
 
 The cached html files live in
