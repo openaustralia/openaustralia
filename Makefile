@@ -38,7 +38,7 @@ update-twfy: twfy/.git
 	git commit -m "Update to latest TheyWorkForYou"
 
 update-openaustralia-parser:
-	cd openaustralia-parser && git checkout main && git pull origin main
+	cd openaustralia-parser && git checkout staging && git pull origin staging
 	git status
 	git add --patch openaustralia-parser
 	git commit -m "Update to latest openaustralia-parser"
