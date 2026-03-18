@@ -109,7 +109,7 @@ namespace :parse do
   task :members do
     on roles(:app) do
       within current_path do
-        execute :bash, '-c', 'cd openaustralia-parser && bundle exec parse-members.rb'
+        execute :bash, '-c', 'openaustralia-parser/bin/run parse-members.rb'
       end
     end
   end
