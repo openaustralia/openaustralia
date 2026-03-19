@@ -48,4 +48,4 @@ daily:
 	cd twfy/scripts && ./dailyupdate
 
 parse-members:
-	cd openaustralia-parser && bundle exec parse-member-links.rb
+	openaustralia-parser/bin/run parse-member-links.rb
