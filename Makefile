@@ -9,22 +9,19 @@ twfy/.git:
 deploy-local-vagrant:
 	bundle exec cap -S stage=development deploy
 
-new-staging-deploy:
+staging-deploy:
 	bundle exec cap staging deploy
 	ssh deploy@staging.openaustralia.org.au ls -l /srv/www/staging/releases/
 
-old-staging-deploy:
-	bundle exec cap staging deploy
-	ssh deploy@staging.openaustralia.org.au ls -l /srv/www/staging/releases/
 
-old-production-deploy:
+production-deploy:
 	bundle exec cap production deploy
 	ssh deploy@openaustralia.org.au ls -l /srv/www/production/releases/
 
-old-staging-parse-members:
+staging-parse-members:
 	bundle exec cap staging parse:members
 
-old-production-parse-members:
+production-parse-members:
 	bundle exec cap production parse:members
 
 init-submodules:
