@@ -29,3 +29,6 @@ set :ssh_options, {
 
 # Load stage-specific configuration
 load "#{__dir__}/deploy/#{fetch(:stage, 'staging')}.rb"
+
+# Tagging options
+set :tagging3_format, ':stage_:release'
