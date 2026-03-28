@@ -5,7 +5,7 @@ set :deploy_via, :remote_cache
 
 # Ruby/rbenv configuration
 set :rbenv_type, :user
-set :rbenv_ruby, File.read('.ruby-version').strip
+set :rbenv_ruby, File.read('openaustralia-parser/.ruby-version').strip
 
 # Bundler configuration
 set :bundle_gemfile, 'openaustralia-parser/Gemfile'
