@@ -4,6 +4,7 @@ require 'capistrano/deploy'
 require 'capistrano/scm/git'
 install_plugin Capistrano::SCM::Git
 require 'capistrano/bundler'
+# Check for this ruby manager first in openaustralia-parser:bin/run
 require 'capistrano/rbenv'
 
 # Load custom tasks
