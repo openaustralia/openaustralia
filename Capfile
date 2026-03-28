@@ -14,7 +14,7 @@ Dir.glob('lib/capistrano/tasks/*.rake').each { |r| import r }
 namespace :git do
   task :create_release do
     on roles(:all) do
-      cached_copy = "#{shared_path}/cached-copy"
+      cached_copy = "#{fetch(:shared_path)}/cached-copy"
 
       if test("[ -d #{cached_copy}/.git ]")
         within cached_copy do
@@ -44,25 +44,25 @@ namespace :deploy do
   task :symlink_shared do
     on roles(:all) do
       links = {
-        'searchdb' => '../shared/search/searchdb',
-        'openaustralia-parser/configuration.yml' => '../../../shared/parser_configuration.yml',
-        'twfy/conf/general' => '../../../../shared/general',
-        'twfy/scripts/alerts-lastsent' => '../../../../shared/alerts-lastsent',
-        'twfy/www/docs/sitemap.xml' => '../../../../../shared/sitemap.xml',
-        'twfy/www/docs/sitemaps' => '../../../../../shared/sitemaps',
-        'twfy/www/docs/images/mps' => '../../../../../../shared/images/mps',
-        'twfy/www/docs/images/mpsL' => '../../../../../../shared/images/mpsL',
-        'twfy/www/docs/images/mpsXL' => '../../../../../../shared/images/mpsXL',
-        'twfy/www/docs/regmem/scan' => '../../../../../../shared/regmem_scan',
-        'twfy/www/docs/rss/mp' => '../../../../../../shared/rss/mp',
-        'twfy/www/docs/debates/debates.rss' => '../../../../../../shared/rss/senate.rss',
-        'twfy/www/docs/senate/senate.rss' => '../../../../../../shared/rss/senate.rss'
+        'searchdb' => "#{fetch(:shared_path)}/shared/search/searchdb",
+        'openaustralia-parser/configuration.yml' => "#{fetch(:shared_path)}/parser_configuration.yml",
+        'twfy/conf/general' => "#{fetch(:shared_path)}/general",
+        'twfy/scripts/alerts-lastsent' => "#{fetch(:shared_path)}/alerts-lastsent",
+        'twfy/www/docs/sitemap.xml' => "#{fetch(:shared_path)}/sitemap.xml",
+        'twfy/www/docs/sitemaps' => "#{fetch(:shared_path)}/sitemaps",
+        'twfy/www/docs/images/mps' => "#{fetch(:shared_path)}/images/mps",
+        'twfy/www/docs/images/mpsL' => "#{fetch(:shared_path)}/images/mpsL",
+        'twfy/www/docs/images/mpsXL' => "#{fetch(:shared_path)}/images/mpsXL",
+        'twfy/www/docs/regmem/scan' => "#{fetch(:shared_path)}/regmem_scan",
+        'twfy/www/docs/rss/mp' => "#{fetch(:shared_path)}/rss/mp",
+        'twfy/www/docs/debates/debates.rss' => "#{fetch(:shared_path)}/rss/senate.rss",
+        'twfy/www/docs/senate/senate.rss' => "#{fetch(:shared_path)}/rss/senate.rss"
       }
 
       within release_path do
         # Copy checked-in images to shared area
-        execute :bash, '-c', "'cp twfy/www/docs/images/mps/* #{shared_path}/images/mps 2>/dev/null || true'"
-        execute :bash, '-c', "'cp twfy/www/docs/images/mpsL/* #{shared_path}/images/mpsL 2>/dev/null || true'"
+        execute :bash, '-c', "'cp twfy/www/docs/images/mps/* #{fetch(:shared_path)}/images/mps 2>/dev/null || true'"
+        execute :bash, '-c', "'cp twfy/www/docs/images/mpsL/* #{fetch(:shared_path)}/images/mpsL 2>/dev/null || true'"
 
         # Remove directories with checked-in files before symlinking
         execute :bash, '-c', "'rm -rf twfy/www/docs/images/mps twfy/www/docs/images/mpsL twfy/www/docs/rss/mp'"
