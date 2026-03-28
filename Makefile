@@ -45,8 +45,8 @@ update-openaustralia-parser:
 update-rblib: rblib/.git
 	@echo
 	@echo "============================================================================="
-	@echo "Checking rblib is in sync with main branch"
-	cd rblib && git fetch origin && git checkout main && git pull origin main
+	@echo "Checking rblib is in sync with ${BRANCH} branch"
+	cd rblib && git fetch origin && git checkout ${BRANCH} && git pull origin ${BRANCH}
 	git add --patch rblib && git commit -m "Update to latest rblib"
 
 update-phplib: phplib/.git
