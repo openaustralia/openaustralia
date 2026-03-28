@@ -44,19 +44,19 @@ namespace :deploy do
   task :symlink_shared do
     on roles(:all) do
       links = {
-        'searchdb' => '../../../shared/searchdb',
-        'openaustralia-parser/configuration.yml' => '../../../../shared/parser_configuration.yml',
-        'twfy/conf/general' => '../../../../../shared/general',
-        'twfy/scripts/alerts-lastsent' => '../../../../../shared/alerts-lastsent',
-        'twfy/www/docs/sitemap.xml' => '../../../../../../shared/sitemap.xml',
-        'twfy/www/docs/sitemaps' => '../../../../../../shared/sitemaps',
-        'twfy/www/docs/images/mps' => '../../../../../../../shared/images/mps',
-        'twfy/www/docs/images/mpsL' => '../../../../../../../shared/images/mpsL',
-        'twfy/www/docs/images/mpsXL' => '../../../../../../../shared/images/mpsXL',
-        'twfy/www/docs/regmem/scan' => '../../../../../../../shared/regmem_scan',
-        'twfy/www/docs/rss/mp' => '../../../../../../../shared/rss/mp',
-        'twfy/www/docs/debates/debates.rss' => '../../../../../../../shared/rss/senate.rss',
-        'twfy/www/docs/senate/senate.rss' => '../../../../../../../shared/rss/senate.rss'
+        'searchdb' => '../shared/search/searchdb',
+        'openaustralia-parser/configuration.yml' => '../../../shared/parser_configuration.yml',
+        'twfy/conf/general' => '../../../../shared/general',
+        'twfy/scripts/alerts-lastsent' => '../../../../shared/alerts-lastsent',
+        'twfy/www/docs/sitemap.xml' => '../../../../../shared/sitemap.xml',
+        'twfy/www/docs/sitemaps' => '../../../../../shared/sitemaps',
+        'twfy/www/docs/images/mps' => '../../../../../../shared/images/mps',
+        'twfy/www/docs/images/mpsL' => '../../../../../../shared/images/mpsL',
+        'twfy/www/docs/images/mpsXL' => '../../../../../../shared/images/mpsXL',
+        'twfy/www/docs/regmem/scan' => '../../../../../../shared/regmem_scan',
+        'twfy/www/docs/rss/mp' => '../../../../../../shared/rss/mp',
+        'twfy/www/docs/debates/debates.rss' => '../../../../../../shared/rss/senate.rss',
+        'twfy/www/docs/senate/senate.rss' => '../../../../../../shared/rss/senate.rss'
       }
 
       within release_path do
