@@ -23,7 +23,7 @@ set :keep_releases, 5
 set :ssh_options, {
   forward_agent: true,
   user: 'deploy',
-  keys: %w[~/.ssh/id_rsa],
+  keys: [ENV['DEPLOY_SSH_KEY'], '~/.ssh/id_ed25519', '~/.ssh/id_rsa'].compact,
   verify_host_key: :accept_new_or_local_tunnel,
   # verbose: :info
 }
