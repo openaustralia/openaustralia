@@ -1,3 +1,6 @@
+# This Gemfile is used ONLY for deployment and other dev tools
+# Capistrano configures the destination server with openaustralia-parser/Gemfile and openaustralia-parser/.ruby-version
+
 source 'https://rubygems.org'
 
 gem 'capistrano', '~> 3.17'
