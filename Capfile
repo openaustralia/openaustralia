@@ -44,7 +44,7 @@ namespace :deploy do
   task :symlink_shared do
     on roles(:all) do
       links = {
-        'searchdb' => '../../../shared/searchdb',
+        'searchdb' => '../shared/search/searchdb',
         'openaustralia-parser/configuration.yml' => '../../../shared/parser_configuration.yml',
         'twfy/conf/general' => '../../../../shared/general',
         'twfy/scripts/alerts-lastsent' => '../../../../shared/alerts-lastsent',
