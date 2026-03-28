@@ -15,7 +15,7 @@ The easiest way to get a development copy running is to use Vagrant, VirtualBox,
 
 Ansible doesn't currently create a `~vagrant/.my.cnf` so you'll have
 to create one by hand, pinching DB details from
-/srv/www/production/shared/config/general`.
+`/srv/www/production/shared/config/general`.
 
 Then:
 
@@ -36,7 +36,12 @@ Yay, you've done it! Visit http://openaustralia.org.au.test and you should see y
 
 OpenAustralia.org is deployed using Capistrano from this repository. Once you've made changes to the web application or the parser and those have been pushed to GitHub you'll first need to update their submodules in this repository.
 
+Set `DEPLOY_SSH_KEY` ENV var if you are using a different ssh key for deployment than `~/.ssh/id_ed25519` (prefered) or `~/.ssh/id_rsa`.
+
 You do this by adding and committing, just like you would with any other change in Git. Here's what it looks like to update both the parser and the web application's submodules:
+
+Use `main` branch for production, or `staging` for staging. 
+You can set STAGING_BRANCH ENV var if you want a different staging branch.
 
 ```bash
   cd openaustralia
@@ -48,18 +53,18 @@ That will commit the changes for you. Have a look around with `git status` then 
 
 Once the submodule change is in `main` branch on github, you're ready to deploy:
 
-To deploy to ([Staging](https://www.test.openaustralia.org.au/)):
+To deploy the STAGING_BRANCH / staging branch to ([Staging](https://www.test.openaustralia.org.au/)):
 ```bash
   make staging-deploy
-  ```
+```
 
 If you've updated data about members you'll need to parse that and import it. This happens automatically once a day or you can run it using this Capistrano task:
 ```bash
   make staging-parse-members
-  ```
+```
 
 
-To deploy to ([Production](https://www.openaustralia.org.au/)):
+To deploy the main branch to ([Production](https://www.openaustralia.org.au/)):
 ```bash
   make production-deploy
   make production-parse-members
