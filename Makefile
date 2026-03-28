@@ -30,48 +30,28 @@ init-submodules:
 # pull in latest changes from submodules
 update-twfy: twfy/.git
 	@echo
-	@echo "-------------------"
+	@echo "============================================================================="
 	@echo "Checking TWFY is in sync with ${BRANCH} branch"
 	cd twfy && git fetch origin && git checkout ${BRANCH} && git pull origin ${BRANCH}
-	git status
-	git add --patch twfy
-	git commit -m "Update to latest TheyWorkForYou"
+	git add --patch twfy && git commit -m "Update to latest TheyWorkForYou"
 
 update-openaustralia-parser:
 	@echo
-	@echo "-------------------"
+	@echo "============================================================================="
 	@echo "Checking openaustralia-parser is in sync with ${BRANCH} branch"
 	cd openaustralia-parser && git fetch origin && git checkout ${BRANCH} && git pull origin ${BRANCH}
-	git status
-	git add --patch openaustralia-parser
-	git commit -m "Update to latest openaustralia-parser"
+	git add --patch openaustralia-parser && git commit -m "Update to latest openaustralia-parser"
 
 update-rblib: rblib/.git
 	@echo
-	@echo "-------------------"
+	@echo "============================================================================="
 	@echo "Checking rblib is in sync with main branch"
 	cd rblib && git fetch origin && git checkout main && git pull origin main
-	git status
-	git add --patch rblib
-	git commit -m "Update to latest rblib"
+	git add --patch rblib && git commit -m "Update to latest rblib"
 
 update-phplib: phplib/.git
 	@echo
-	@echo "-------------------"
+	@echo "============================================================================="
 	@echo "Checking phplib is in sync with ${BRANCH} branch"
 	cd phplib && git fetch origin && git checkout ${BRANCH} && git pull origin ${BRANCH}
-	git status
-	git add --patch phplib
-	git commit -m "Update to latest phplib"
-
-update-submodules:
-	make update-rblib
-	make update-twfy
-	make update-openaustralia-parser
-	make update-phplib
-
-# daily:
-# 	cd twfy/scripts && ./dailyupdate
-
-parse-members:
-	openaustralia-parser/bin/run parse-member-links.rb
+	git add --patch phplib && git commit -m "Update to latest phplib"
