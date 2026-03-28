@@ -2,6 +2,7 @@
 
 ALL: vagrant
 SHELL := /usr/bin/env bash
+BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
 
 twfy/.git:
 	git submodule init && git submodule update
@@ -12,7 +13,6 @@ deploy-local-vagrant:
 staging-deploy:
 	bundle exec cap staging deploy
 	ssh deploy@staging.openaustralia.org.au ls -l /srv/www/staging/releases/
-
 
 production-deploy:
 	bundle exec cap production deploy
@@ -29,20 +29,49 @@ init-submodules:
 
 # pull in latest changes from submodules
 update-twfy: twfy/.git
-	cd twfy && git checkout staging && git pull origin staging
+	@echo
+	@echo "-------------------"
+	@echo "Checking TWFY is in sync with ${BRANCH} branch"
+	cd twfy && git fetch origin && git checkout ${BRANCH} && git pull origin ${BRANCH}
 	git status
 	git add --patch twfy
 	git commit -m "Update to latest TheyWorkForYou"
 
 update-openaustralia-parser:
-	cd openaustralia-parser && git checkout staging && git pull origin staging
+	@echo
+	@echo "-------------------"
+	@echo "Checking openaustralia-parser is in sync with ${BRANCH} branch"
+	cd openaustralia-parser && git fetch origin && git checkout ${BRANCH} && git pull origin ${BRANCH}
 	git status
 	git add --patch openaustralia-parser
 	git commit -m "Update to latest openaustralia-parser"
 
+update-rblib: rblib/.git
+	@echo
+	@echo "-------------------"
+	@echo "Checking rblib is in sync with main branch"
+	cd rblib && git fetch origin && git checkout main && git pull origin main
+	git status
+	git add --patch rblib
+	git commit -m "Update to latest rblib"
 
-daily:
-	cd twfy/scripts && ./dailyupdate
+update-phplib: phplib/.git
+	@echo
+	@echo "-------------------"
+	@echo "Checking phplib is in sync with ${BRANCH} branch"
+	cd phplib && git fetch origin && git checkout ${BRANCH} && git pull origin ${BRANCH}
+	git status
+	git add --patch phplib
+	git commit -m "Update to latest phplib"
+
+update-submodules:
+	make update-rblib
+	make update-twfy
+	make update-openaustralia-parser
+	make update-phplib
+
+# daily:
+# 	cd twfy/scripts && ./dailyupdate
 
 parse-members:
 	openaustralia-parser/bin/run parse-member-links.rb
