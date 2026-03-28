@@ -40,6 +40,9 @@ Set `DEPLOY_SSH_KEY` ENV var if you are using a different ssh key for deployment
 
 You do this by adding and committing, just like you would with any other change in Git. Here's what it looks like to update both the parser and the web application's submodules:
 
+Use `main` branch for production, or `staging` for staging. 
+You can set STAGING_BRANCH ENV var if you want a different staging branch.
+
 ```bash
   cd openaustralia
   #pull in the latest `main` branch of openaustralia-parser and twfy
@@ -50,7 +53,7 @@ That will commit the changes for you. Have a look around with `git status` then 
 
 Once the submodule change is in `main` branch on github, you're ready to deploy:
 
-To deploy to ([Staging](https://www.test.openaustralia.org.au/)):
+To deploy the STAGING_BRANCH / staging branch to ([Staging](https://www.test.openaustralia.org.au/)):
 ```bash
   make staging-deploy
   ```
@@ -61,7 +64,7 @@ If you've updated data about members you'll need to parse that and import it. Th
   ```
 
 
-To deploy to ([Production](https://www.openaustralia.org.au/)):
+To deploy the main branch to ([Production](https://www.openaustralia.org.au/)):
 ```bash
   make production-deploy
   make production-parse-members
