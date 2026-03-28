@@ -4,6 +4,7 @@ set :repo_url, 'https://github.com/openaustralia/openaustralia.git'
 set :deploy_via, :remote_cache
 
 # Ruby/rbenv configuration
+# Check for this ruby manager first in openaustralia-parser:bin/run
 set :rbenv_type, :user
 set :rbenv_ruby, File.read('openaustralia-parser/.ruby-version').strip
 
