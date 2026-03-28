@@ -28,8 +28,12 @@ set :ssh_options, {
   # verbose: :info
 }
 
-# Load stage-specific configuration
-load "#{__dir__}/deploy/#{fetch(:stage, 'staging')}.rb"
+stage_config = File.join(__dir__, 'deploy', "#{fetch(:stage, 'staging')}.rb")
+if File.exist?(stage_config)
+  load stage_config
+else
+  puts "warning: No stage-specific configuration found for #{fetch(:stage, 'staging').inspect}!"
+end
 
 # Tagging options
 set :tagging3_format, ':stage_:release'
