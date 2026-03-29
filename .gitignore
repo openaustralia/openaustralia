@@ -7,3 +7,10 @@ shlib/*
 twfy/*
 pwdata/*
 html_cache/*
+
+/openaustralia-parser
+/perllib
+/phplib
+/rblib
+/shlib
+/twfy
