@@ -5,6 +5,7 @@ require 'capistrano/scm/git'
 install_plugin Capistrano::SCM::Git
 require 'capistrano/bundler'
 require 'capistrano/rbenv'
+require 'capistrano/tagging3'
 
 # Load custom tasks
 Dir.glob('lib/capistrano/tasks/*.rake').each { |r| import r }
