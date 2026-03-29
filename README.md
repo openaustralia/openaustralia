@@ -36,6 +36,8 @@ Yay, you've done it! Visit http://openaustralia.org.au.test and you should see y
 
 OpenAustralia.org is deployed using Capistrano from this repository. Once you've made changes to the web application or the parser and those have been pushed to GitHub you'll first need to update their submodules in this repository.
 
+Set `DEPLOY_SSH_KEY` ENV var if you are using a different ssh key for deployment than `~/.ssh/id_ed25519` (prefered) or `~/.ssh/id_rsa`.
+
 You do this by adding and committing, just like you would with any other change in Git. Here's what it looks like to update both the parser and the web application's submodules:
 
 ```bash
