@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+ruby file: ".ruby-version"
+
 gem 'capistrano', '~> 3.17'
 gem 'capistrano-bundler'
 gem 'capistrano-rbenv'
