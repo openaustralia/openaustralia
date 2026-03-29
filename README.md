@@ -15,7 +15,7 @@ The easiest way to get a development copy running is to use Vagrant, VirtualBox,
 
 Ansible doesn't currently create a `~vagrant/.my.cnf` so you'll have
 to create one by hand, pinching DB details from
-/srv/www/production/shared/config/general`.
+`/srv/www/production/shared/config/general`.
 
 Then:
 
@@ -51,12 +51,12 @@ Once the submodule change is in `main` branch on github, you're ready to deploy:
 To deploy to ([Staging](https://www.test.openaustralia.org.au/)):
 ```bash
   make staging-deploy
-  ```
+```
 
 If you've updated data about members you'll need to parse that and import it. This happens automatically once a day or you can run it using this Capistrano task:
 ```bash
   make staging-parse-members
-  ```
+```
 
 
 To deploy to ([Production](https://www.openaustralia.org.au/)):
