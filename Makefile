@@ -14,7 +14,7 @@ staging-deploy:
 	bundle exec cap staging deploy
 	ssh deploy@staging.openaustralia.org.au ls -l /srv/www/staging/releases/
 
-production-deploy:
+new-production-deploy:
 	bundle exec cap production deploy
 	ssh deploy@openaustralia.org.au ls -l /srv/www/production/releases/
 
