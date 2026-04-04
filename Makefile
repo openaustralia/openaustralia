@@ -16,7 +16,7 @@ staging-deploy:
 
 new-production-deploy:
 	bundle exec cap production deploy
-	ssh deploy@openaustralia.org.au ls -l /srv/www/production/releases/
+	ssh deploy@newprod.openaustralia.org.au ls -l /srv/www/production/releases/
 
 staging-parse-members:
 	bundle exec cap staging parse:members
