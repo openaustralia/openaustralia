@@ -41,7 +41,8 @@ Set `DEPLOY_SSH_KEY` ENV var if you are using a different ssh key for deployment
 You do this by adding and committing, just like you would with any other change in Git. Here's what it looks like to update both the parser and the web application's submodules:
 
 Use `main` branch for production, or `staging` for staging. 
-You can set STAGING_BRANCH ENV var if you want a different staging branch.
+Whilst we are setting up a new server we changed stage=production to use staging branch, with the override below (This will be reverted).
+You can set `STAGING_BRANCH` ENV var if you want a different staging branch.
 
 ```bash
   cd openaustralia
