@@ -11,7 +11,7 @@ set :rbenv_ruby, File.read('openaustralia-parser/.ruby-version').strip
 # Bundler configuration
 set :bundle_gemfile, 'openaustralia-parser/Gemfile'
 set :bundle_roles, :app
-set :bundle_flags, '--deployment'
+set :bundle_config, { deployment: true }
 
 # Use sudo for apache restart
 set :use_sudo, true
