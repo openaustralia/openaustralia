@@ -54,3 +54,10 @@ update-phplib: phplib/.git
 	@echo "Checking phplib is in sync with main branch"
 	cd phplib && git fetch origin && git checkout main && git pull origin main
 	git add --patch phplib && git commit -m "Update to latest phplib"
+
+update-perllib: perllib/.git
+	@echo
+	@echo "============================================================================="
+	@echo "Checking perllib is in sync with main branch"
+	cd perllib && git fetch origin && git checkout main && git pull origin main
+	git add --patch perllib && git commit -m "Update to latest perllib"
