@@ -1,102 +1,118 @@
-# Capistrano 2.x recipe file
-#
-# Requirement cap 2.2
-#
-# Execute with:
-# cap -S stage=<production|test> task
+# Capistrano 3.x Capfile
+require 'capistrano/setup'
+require 'capistrano/deploy'
+require 'capistrano/scm/git'
+install_plugin Capistrano::SCM::Git
+require 'capistrano/bundler'
+# Check for this ruby manager first in openaustralia-parser:bin/run
+require 'capistrano/rbenv'
+require 'capistrano/tagging3'
 
-set :application, "openaustralia.org"
+# Load custom tasks
+Dir.glob('lib/capistrano/tasks/*.rake').each { |r| import r }
 
-# default_run_options[:pty] = true
+# Override git:create_release to use a cached working copy with submodules
+# instead of git archive which doesn't include submodule content
+namespace :git do
+  task :create_release do
+    on roles(:all) do
+      cached_copy = "#{shared_path}/cached-copy"
 
-set :use_sudo, false
+      if test("[ -d #{cached_copy}/.git ]")
+        within cached_copy do
+          execute :git, 'fetch', 'origin'
+          execute :git, 'reset', '--hard', "origin/#{fetch(:branch)}"
+          execute :git, 'clean', '-d', '-x', '-f'
+          execute :git, 'submodule', 'init'
+          execute :git, 'submodule', 'update', '--recursive'
+        end
+      else
+        execute :git, 'clone', '--branch', fetch(:branch), fetch(:repo_url), cached_copy
+        within cached_copy do
+          execute :git, 'submodule', 'init'
+          execute :git, 'submodule', 'update', '--recursive'
+        end
+      end
 
-set :scm, :git
-set :repository, "https://github.com/openaustralia/openaustralia.git"
-set :git_enable_submodules, true
-set :deploy_via, :remote_cache
-
-set :stage, "test" unless exists? :stage
-
-set :user, "deploy"
-
-# A great little trick I learned recently. If you have a machine running on a non-standard ssh port
-# put the following in your ~/.ssh/config file:
-# Host myserver.com
-#   Port 1234
-# This will change the port for all ssh commands on that server which saves a whole lot of typing
-
-if stage == "production"
-  role :web, "openaustralia.org.au"
-  set :deploy_to, "/srv/www/production"
-	set :branch, "main"
-elsif stage == "test"
-  role :web, "openaustralia.org.au"
-  set :deploy_to, "/srv/www/staging"
-  set :branch, "test"
-elsif stage == "development"
-  role :web, "openaustralia.org.au.test"
-  set :deploy_to, "/srv/www/production"
-end
-set :bundle_gemfile, "openaustralia-parser/Gemfile"
-
-load 'deploy' if respond_to?(:namespace) # cap2 differentiator
-
-require "bundler/capistrano"
-
-# Clean up old releases so we don't fill up our disk
-after "deploy:restart", "deploy:cleanup"
-
-namespace :deploy do
-	# Restart Apache because for some reason a deploy can cause trouble very occasionally (which is fixed by a restart). So, playing safe
-	task :restart do
-	 sudo "apache2ctl restart"
-	end
-
-	task :finalize_update do
-		run "chmod -R g+w #{latest_release}" if fetch(:group_writable, true)
-	end
-
-	desc "After a code update, we link the images directories to the shared ones"
-	after "deploy:update_code" do
-		links = {
-			"#{release_path}/searchdb"                                => "../../shared/searchdb",
-
-			"#{release_path}/openaustralia-parser/configuration.yml"  => "../../../shared/parser_configuration.yml",
-
-			"#{release_path}/twfy/conf/general"                       => "../../../../shared/general",
-			"#{release_path}/twfy/scripts/alerts-lastsent"            => "../../../../shared/alerts-lastsent",
-
-			"#{release_path}/twfy/www/docs/sitemap.xml"               => "../../../../../shared/sitemap.xml",
-			"#{release_path}/twfy/www/docs/sitemaps"                  => "../../../../../shared/sitemaps",
-
-		  "#{release_path}/twfy/www/docs/images/mps"                => "../../../../../../shared/images/mps",
-      "#{release_path}/twfy/www/docs/images/mpsL"               => "../../../../../../shared/images/mpsL",
-      "#{release_path}/twfy/www/docs/images/mpsXL"              => "../../../../../../shared/images/mpsXL",
-			"#{release_path}/twfy/www/docs/regmem/scan"               => "../../../../../../shared/regmem_scan",
-			"#{release_path}/twfy/www/docs/rss/mp"                    => "../../../../../../shared/rss/mp",
-			"#{release_path}/twfy/www/docs/debates/debates.rss"       => "../../../../../../shared/rss/senate.rss",
-			"#{release_path}/twfy/www/docs/senate/senate.rss"       => "../../../../../../shared/rss/senate.rss"
-		}
-		# First copy any images that have been checked into the repository to the shared area
-		run "cp #{release_path}/twfy/www/docs/images/mps/* #{shared_path}/images/mps"
-		run "cp #{release_path}/twfy/www/docs/images/mpsL/* #{shared_path}/images/mpsL"
-		# HACK: Remove directories next because they have files in them
-		run "rm -rf #{release_path}/twfy/www/docs/images/mps #{release_path}/twfy/www/docs/images/mpsL #{release_path}/twfy/www/docs/rss/mp"
-		# "ln -sf <a> <b>" creates a symbolic link but deletes <b> if it already exists
-		run links.map {|a| "ln -sf #{a.last} #{a.first}"}.join(";")
-		# Now compile twfy/scripts/run-with-lockfile.c
-		run "gcc -o #{release_path}/twfy/scripts/run-with-lockfile #{release_path}/twfy/scripts/run-with-lockfile.c"
-	end
-
-  task :setup_db do
-    run "mysql < #{current_path}/twfy/db/schema.sql"
+      # Copy contents (not the directory itself) to release path
+      execute :mkdir, '-p', release_path
+      execute :cp, '-a', "#{cached_copy}/.", "#{release_path}/"
+    end
   end
 end
 
+namespace :deploy do
+  desc 'Create symlinks to shared directories'
+  task :symlink_shared do
+    on roles(:all) do
+      links = {
+        'searchdb' => "#{shared_path}/shared/search/searchdb",
+        'openaustralia-parser/configuration.yml' => "#{shared_path}/parser_configuration.yml",
+        'twfy/conf/general' => "#{shared_path}/general",
+        'twfy/scripts/alerts-lastsent' => "#{shared_path}/alerts-lastsent",
+        'twfy/www/docs/sitemap.xml' => "#{shared_path}/sitemap.xml",
+        'twfy/www/docs/sitemaps' => "#{shared_path}/sitemaps",
+        'twfy/www/docs/images/mps' => "#{shared_path}/images/mps",
+        'twfy/www/docs/images/mpsL' => "#{shared_path}/images/mpsL",
+        'twfy/www/docs/images/mpsXL' => "#{shared_path}/images/mpsXL",
+        'twfy/www/docs/regmem/scan' => "#{shared_path}/regmem_scan",
+        'twfy/www/docs/rss/mp' => "#{shared_path}/rss/mp",
+        'twfy/www/docs/debates/debates.rss' => "#{shared_path}/rss/senate.rss",
+        'twfy/www/docs/senate/senate.rss' => "#{shared_path}/rss/senate.rss"
+      }
+
+      within release_path do
+        # Copy checked-in images to shared area
+        execute :bash, '-c', "'cp twfy/www/docs/images/mps/* #{shared_path}/images/mps 2>/dev/null || true'"
+        execute :bash, '-c', "'cp twfy/www/docs/images/mpsL/* #{shared_path}/images/mpsL 2>/dev/null || true'"
+
+        # Remove directories with checked-in files before symlinking
+        execute :bash, '-c', "'rm -rf twfy/www/docs/images/mps twfy/www/docs/images/mpsL twfy/www/docs/rss/mp'"
+
+        # Create symlinks
+        links.each do |from, to|
+          execute :ln, '-sf', to, from
+        end
+      end
+    end
+  end
+
+  desc 'Compile run-with-lockfile'
+  task :compile_lockfile do
+    on roles(:all) do
+      within release_path do
+        execute :gcc, '-o', 'twfy/scripts/run-with-lockfile', 'twfy/scripts/run-with-lockfile.c'
+      end
+    end
+  end
+
+  desc 'Restart Apache'
+  task :restart do
+    on roles(:web) do
+      execute :sudo, '/usr/sbin/apache2ctl', 'restart'
+    end
+  end
+
+  task :setup_db do
+    on roles(:db) do
+      within current_path do
+        execute :bash, '-c', "mysql < #{current_path}/twfy/db/schema.sql"
+      end
+    end
+  end
+end
+
+after 'git:create_release', 'deploy:symlink_shared'
+after 'deploy:symlink_shared', 'deploy:compile_lockfile'
+after 'deploy:published', 'deploy:restart'
+
 namespace :parse do
-	desc 'Parses data about MPs & Senators and loads it into OpenAustralia'
-	task :members do
-		run "cd #{current_path}/openaustralia-parser && bundle exec parse-members.rb"
-	end
+  desc 'Parse member data and load into OpenAustralia'
+  task :members do
+    on roles(:app) do
+      within current_path do
+        execute :bash, '-c', 'openaustralia-parser/bin/run parse-members.rb'
+      end
+    end
+  end
 end
