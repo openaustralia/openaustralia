@@ -1,4 +1,4 @@
 server 'newprod.openaustralia.org.au', user: 'deploy', roles: %w[app web], primary: true
 
 set :deploy_to, '/srv/www/staging'
-set :branch, ENV.fetch('STAGING_BRANCH', 'staging')
+set :branch, ENV.fetch('OVERRIDE_BRANCH', 'main')
