@@ -37,8 +37,8 @@ update-twfy: twfy/.git
 update-openaustralia-parser:
 	@echo
 	@echo "============================================================================="
-	@echo "Checking openaustralia-parser is in sync with staging branch"
-	cd openaustralia-parser && git fetch origin && git checkout staging && git pull origin staging
+	@echo "Checking openaustralia-parser is in sync with main branch"
+	cd openaustralia-parser && git fetch origin && git checkout main && git pull origin main
 	git add --patch openaustralia-parser && git commit -m "Update to latest openaustralia-parser"
 
 update-rblib: rblib/.git
