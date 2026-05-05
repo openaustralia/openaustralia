@@ -61,3 +61,14 @@ update-perllib: perllib/.git
 	@echo "Checking perllib is in sync with main branch"
 	cd perllib && git fetch origin && git checkout main && git pull origin main
 	git add --patch perllib && git commit -m "Update to latest perllib"
+
+check-submodules:
+	@git submodule foreach -q 'git fetch -q origin main'
+	@behind=$$(git submodule | sed -n 's/^\([^ ]\{8\}\)[^ ]*  *\([^ ][^ ]*\) *\(.*\)/make update-\2 \t# will update to: \1 \2 \t\3/p'); \
+	  if [ -z "$$behind" ]; then \
+		count=$$(git submodule | wc -l); \
+	    echo "All $$count submodules up to date"; \
+	  else \
+	    echo "Run the following commands to update submodules:"; \
+	    echo "$$behind"; \
+	  fi
