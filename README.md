@@ -43,6 +43,7 @@ You do this by adding and committing, just like you would with any other change 
 By default the `main` branch is deployed to both production and staging. You can override this using:
 * `STAGING_BRANCH` ENV var if you want a different staging branch;
 * `PRODUCTION_BRANCH` ENV var if you want a different production branch, eg whilst setting up a new server.
+You can set `SUBMODULE_BRANCH` ENV var if you want the submodules updated to a different branch than main.
 
 ```bash
   cd openaustralia
