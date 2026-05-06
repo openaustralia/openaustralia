@@ -46,6 +46,7 @@ You can set `OVERRIDE_BRANCH` ENV var if you want a different staging branch.
 
 ```bash
   cd openaustralia
+  make check-submodules # to check what has changed
   #pull in the latest `main` branch of openaustralia-parser and twfy
   make update-twfy
   make update-openaustralia-parser
