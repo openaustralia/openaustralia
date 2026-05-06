@@ -6,21 +6,28 @@ SHELL := /usr/bin/env bash
 twfy/.git:
 	git submodule init && git submodule update
 
-deploy-local-vagrant:
+init-bundle: .bundle/bundle-installed
+
+.bundle/bundle-installed: Gemfile Gemfile.lock .ruby-version
+	bundle install
+	mkdir -p .bundle
+	touch .bundle/bundle-installed
+
+deploy-local-vagrant: .bundle/bundle-installed
 	bundle exec cap -S stage=development deploy
 
-staging-deploy:
+staging-deploy: .bundle/bundle-installed
 	bundle exec cap staging deploy
 	ssh deploy@openaustralia.org.au ls -l /srv/www/staging/releases/
 
-production-deploy:
+production-deploy: .bundle/bundle-installed
 	bundle exec cap production deploy
 	ssh deploy@openaustralia.org.au ls -l /srv/www/production/releases/
 
-staging-parse-members:
+staging-parse-members: .bundle/bundle-installed
 	bundle exec cap staging parse:members
 
-production-parse-members:
+production-parse-members: .bundle/bundle-installed
 	bundle exec cap production parse:members
 
 init-submodules:
