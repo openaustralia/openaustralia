@@ -1,4 +1,6 @@
-.PHONY: production vagrant
+.PHONY: production vagrant check-submodules deploy-local-vagrant init-bundle init-submodules production-deploy \
+		production-parse-members staging-deploy staging-parse-members update-openaustralia-parser update-perllib \
+		update-phplib update-rblib update-twfy
 
 ALL: vagrant
 SHELL := /usr/bin/env bash
@@ -86,4 +88,3 @@ check-submodules:
 	    echo "Run the following commands to update submodules:"; \
 	    printf "$$behind\n"; \
 	  fi
-
