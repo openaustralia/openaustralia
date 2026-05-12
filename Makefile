@@ -72,11 +72,18 @@ update-perllib: perllib/.git
 
 check-submodules:
 	@git submodule foreach -q 'git fetch -q origin $(SUBMODULE_BRANCH)'
-	@behind=$$(git submodule | sed -n 's/^\([^ ]\{8\}\)[^ ]*  *\([^ ][^ ]*\) *\(.*\)/make update-\2 \t# will update to: \1 \2 \t\3/p'); \
+	@behind=$$(git submodule foreach -q ' \
+	  current=$$(git rev-parse HEAD); \
+	  remote=$$(git rev-parse origin/$(SUBMODULE_BRANCH) 2>/dev/null); \
+	  if [ "$$current" != "$$remote" ]; then \
+	    short=$$(echo $$remote | cut -c1-8); \
+	    echo "make update-$$name \t# will update to: $$short $$name"; \
+	  fi'); \
 	  if [ -z "$$behind" ]; then \
-		count=$$(git submodule | wc -l); \
+	    count=$$(git submodule | wc -l); \
 	    echo "All $$count submodules are up to date with their current branch"; \
 	  else \
 	    echo "Run the following commands to update submodules:"; \
-	    echo "$$behind"; \
+	    printf "$$behind\n"; \
 	  fi
+
