@@ -20,7 +20,7 @@ namespace :git do
 
       if test("[ -d #{cached_copy}/.git ]")
         within cached_copy do
-          execute :git, 'fetch', 'origin'
+          execute :git, 'fetch', 'origin', fetch(:branch)
           execute :git, 'reset', '--hard', "origin/#{fetch(:branch)}"
           execute :git, 'clean', '-d', '-x', '-f'
           execute :git, 'submodule', 'init'
