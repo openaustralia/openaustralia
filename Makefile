@@ -73,10 +73,15 @@ update-perllib: perllib/.git
 	git add --patch perllib && git commit -m "Update to latest perllib $(SUBMODULE_BRANCH) branch"
 
 check-submodules:
-	@git submodule foreach -q 'git fetch -q origin $(SUBMODULE_BRANCH)'
 	@behind=$$(git submodule foreach -q ' \
+	  if git ls-remote --exit-code --heads origin $(SUBMODULE_BRANCH) > /dev/null 2>&1; then \
+	    branch=$(SUBMODULE_BRANCH); \
+	  else \
+	    branch=main; \
+	  fi; \
+	  git fetch -q origin $$branch; \
 	  current=$$(git rev-parse HEAD); \
-	  remote=$$(git rev-parse origin/$(SUBMODULE_BRANCH) 2>/dev/null); \
+	  remote=$$(git rev-parse origin/$$branch 2>/dev/null); \
 	  if [ "$$current" != "$$remote" ]; then \
 	    short=$$(echo $$remote | cut -c1-8); \
 	    echo "make update-$$name \t# will update to: $$short $$name"; \
