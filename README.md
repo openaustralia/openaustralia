@@ -75,6 +75,46 @@ To deploy the main branch to ([Production](https://www.openaustralia.org.au/)):
 
 For other things, like attempting to parse a day's speeches after a parsing error, you'll need to log into the server to run the script(s) manually.
 
+### PHP / Composer dependencies (twfy)
+
+The `twfy` web application uses PHP packages declared in `twfy/composer.json`
+(currently Eloquent / `illuminate/database`, plus dev tools like PHPUnit, Psalm
+and Phinx). The resulting `twfy/vendor/` directory is **gitignored** in the
+`twfy` submodule, so it is never committed or pushed.
+
+Capistrano fills that gap during deploy via the [capistrano-composer][cc] gem
+(loaded in [`Capfile`](Capfile) and configured in [`config/deploy.rb`](config/deploy.rb)):
+
+[cc]: https://github.com/capistrano/composer
+
+1. The custom `git:create_release` task clones the submodules and copies the
+   working tree into `release_path`, so `release_path/twfy/composer.json` is
+   present on the server.
+2. `capistrano-composer` automatically registers
+   `before 'deploy:updated', 'composer:install'`. We point it at the twfy
+   subdirectory with `set :composer_working_dir, -> { release_path.join('twfy') }`
+   and install with `--no-dev --prefer-dist --no-interaction --optimize-autoloader`.
+3. This produces `release_path/twfy/vendor/` before
+   `deploy:symlink_shared`, `deploy:compile_lockfile`, and the Apache restart
+   run. The application's `twfy/www/includes/easyparliament/init.php` does a
+   `require_once .../vendor/autoload.php`, so the dependency tree must be on
+   disk before Apache serves any traffic from the new release.
+4. On rollback the gem also runs `composer:install` before `deploy:reverted`,
+   so older releases get a matching `vendor/` if it has been pruned.
+
+Bumping a PHP dependency therefore needs **no special deploy step** — update
+`composer.json` / `composer.lock` in the `twfy` repo, push, bump the submodule
+pointer in this repo (`make update-twfy`), and deploy as usual.
+
+Server prerequisites (one-time, managed by Ansible, not by Capistrano):
+
+* `composer` on the `deploy` user's `$PATH`.
+* `php-cli` with the same extensions the runtime needs (at minimum
+  `mbstring`, `xml`, `curl`, `zip`, `mysql`).
+
+If either is missing the deploy fails loudly at the `composer:install` step
+rather than producing a silent 500 from a missing `vendor/autoload.php`.
+
 ## Updating images
 
 OpenAustralia attempts to grab the official profile photo for each MP
