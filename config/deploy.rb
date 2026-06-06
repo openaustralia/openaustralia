@@ -13,6 +13,16 @@ set :bundle_gemfile, 'openaustralia-parser/Gemfile'
 set :bundle_roles, :app
 set :bundle_config, { deployment: true }
 
+# Composer configuration (PHP dependencies for the twfy app).
+# composer.json lives in the twfy submodule, so override the default working
+# directory (which is release_path). capistrano/composer hooks composer:install
+# into `before deploy:updated`, which runs after our custom git:create_release
+# task has populated release_path, so release_path/twfy/composer.json exists by
+# the time composer runs.
+set :composer_roles, :app
+set :composer_working_dir, -> { release_path.join('twfy') }
+set :composer_install_flags, '--no-dev --prefer-dist --no-interaction --optimize-autoloader'
+
 # Use sudo for apache restart
 set :use_sudo, true
 
