@@ -12,6 +12,8 @@ GEM
       sshkit (>= 1.9.0)
     capistrano-bundler (2.2.0)
       capistrano (~> 3.1)
+    capistrano-composer (0.0.6)
+      capistrano (>= 3.0.0.pre)
     capistrano-rbenv (2.2.0)
       capistrano (~> 3.1)
       sshkit (~> 1.3)
@@ -45,6 +47,7 @@ DEPENDENCIES
   bcrypt_pbkdf (>= 1.0, < 2.0)
   capistrano (~> 3.20)
   capistrano-bundler
+  capistrano-composer
   capistrano-rbenv
   capistrano-tagging3 (~> 2.0)
   ed25519 (>= 1.2, < 2.0)
@@ -56,6 +59,7 @@ CHECKSUMS
   bundler (4.0.12) sha256=7f8b757d28dfb636e7b24fba2344ac6dd13b5b24f4b46d62573d483f211825ac
   capistrano (3.20.1) sha256=b0d54ba5cf49bb194998bf6b427e889aa36ed05f545ecf7cc37acb9d529e9ae9
   capistrano-bundler (2.2.0) sha256=47b4cf2ea17ea132bb0a5cabc5663443f5190a54f4da5b322d04e1558ff1468c
+  capistrano-composer (0.0.6) sha256=dc32796263212a1e9ea4e573422a2fa893649805fb8fd2055901e26515fb3397
   capistrano-rbenv (2.2.0) sha256=3c8f39b7c624f3806630dcb475484bb3579aef07a40efe85089d83f64b0c35f5
   capistrano-tagging3 (2.0.0) sha256=cf676c5c8928bbcb59dda4b75dcf9bb096d5f4ae5641a1b5a5ac5ddbb3e136b3
   concurrent-ruby (1.3.6) sha256=6b56837e1e7e5292f9864f34b69c5a2cbc75c0cf5338f1ce9903d10fa762d5ab

@@ -7,6 +7,7 @@ ruby file: ".ruby-version"
 
 gem 'capistrano', '~> 3.20'
 gem 'capistrano-bundler'
+gem 'capistrano-composer'
 gem 'capistrano-rbenv'
 gem "capistrano-tagging3", "~> 2.0"
 
