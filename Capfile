@@ -104,9 +104,9 @@ namespace :deploy do
 
   desc 'Run pending Phinx database migrations'
   task :migrate do
-    on roles(:app) do
+    on primary(:app) do
       within release_path.join('twfy') do
-        execute :bash, '-c', "'vendor/bin/phinx migrate -c phinx.php'"
+        execute 'vendor/bin/phinx', 'migrate', '-c', 'phinx.php'
       end
     end
   end
