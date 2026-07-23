@@ -114,7 +114,11 @@ end
 
 after 'git:create_release', 'deploy:symlink_shared'
 after 'deploy:symlink_shared', 'deploy:compile_lockfile'
-after 'deploy:compile_lockfile', 'deploy:migrate'
+# capistrano-composer hooks `before 'deploy:updated', 'composer:install'`, which
+# runs after our git:create_release/symlink_shared/compile_lockfile chain (part of
+# deploy:updating) but before deploy:updated. Hook migrate off composer:install
+# directly so vendor/bin/phinx exists by the time migrations run.
+after 'composer:install', 'deploy:migrate'
 after 'deploy:published', 'deploy:restart'
 
 namespace :parse do
