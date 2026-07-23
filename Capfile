@@ -101,10 +101,20 @@ namespace :deploy do
       end
     end
   end
+
+  desc 'Run pending Phinx database migrations'
+  task :migrate do
+    on roles(:app) do
+      within release_path.join('twfy') do
+        execute :bash, '-c', "'vendor/bin/phinx migrate -c phinx.php'"
+      end
+    end
+  end
 end
 
 after 'git:create_release', 'deploy:symlink_shared'
 after 'deploy:symlink_shared', 'deploy:compile_lockfile'
+after 'deploy:compile_lockfile', 'deploy:migrate'
 after 'deploy:published', 'deploy:restart'
 
 namespace :parse do
