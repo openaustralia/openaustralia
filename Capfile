@@ -21,10 +21,14 @@ namespace :git do
 
       if test("[ -d #{cached_copy}/.git ]")
         within cached_copy do
-          execute :git, 'fetch', 'origin', fetch(:branch)
+          execute :git, 'fetch', '--prune', 'origin', fetch(:branch)
           execute :git, 'reset', '--hard', "origin/#{fetch(:branch)}"
           execute :git, 'clean', '-d', '-x', '-f'
           execute :git, 'submodule', 'init'
+          # Prune stale remote-tracking refs first: deleted-then-reused branch
+          # names upstream (e.g. `test` replaced by `test/scripts`) otherwise
+          # make the submodule fetch below fail with a ref lock error.
+          execute :git, 'submodule', 'foreach', '--recursive', 'git remote prune origin'
           execute :git, 'submodule', 'update', '--recursive'
         end
       else
