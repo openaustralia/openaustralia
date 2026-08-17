@@ -130,7 +130,8 @@ namespace :parse do
   task :members do
     on roles(:app) do
       within current_path do
-        execute :bash, '-c', 'openaustralia-parser/bin/run parse-members.rb'
+        # No bash -c here, SSHKit already executes commands directly.
+        execute 'openaustralia-parser/bin/run', 'parse-members.rb'
       end
     end
   end
