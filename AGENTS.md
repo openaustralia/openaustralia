@@ -63,6 +63,26 @@ specific go-ahead for that exact action, right now, however routine the request 
 - The stack is old in places (README's own warning); check what a file actually targets before assuming modern
   Ruby/PHP idioms apply.
 
+## Agent skills
+
+Configuration the engineering skills read. These files describe how this repo works; edit them directly rather than
+re-running the setup skill.
+
+### Issue tracker
+
+Issues live as GitHub issues in `openaustralia/openaustralia`, driven by the `gh` CLI. See
+`docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+The default five-label vocabulary: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`.
+See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: one `CONTEXT.md` and one `docs/adr/` at the root, both created lazily. The submodules are separate
+repositories and keep their own. See `docs/agents/domain.md`.
+
 ## Contributing
 
 This repository has no `CONTRIBUTING.md` or templates of its own; the org-wide ones in
