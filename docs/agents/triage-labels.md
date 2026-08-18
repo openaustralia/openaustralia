@@ -16,6 +16,10 @@ from this table.
 
 Edit the right-hand column to match whatever vocabulary you actually use.
 
+All five labels exist on the repo. Two were renamed from earlier labels rather than created, so older issues
+and comments may still refer to them by the old name: `needs-info` was `needs-reproduction`, and
+`ready-for-human` was `ready`.
+
 ## Other labels in this repo
 
 These sit outside the five canonical roles and the skills don't read them. Leave them alone unless you are
