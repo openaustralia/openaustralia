@@ -33,7 +33,9 @@ jobs:
                 COMMIT_AUTHOR_ID: ${{ github.actor_id }}
                 COMMIT_AUTHOR_NAME: ${{ github.actor }}
             run: |
-                git add -- $(git config --file .gitmodules --get-regexp path | awk "{ print \$2 }")
+                while IFS= read -r path; do
+                    git add -- "$path"
+                done < <(git config --file .gitmodules --get-regexp path | awk '{ print $2 }')
 
                 if git diff --cached --quiet; then
                     echo "All submodules are already up to date"
