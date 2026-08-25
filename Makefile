@@ -1,6 +1,6 @@
 .PHONY: production vagrant check-submodules deploy-local-vagrant init-bundle init-submodules production-deploy \
 		production-parse-members staging-deploy staging-parse-members update-openaustralia-parser update-perllib \
-		update-phplib update-rblib update-shlib update-twfy
+		update-phplib update-rblib update-shlib update-submodules update-twfy
 
 ALL: vagrant
 SHELL := /usr/bin/env bash
@@ -35,6 +35,25 @@ production-parse-members: .bundle/bundle-installed
 
 init-submodules:
 	git submodule update --init
+
+update-submodules: init-submodules
+	@git submodule foreach --quiet ' \
+	  current=$$(git rev-parse HEAD); \
+	  git fetch --quiet origin $(SUBMODULE_BRANCH); \
+	  latest=$$(git rev-parse origin/$(SUBMODULE_BRANCH)); \
+	  if [ "$$current" = "$$latest" ]; then \
+	    echo "$$name is already up to date"; \
+	  elif git merge-base --is-ancestor "$$current" "$$latest"; then \
+	    git checkout --quiet --detach "$$latest"; \
+	    current_short=$$(printf "%s" "$$current" | cut -c1-8); \
+	    latest_short=$$(printf "%s" "$$latest" | cut -c1-8); \
+	    echo "Updated $$name from $$current_short to $$latest_short"; \
+	  else \
+	    current_short=$$(printf "%s" "$$current" | cut -c1-8); \
+	    latest_short=$$(printf "%s" "$$latest" | cut -c1-8); \
+	    echo "Error: $$name is not behind origin/$(SUBMODULE_BRANCH); refusing to replace $$current_short with $$latest_short"; \
+	    exit 1; \
+	  fi'
 
 # pull in latest changes from submodules
 update-twfy: twfy/.git
