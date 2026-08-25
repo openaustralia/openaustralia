@@ -1,6 +1,6 @@
 .PHONY: production vagrant check-submodules deploy-local-vagrant init-bundle init-submodules production-deploy \
 		production-parse-members staging-deploy staging-parse-members update-openaustralia-parser update-perllib \
-		update-phplib update-rblib update-twfy
+		update-phplib update-rblib update-shlib update-twfy
 
 ALL: vagrant
 SHELL := /usr/bin/env bash
@@ -71,6 +71,13 @@ update-perllib: perllib/.git
 	@echo "Checking perllib is in sync with $(SUBMODULE_BRANCH) branch"
 	cd perllib && git fetch origin && git checkout $(SUBMODULE_BRANCH) && git pull origin $(SUBMODULE_BRANCH)
 	git add --patch perllib && git commit -m "Update to latest perllib $(SUBMODULE_BRANCH) branch"
+
+update-shlib: shlib/.git
+	@echo
+	@echo "============================================================================="
+	@echo "Checking shlib is in sync with $(SUBMODULE_BRANCH) branch"
+	cd shlib && git fetch origin && git checkout $(SUBMODULE_BRANCH) && git pull origin $(SUBMODULE_BRANCH)
+	git add --patch shlib && git commit -m "Update to latest shlib $(SUBMODULE_BRANCH) branch"
 
 check-submodules:
 	@behind=$$(git submodule foreach -q ' \

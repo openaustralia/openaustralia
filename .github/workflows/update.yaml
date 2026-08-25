@@ -1,0 +1,57 @@
+name: Update submodules
+
+on:
+    workflow_dispatch:
+
+permissions:
+    contents: write
+
+concurrency:
+    group: update-submodules
+    cancel-in-progress: false
+
+jobs:
+    update:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Check out main with submodules
+            uses: actions/checkout@v4
+            with:
+                ref: main
+                fetch-depth: 0
+                submodules: recursive
+          - name: Update submodules from main
+            shell: bash
+            run: |
+                git submodule foreach --quiet '
+                    current=$(git rev-parse HEAD)
+                    git fetch --quiet origin main
+                    latest=$(git rev-parse origin/main)
+
+                    if [[ "$current" == "$latest" ]]; then
+                        echo "$name is already up to date"
+                    elif git merge-base --is-ancestor "$current" "$latest"; then
+                        git checkout --quiet --detach "$latest"
+                        echo "Updated $name from ${current:0:8} to ${latest:0:8}"
+                    else
+                        echo "::error::$name is not behind origin/main; refusing to replace ${current:0:8} with ${latest:0:8}"
+                        exit 1
+                    fi
+                '
+          - name: Commit and push updated pointers
+            shell: bash
+            env:
+                COMMIT_AUTHOR_ID: ${{ github.actor_id }}
+                COMMIT_AUTHOR_NAME: ${{ github.actor }}
+            run: |
+                git add -- $(git config --file .gitmodules --get-regexp path | awk "{ print \$2 }")
+
+                if git diff --cached --quiet; then
+                    echo "All submodules are already up to date"
+                    exit 0
+                fi
+
+                git config user.name "$COMMIT_AUTHOR_NAME"
+                git config user.email "${COMMIT_AUTHOR_ID}+${COMMIT_AUTHOR_NAME}@users.noreply.github.com"
+                git commit -m "Update submodules to latest main commits"
+                git push origin HEAD:main
