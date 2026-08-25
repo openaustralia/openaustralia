@@ -14,6 +14,11 @@ jobs:
     update:
         runs-on: ubuntu-latest
         steps:
+          - name: Fail if not run from main
+            if: ${{ github.ref_name != 'main' }}
+            run: |
+                echo "This workflow must be run from the main branch"
+                exit 1
           - name: Check out main with submodules
             uses: actions/checkout@v4
             with:
