@@ -25,7 +25,6 @@ and comments may still refer to them by the old name: `needs-info` was `needs-re
 These sit outside the five canonical roles and the skills don't read them. Leave them alone unless you are
 deliberately triaging with them:
 
-- `needs-dev-env` for issues that can only be verified with a working development environment. Given the state of
-  the local Vagrantfile and `docker.sh` (see `AGENTS.md`), a fair number of issues sit here.
+- `needs-dev-env` for issues that can only be verified with a working development environment.
 - `stale` for probable close candidates from a triage sweep, pending human confirmation.
 - Type and area labels such as `bug`, `task`, `New feature`, `improvement`, `parser`, `web app`, `votes`, `API`.

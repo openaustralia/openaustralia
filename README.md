@@ -21,10 +21,8 @@ This repository's own `Gemfile` is deployment tooling (Capistrano and friends), 
 
 This repository is deployment tooling and issue tracking, not a development environment. To work on the code itself:
 
-* **The web application (`twfy`)**: it has its own Docker Compose setup. See [`twfy/README.md`](twfy/README.md) - roughly `make dependencies`, `make docker`, `make docker-db-migrate`, `make docker-db-seed`, then `make docker-run`, with the site at <http://localhost>.
+* **The web application (`twfy`)**: the maintained Docker Compose development environment is in the `twfy` submodule. See [`twfy/README.md`](twfy/README.md) - roughly `make dependencies`, `make docker`, `make docker-db-migrate`, `make docker-db-seed`, then `make docker-run`, with the site at <http://localhost>.
 * **The parser (`openaustralia-parser`)**: see that submodule's own README.
-
-The `Vagrantfile` and `docker.sh` in this repository are historical (Ubuntu 16.04/PHP 5.6 era) and not maintained; don't build on them.
 
 ## Deployment
 

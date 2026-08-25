@@ -1,8 +1,8 @@
-.PHONY: production vagrant check-submodules deploy-local-vagrant init-bundle init-submodules production-deploy \
+.PHONY: production check-submodules init-bundle init-submodules production-deploy \
 		production-parse-members staging-deploy staging-parse-members update-openaustralia-parser update-perllib \
 		update-phplib update-rblib update-twfy
 
-ALL: vagrant
+ALL: init-submodules init-bundle
 SHELL := /usr/bin/env bash
 SUBMODULE_BRANCH ?= main
 
@@ -15,9 +15,6 @@ init-bundle: .bundle/bundle-installed
 	bundle install
 	mkdir -p .bundle
 	touch .bundle/bundle-installed
-
-deploy-local-vagrant: .bundle/bundle-installed
-	bundle exec cap -S stage=development deploy
 
 staging-deploy: .bundle/bundle-installed
 	bundle exec cap staging deploy
