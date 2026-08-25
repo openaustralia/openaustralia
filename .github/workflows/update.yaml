@@ -21,27 +21,7 @@ jobs:
                 fetch-depth: 0
                 submodules: recursive
           - name: Update submodules from main
-            shell: bash
-            run: |
-                git submodule foreach --quiet '
-                    current=$(git rev-parse HEAD)
-                    git fetch --quiet origin main
-                    latest=$(git rev-parse origin/main)
-
-                    if [ "$current" = "$latest" ]; then
-                        echo "$name is already up to date"
-                    elif git merge-base --is-ancestor "$current" "$latest"; then
-                        git checkout --quiet --detach "$latest"
-                        current_short=$(printf "%s" "$current" | cut -c1-8)
-                        latest_short=$(printf "%s" "$latest" | cut -c1-8)
-                        echo "Updated $name from $current_short to $latest_short"
-                    else
-                        current_short=$(printf "%s" "$current" | cut -c1-8)
-                        latest_short=$(printf "%s" "$latest" | cut -c1-8)
-                        echo "::error::$name is not behind origin/main; refusing to replace $current_short with $latest_short"
-                        exit 1
-                    fi
-                '
+            run: make update-submodules
           - name: Commit and push updated pointers
             shell: bash
             env:
