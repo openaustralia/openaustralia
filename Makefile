@@ -91,7 +91,7 @@ update-perllib: perllib/.git
 	cd perllib && git fetch origin && git checkout $(SUBMODULE_BRANCH) && git pull origin $(SUBMODULE_BRANCH)
 	git add --patch perllib && git commit -m "Update to latest perllib $(SUBMODULE_BRANCH) branch"
 
-update-shlib: shlib/.git
+update-shlib: init-submodules
 	@echo
 	@echo "============================================================================="
 	@echo "Checking shlib is in sync with $(SUBMODULE_BRANCH) branch"
