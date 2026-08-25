@@ -1,42 +1,36 @@
 # OpenAustralia.org
 
-This is the master OpenAustralia.org repository. Here you'll find [issue tracking](https://github.com/openaustralia/openaustralia/issues) for the whole project and how to deploy it. This repository doesn't contain much code, those are stored in the submodules.
+This is the master OpenAustralia.org repository. Here you'll find [issue tracking](https://github.com/openaustralia/openaustralia/issues) for the whole project and how to deploy it. This repository doesn't contain much code itself; almost everything lives in submodules.
 
-The key sub-projects are:
+The submodules are:
 
 * The web application: [openaustralia/twfy](https://github.com/openaustralia/twfy)
 * The parser: [openaustralia/openaustralia-parser](https://github.com/openaustralia/openaustralia-parser)
+* Shared libraries: [openaustralia/phplib](https://github.com/openaustralia/phplib), [openaustralia/perllib](https://github.com/openaustralia/perllib), [openaustralia/rblib](https://github.com/openaustralia/rblib), [openaustralia/shlib](https://github.com/openaustralia/shlib)
+
+## Setup
+
+```bash
+make init-submodules   # git submodule update --init
+make init-bundle       # bundle install (deploy tooling only)
+```
+
+This repository's own `Gemfile` is deployment tooling (Capistrano and friends), pinned to Ruby 3.4.9 (`.ruby-version`). It isn't the app runtime - `config/deploy.rb` reads `openaustralia-parser/.ruby-version` and uses `openaustralia-parser/Gemfile` for that.
 
 ## Development
 
-OpenAustralia.org is currently deployed on Ubuntu 12.04 and has a number of quite old dependencies. This means it can be a bit difficult to get it running on a modern machine (if you'd like to try anyway there's [an old website](https://openaustralia.github.io/openaustralia/) that has the details).
+This repository is deployment tooling and issue tracking, not a development environment. To work on the code itself:
 
-The easiest way to get a development copy running is to use Vagrant, VirtualBox, and Ansible with the Vagrantfile in the **infrastructure repository** NOT THIS REPOSITORY.
+* **The web application (`twfy`)**: it has its own Docker Compose setup. See [`twfy/README.md`](twfy/README.md) - roughly `make dependencies`, `make docker`, `make docker-db-migrate`, `make docker-db-seed`, then `make docker-run`, with the site at <http://localhost>.
+* **The parser (`openaustralia-parser`)**: see that submodule's own README.
 
-Ansible doesn't currently create a `~vagrant/.my.cnf` so you'll have
-to create one by hand, pinching DB details from
-`/srv/www/production/shared/config/general`.
-
-Then:
-
-```
-# Setup the database on the Vagrant machine
-bundle exec cap -S stage=development deploy:setup_db
-
-# Load MPs into the database
-bundle exec cap -S stage=development parse:members
-
-# Download, parse, and load speeches for an example day
-vagrant ssh --command '/srv/www/production/current/openaustralia-parser/parse-speeches.rb 2017-08-08'
-```
-
-Yay, you've done it! Visit http://openaustralia.org.au.test and you should see your development copy of OpenAustralia.org.au
+The `Vagrantfile` and `docker.sh` in this repository are historical (Ubuntu 16.04/PHP 5.6 era) and not maintained; don't build on them.
 
 ## Deployment
 
-OpenAustralia.org is deployed using Capistrano from this repository. Once you've made changes to the web application or the parser and those have been pushed to GitHub you'll first need to update their submodules in this repository.
+OpenAustralia.org is deployed using Capistrano 3 from this repository, to a single host (`openaustralia.org.au`) with separate `production` and `staging` deploy paths. Once you've made changes to the web application or the parser and pushed them to GitHub, you first need to update their submodule pointers in this repository.
 
-Set `DEPLOY_SSH_KEY` ENV var if you are using a different ssh key for deployment than `~/.ssh/id_ed25519` (prefered) or `~/.ssh/id_rsa`.
+Set `DEPLOY_SSH_KEY` ENV var if you are using a different ssh key for deployment than `~/.ssh/id_ed25519` (preferred) or `~/.ssh/id_rsa`.
 
 You do this by adding and committing, just like you would with any other change in Git. Here's what it looks like to update both the parser and the web application's submodules:
 
@@ -101,6 +95,9 @@ Capistrano fills that gap during deploy via the [capistrano-composer][cc] gem
    disk before Apache serves any traffic from the new release.
 4. On rollback the gem also runs `composer:install` before `deploy:reverted`,
    so older releases get a matching `vendor/` if it has been pruned.
+5. `deploy:migrate` runs Phinx migrations (`vendor/bin/phinx migrate`) against
+   `twfy`, hooked directly off `composer:install` so `vendor/bin/phinx` is
+   guaranteed to exist by then.
 
 Bumping a PHP dependency therefore needs **no special deploy step** — update
 `composer.json` / `composer.lock` in the `twfy` repo, push, bump the submodule

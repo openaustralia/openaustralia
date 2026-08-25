@@ -19,10 +19,11 @@ repository; what belongs here is deployment, submodule pointer bumps, and cross-
   deployed runtime is defined by the parser submodule: `config/deploy.rb` reads
   `openaustralia-parser/.ruby-version` and uses `openaustralia-parser/Gemfile`; PHP dependencies come from
   `twfy/composer.json` via capistrano-composer.
-- For a development environment the README says to use the Vagrantfile in the **infrastructure repository, not this
-  one**. The local `Vagrantfile` (Ubuntu 16.04, Ruby 1.8.7, php5.6) and `docker.sh` (Ubuntu 10.04/14.04 images with
-  the install steps commented out) are historical; don't build anything on them. For working on the web app itself,
-  `twfy` now has its own docker-compose setup - start there.
+- This repository is not a development environment. The README points to `twfy`'s own Docker Compose setup
+  (`twfy/README.md`: `make dependencies` → `make docker` → `make docker-db-migrate` → `make docker-db-seed` →
+  `make docker-run`) for working on the web app, and to the parser submodule's own README for the parser. The local
+  `Vagrantfile` (Ubuntu 16.04, Ruby 1.8.7, php5.6) and `docker.sh` (Ubuntu 10.04/14.04 images with the install steps
+  commented out) are historical; don't build anything on them.
 
 ## Commands
 
@@ -60,8 +61,7 @@ specific go-ahead for that exact action, right now, however routine the request 
   they're symlinked from `shared/` at deploy time. Locally, copy each submodule's example file.
 - After merging a change in a submodule repo, the pointer here must be bumped (by `make update-<name>` or
   Dependabot) before a deploy picks it up.
-- The stack is old in places (README's own warning); check what a file actually targets before assuming modern
-  Ruby/PHP idioms apply.
+- The stack is old in places; check what a file actually targets before assuming modern Ruby/PHP idioms apply.
 
 ## Agent skills
 
