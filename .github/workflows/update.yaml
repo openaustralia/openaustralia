@@ -1,0 +1,48 @@
+name: Update submodules
+
+on:
+    workflow_dispatch:
+
+permissions:
+    contents: write
+
+concurrency:
+    group: update-submodules
+    cancel-in-progress: false
+
+jobs:
+    update:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Fail if not run from main
+            if: ${{ github.ref_name != 'main' }}
+            run: |
+                echo "This workflow must be run from the main branch"
+                exit 1
+          - name: Check out main with submodules
+            uses: actions/checkout@v4
+            with:
+                ref: main
+                fetch-depth: 0
+                submodules: recursive
+          - name: Update submodules from main
+            run: make update-submodules
+          - name: Commit and push updated pointers
+            shell: bash
+            env:
+                COMMIT_AUTHOR_ID: ${{ github.actor_id }}
+                COMMIT_AUTHOR_NAME: ${{ github.actor }}
+            run: |
+                while IFS= read -r path; do
+                    git add -- "$path"
+                done < <(git config --file .gitmodules --get-regexp path | awk '{ print $2 }')
+
+                if git diff --cached --quiet; then
+                    echo "All submodules are already up to date"
+                    exit 0
+                fi
+
+                git config user.name "$COMMIT_AUTHOR_NAME"
+                git config user.email "${COMMIT_AUTHOR_ID}+${COMMIT_AUTHOR_NAME}@users.noreply.github.com"
+                git commit -m "Update submodules to latest main commits"
+                git push origin HEAD:main

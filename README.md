@@ -28,6 +28,21 @@ This repository is deployment tooling and issue tracking, not a development envi
 
 OpenAustralia.org is deployed using Capistrano 3 from this repository, to a single host (`openaustralia.org.au`) with separate `production` and `staging` deploy paths. Once you've made changes to the web application or the parser and pushed them to GitHub, you first need to update their submodule pointers in this repository.
 
+### Update submodules with GitHub Actions
+
+The [Update submodules](https://github.com/openaustralia/openaustralia/actions/workflows/update.yaml) workflow
+updates all six submodule pointers from their `main` branches. It is manually triggered and does not deploy the
+site.
+
+To run it, open **Actions** in this repository, select **Update submodules**, select **Run workflow**, leave the
+branch set to `main`, and confirm **Run workflow**. If any submodules are behind, the workflow creates one
+`Update submodules to latest main commits` commit and pushes it directly to this repository's `main` branch. The
+commit is attributed to the GitHub user who started the workflow.
+
+If all pointers are current, the workflow succeeds without creating a commit. If a recorded submodule commit has
+diverged from, rather than being an ancestor of, its `origin/main`, the workflow stops without replacing it so the
+divergence can be resolved manually. Only one update workflow runs at a time.
+
 Set `DEPLOY_SSH_KEY` ENV var if you are using a different ssh key for deployment than `~/.ssh/id_ed25519` (preferred) or `~/.ssh/id_rsa`.
 
 You do this by adding and committing, just like you would with any other change in Git. Here's what it looks like to update both the parser and the web application's submodules:
