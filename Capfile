@@ -114,15 +114,26 @@ namespace :deploy do
       end
     end
   end
+
+  desc 'Install npm dependencies and build twfy/www/docs/style/tailwind/tailwind.css'
+  task :npm_build_css do
+    on roles(:app) do
+      within release_path.join('twfy') do
+        execute :npm, 'ci'
+        execute :npm, 'run', 'build:css'
+      end
+    end
+  end
 end
 
 after 'git:create_release', 'deploy:symlink_shared'
 after 'deploy:symlink_shared', 'deploy:compile_lockfile'
 # capistrano-composer hooks `before 'deploy:updated', 'composer:install'`, which
 # runs after our git:create_release/symlink_shared/compile_lockfile chain (part of
-# deploy:updating) but before deploy:updated. Hook migrate off composer:install
-# directly so vendor/bin/phinx exists by the time migrations run.
+# deploy:updating) but before deploy:updated. Hook migrate and the npm/Tailwind
+# build off composer:install directly so they run at the same point in the chain.
 after 'composer:install', 'deploy:migrate'
+after 'composer:install', 'deploy:npm_build_css'
 after 'deploy:published', 'deploy:restart'
 
 namespace :parse do
