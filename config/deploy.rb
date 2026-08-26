@@ -29,22 +29,42 @@ set :use_sudo, true
 # Keep last 5 releases
 set :keep_releases, 5
 
-# SSH options
+# AWS EC2 instance lookup (capistrano-aws). The instance is tagged by Terraform
+# (infrastructure:terraform/openaustralia/production.tf) with Application and
+# Roles tags for exactly this purpose.
+set :aws_ec2_regions, ['ap-southeast-2']
+
+# Use the instance ID as the contact point as that is what SSM needs.
+set :aws_ec2_contact_point, :id
+
+# Don't filter on the stage tag: the single instance has no Stage tag because
+# it is the deploy target for both production and staging.
+set :aws_ec2_default_filters, (proc {
+  [
+    {
+      name: "tag:#{fetch(:aws_ec2_application_tag)}",
+      values: [fetch(:aws_ec2_application)]
+    },
+    {
+      name: 'instance-state-name',
+      values: ['running']
+    }
+  ]
+})
+
+# SSH options - proxied through AWS SSM Session Manager, so no direct SSH
+# access to the instance is needed. Key auth still happens over the tunnel.
 set :ssh_options, {
   forward_agent: true,
   user: 'deploy',
   keys: [ENV['DEPLOY_SSH_KEY'], '~/.ssh/id_ed25519', '~/.ssh/id_rsa'].compact,
   verify_host_key: :accept_new_or_local_tunnel,
+  proxy: Net::SSH::Proxy::Command.new(
+    'aws ssm start-session --profile oaf --target %h ' \
+    '--document-name AWS-StartSSHSession --parameters portNumber=%p'
+  ),
   # verbose: :info
 }
-
-# Load stage-specific configuration
-stage_config = File.join(__dir__, 'deploy', "#{fetch(:stage, 'staging')}.rb")
-if File.exist?(stage_config)
-  load stage_config
-else
-  puts "warning: No stage-specific configuration found for #{fetch(:stage, 'staging').inspect}!"
-end
 
 # Tagging options
 set :tagging3_format, ':stage_:release'

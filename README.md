@@ -28,7 +28,12 @@ The `Vagrantfile` and `docker.sh` in this repository are historical (Ubuntu 16.0
 
 ## Deployment
 
-OpenAustralia.org is deployed using Capistrano 3 from this repository, to a single host (`openaustralia.org.au`) with separate `production` and `staging` deploy paths. Once you've made changes to the web application or the parser and pushed them to GitHub, you first need to update their submodule pointers in this repository.
+OpenAustralia.org is deployed using Capistrano 3 from this repository, to a single EC2 instance with separate `production` and `staging` deploy paths. Once you've made changes to the web application or the parser and pushed them to GitHub, you first need to update their submodule pointers in this repository.
+
+Capistrano looks up the deploy target dynamically by its EC2 tags (via [capistrano-aws](https://github.com/fernandocarletti/capistrano-aws)) and proxies SSH through AWS SSM Session Manager, so deploying requires:
+
+* the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) with the [Session Manager plugin](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html) installed;
+* an `oaf` AWS profile with an active session (`aws login` / `aws sso login --profile oaf`).
 
 ### Update submodules with GitHub Actions
 

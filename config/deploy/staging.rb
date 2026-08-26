@@ -1,4 +1,5 @@
-server 'openaustralia.org.au', user: 'deploy', roles: %w[app web], primary: true
+# Roles come from the instance's Roles tag (app,web)
+aws_ec2_register(user: 'deploy')
 
 set :deploy_to, '/srv/www/staging'
 set :branch, ENV.fetch('STAGING_BRANCH', 'main')
