@@ -1,0 +1,59 @@
+---
+name: Deploy to staging
+
+# Runs only on a push to main - which on this repo only ever happens when a
+# maintainer merges an approved, reviewed PR (branch protection blocks direct
+# pushes and force-pushes). Forked PRs can never trigger this workflow and are
+# never handed the deploy key: GitHub does not expose secrets to pull_request
+# runs from forks, and this workflow doesn't listen for that event anyway.
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-staging
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # The "staging" environment holds DEPLOY_SSH_KEY and has a deployment
+    # branch policy restricting it to main - a second, GitHub-enforced gate
+    # independent of this file. Configure under Settings > Environments.
+    environment: staging
+    steps:
+      - name: Check out repository
+        # actions/checkout v7.0.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Set up Ruby
+        # ruby/setup-ruby v1.321.0
+        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
+        with:
+          bundler-cache: true
+
+      # Deliberately not using a marketplace "ssh deploy" action here: keeping
+      # the deploy key handling to plain, auditable shell with no third-party
+      # code in the loop.
+      - name: Start ssh-agent
+        run: |
+          eval "$(ssh-agent -s)"
+          echo "SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >> "$GITHUB_ENV"
+          echo "SSH_AGENT_PID=$SSH_AGENT_PID" >> "$GITHUB_ENV"
+
+      - name: Add deploy key
+        run: ssh-add - <<< "${{ secrets.DEPLOY_SSH_KEY }}"
+
+      - name: Trust the deploy host
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          ssh-keyscan -H openaustralia.org.au >> ~/.ssh/known_hosts
+
+      - name: Deploy to staging
+        run: bundle exec cap staging deploy

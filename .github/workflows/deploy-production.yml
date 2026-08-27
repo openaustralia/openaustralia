@@ -1,0 +1,68 @@
+---
+name: Deploy to production
+
+# Manual only. Whoever runs this must have write access to trigger the
+# workflow at all, and the "production" environment below requires a listed
+# reviewer to approve the run before the job (and its secret) starts -
+# configure required reviewers under Settings > Environments > production.
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "Branch/tag/ref to deploy (defaults to main)"
+        required: false
+        default: main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: production
+    steps:
+      - name: Check out repository
+        # actions/checkout v7.0.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ inputs.branch }}
+
+      - name: Set up Ruby
+        # ruby/setup-ruby v1.321.0
+        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
+        with:
+          bundler-cache: true
+
+      # Deliberately not using a marketplace "ssh deploy" action here: keeping
+      # the deploy key handling to plain, auditable shell with no third-party
+      # code in the loop.
+      - name: Start ssh-agent
+        run: |
+          eval "$(ssh-agent -s)"
+          echo "SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >> "$GITHUB_ENV"
+          echo "SSH_AGENT_PID=$SSH_AGENT_PID" >> "$GITHUB_ENV"
+
+      - name: Add deploy key
+        run: ssh-add - <<< "${{ secrets.DEPLOY_SSH_KEY }}"
+
+      - name: Trust the deploy host
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          ssh-keyscan -H openaustralia.org.au >> ~/.ssh/known_hosts
+
+      - name: Deploy to production
+        # Only set PRODUCTION_BRANCH when it's not main, so Capistrano's own
+        # "deploying X NOT main branch" notice doesn't fire on the common case.
+        run: |
+          if [ "${{ inputs.branch }}" = "main" ]; then
+            bundle exec cap production deploy
+          else
+            export PRODUCTION_BRANCH="${{ inputs.branch }}"
+            bundle exec cap production deploy
+          fi
