@@ -28,20 +28,15 @@ This repository is deployment tooling and issue tracking, not a development envi
 
 OpenAustralia.org is deployed using Capistrano 3 from this repository, to a single host (`openaustralia.org.au`) with separate `production` and `staging` deploy paths. Once you've made changes to the web application or the parser and pushed them to GitHub, you first need to update their submodule pointers in this repository.
 
-### Update submodules with GitHub Actions
+### Update submodules with Dependabot
 
-The [Update submodules](https://github.com/openaustralia/openaustralia/actions/workflows/update.yaml) workflow
-updates all six submodule pointers from their `main` branches. It is manually triggered and does not deploy the
-site.
+`.github/dependabot.yml` runs a daily `gitsubmodule` check that opens a pull request for each submodule pointer
+that is behind its `main` branch, the same way it does for the other dependencies in this repository. These
+pull requests go through the normal review and merge process, so `main` stays protected.
 
-To run it, open **Actions** in this repository, select **Update submodules**, select **Run workflow**, leave the
-branch set to `main`, and confirm **Run workflow**. If any submodules are behind, the workflow creates one
-`Update submodules to latest main commits` commit and pushes it directly to this repository's `main` branch. The
-commit is attributed to the GitHub user who started the workflow.
-
-If all pointers are current, the workflow succeeds without creating a commit. If a recorded submodule commit has
-diverged from, rather than being an ancestor of, its `origin/main`, the workflow stops without replacing it so the
-divergence can be resolved manually. Only one update workflow runs at a time.
+To trigger a check immediately instead of waiting for the daily run, open **Insights**, then **Dependency graph**,
+then the **Dependabot** tab in this repository, find the `gitsubmodule` entry under recent update jobs, and select
+**Check for updates**.
 
 Set `DEPLOY_SSH_KEY` ENV var if you are using a different ssh key for deployment than `~/.ssh/id_ed25519` (preferred) or `~/.ssh/id_rsa`.
 
@@ -51,6 +46,13 @@ By default the `main` branch is deployed to both production and staging. You can
 * `STAGING_BRANCH` ENV var if you want a different staging branch;
 * `PRODUCTION_BRANCH` ENV var if you want a different production branch, eg whilst setting up a new server.
 You can set `SUBMODULE_BRANCH` ENV var if you want the submodules updated to a different branch than main.
+
+Deploying does not use whatever branch you have checked out locally. Capistrano's custom `git:create_release`
+task in the `Capfile` does a fresh `git clone --branch <branch> https://github.com/openaustralia/openaustralia.git`
+on the deploy target itself, where `<branch>` comes from `STAGING_BRANCH`/`PRODUCTION_BRANCH` (default `main`),
+set in `config/deploy/staging.rb` and `config/deploy/production.rb`. So to deploy an unmerged PR branch to
+staging, run it as `STAGING_BRANCH=your-branch-name make staging-deploy`, not just `make staging-deploy` from
+that branch locally.
 
 ```bash
   cd openaustralia
