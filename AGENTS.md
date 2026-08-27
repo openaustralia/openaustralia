@@ -58,6 +58,10 @@ specific go-ahead for that exact action, right now, however routine the request 
   they're symlinked from `shared/` at deploy time. Locally, copy each submodule's example file.
 - After merging a change in a submodule repo, the pointer here must be bumped (by `make update-<name>` or
   Dependabot) before a deploy picks it up.
+- `make staging-deploy`/`make production-deploy` never deploys your local checkout. Capistrano's `git:create_release`
+  task clones straight from GitHub on the deploy target, at the branch named by `STAGING_BRANCH`/`PRODUCTION_BRANCH`
+  (default `main`). Testing an unmerged branch means `STAGING_BRANCH=that-branch make staging-deploy`, not just
+  running the target while that branch is checked out.
 - The stack is old in places; check what a file actually targets before assuming modern Ruby/PHP idioms apply.
 
 ## Agent skills
