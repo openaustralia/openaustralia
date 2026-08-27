@@ -21,9 +21,7 @@ repository; what belongs here is deployment, submodule pointer bumps, and cross-
   `twfy/composer.json` via capistrano-composer.
 - This repository is not a development environment. The README points to `twfy`'s own Docker Compose setup
   (`twfy/README.md`: `make dependencies` → `make docker` → `make docker-db-migrate` → `make docker-db-seed` →
-  `make docker-run`) for working on the web app, and to the parser submodule's own README for the parser. The local
-  `Vagrantfile` (Ubuntu 16.04, Ruby 1.8.7, php5.6) and `docker.sh` (Ubuntu 10.04/14.04 images with the install steps
-  commented out) are historical; don't build anything on them.
+  `make docker-run`) for working on the web app, and to the parser submodule's own README for the parser.
 
 ## Commands
 
@@ -38,7 +36,6 @@ make production-deploy     # bundle exec cap production deploy
 make staging-parse-members / production-parse-members
 ```
 
-- Bare `make` fails: the default target is `vagrant`, which has no rule.
 - The `update-*` targets are interactive (`git add --patch`) and **commit for you**.
 - `check-submodules` may suggest `make update-shlib`, which doesn't exist; bump that pointer by hand.
 - Dependabot bumps submodule pointers daily (`.github/dependabot.yml`); there is no CI in this repo.
