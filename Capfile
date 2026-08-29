@@ -8,6 +8,8 @@ require 'capistrano/composer'
 # Check for this ruby manager first in openaustralia-parser:bin/run
 require 'capistrano/rbenv'
 require 'capistrano/tagging3'
+require 'capistrano/aws'
+require 'net/ssh/proxy/command'
 
 # Load custom tasks
 Dir.glob('lib/capistrano/tasks/*.rake').each { |r| import r }

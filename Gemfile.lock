@@ -3,13 +3,34 @@ GEM
   specs:
     airbrussh (1.6.1)
       sshkit (>= 1.6.1, != 1.7.0)
+    aws-eventstream (1.4.0)
+    aws-partitions (1.1282.0)
+    aws-sdk-core (3.254.1)
+      aws-eventstream (~> 1, >= 1.3.0)
+      aws-partitions (~> 1, >= 1.992.0)
+      aws-sigv4 (~> 1.9)
+      base64
+      bigdecimal
+      jmespath (~> 1, >= 1.6.1)
+      logger
+    aws-sdk-ec2 (1.639.0)
+      aws-sdk-core (~> 3, >= 3.254.0)
+      aws-sigv4 (~> 1.5)
+    aws-sigv4 (1.12.1)
+      aws-eventstream (~> 1, >= 1.0.2)
     base64 (0.3.0)
     bcrypt_pbkdf (1.1.2)
+    bigdecimal (4.1.2)
     capistrano (3.20.1)
       airbrussh (>= 1.0.0)
       i18n
       rake (>= 10.0.0)
       sshkit (>= 1.9.0)
+    capistrano-aws (1.4.0)
+      aws-sdk-ec2 (~> 1)
+      capistrano (~> 3.1)
+      rainbow (~> 3)
+      terminal-table (>= 1.7, < 4.0)
     capistrano-bundler (2.2.0)
       capistrano (~> 3.1)
     capistrano-composer (0.0.6)
@@ -23,6 +44,7 @@ GEM
     ed25519 (1.4.0)
     i18n (1.14.8)
       concurrent-ruby (~> 1.0)
+    jmespath (1.6.2)
     logger (1.7.0)
     net-scp (4.1.0)
       net-ssh (>= 2.6.5, < 8.0.0)
@@ -30,7 +52,9 @@ GEM
       net-ssh (>= 5.0.0, < 8.0.0)
     net-ssh (7.3.2)
     ostruct (0.6.3)
+    rainbow (3.1.1)
     rake (13.4.2)
+    rexml (3.4.4)
     sshkit (1.25.0)
       base64
       logger
@@ -38,6 +62,9 @@ GEM
       net-sftp (>= 2.1.2)
       net-ssh (>= 2.8.0)
       ostruct
+    terminal-table (3.0.2)
+      unicode-display_width (>= 1.1.1, < 3)
+    unicode-display_width (2.6.0)
 
 PLATFORMS
   ruby
@@ -46,18 +73,27 @@ PLATFORMS
 DEPENDENCIES
   bcrypt_pbkdf (>= 1.0, < 2.0)
   capistrano (~> 3.20)
+  capistrano-aws
   capistrano-bundler
   capistrano-composer
   capistrano-rbenv
   capistrano-tagging3 (~> 2.0)
   ed25519 (>= 1.2, < 2.0)
+  rexml
 
 CHECKSUMS
   airbrussh (1.6.1) sha256=9a5fc95583cefe722054a016d26ff0338cf00072b031b829086dde2039d5836a
+  aws-eventstream (1.4.0) sha256=116bf85c436200d1060811e6f5d2d40c88f65448f2125bc77ffce5121e6e183b
+  aws-partitions (1.1282.0) sha256=d6c7c4ad2e4f8cd4ca56445bfbb3958fec0deecd959c1e2bcd3a83c9aa308c18
+  aws-sdk-core (3.254.1) sha256=518089e32134c3478cd4ec63d07fb966546a45e9e4cbf5f80d2cf16d5699d29b
+  aws-sdk-ec2 (1.639.0) sha256=f5ca4e98fb69a2176743be1f5cdb1a70ced9c08ff9e2d68ad6dcea6953fc5747
+  aws-sigv4 (1.12.1) sha256=6973ff95cb0fd0dc58ba26e90e9510a2219525d07620c8babeb70ef831826c00
   base64 (0.3.0) sha256=27337aeabad6ffae05c265c450490628ef3ebd4b67be58257393227588f5a97b
   bcrypt_pbkdf (1.1.2) sha256=c2414c23ce66869b3eb9f643d6a3374d8322dfb5078125c82792304c10b94cf6
+  bigdecimal (4.1.2) sha256=53d217666027eab4280346fba98e7d5b66baaae1b9c3c1c0ffe89d48188a3fbd
   bundler (4.0.12) sha256=7f8b757d28dfb636e7b24fba2344ac6dd13b5b24f4b46d62573d483f211825ac
   capistrano (3.20.1) sha256=b0d54ba5cf49bb194998bf6b427e889aa36ed05f545ecf7cc37acb9d529e9ae9
+  capistrano-aws (1.4.0) sha256=c644fb68397ba6bc76352e7f1faf01433dccea8b16bb69c7e5af5a2cd491f2c1
   capistrano-bundler (2.2.0) sha256=47b4cf2ea17ea132bb0a5cabc5663443f5190a54f4da5b322d04e1558ff1468c
   capistrano-composer (0.0.6) sha256=dc32796263212a1e9ea4e573422a2fa893649805fb8fd2055901e26515fb3397
   capistrano-rbenv (2.2.0) sha256=3c8f39b7c624f3806630dcb475484bb3579aef07a40efe85089d83f64b0c35f5
@@ -65,13 +101,18 @@ CHECKSUMS
   concurrent-ruby (1.3.7) sha256=4412caec3a5ea2e5fdc52076724c071a81f2c0593d83b2ac8cbb8ca63b3151b0
   ed25519 (1.4.0) sha256=16e97f5198689a154247169f3453ef4cfd3f7a47481fde0ae33206cdfdcac506
   i18n (1.14.8) sha256=285778639134865c5e0f6269e0b818256017e8cde89993fdfcbfb64d088824a5
+  jmespath (1.6.2) sha256=238d774a58723d6c090494c8879b5e9918c19485f7e840f2c1c7532cf84ebcb1
   logger (1.7.0) sha256=196edec7cc44b66cfb40f9755ce11b392f21f7967696af15d274dde7edff0203
   net-scp (4.1.0) sha256=a99b0b92a1e5d360b0de4ffbf2dc0c91531502d3d4f56c28b0139a7c093d1a5d
   net-sftp (4.0.0) sha256=65bb91c859c2f93b09826757af11b69af931a3a9155050f50d1b06d384526364
   net-ssh (7.3.2) sha256=65029e213c380e20e5fd92ece663934ab0a0fe888e0cd7cc6a5b664074362dd4
   ostruct (0.6.3) sha256=95a2ed4a4bd1d190784e666b47b2d3f078e4a9efda2fccf18f84ddc6538ed912
+  rainbow (3.1.1) sha256=039491aa3a89f42efa1d6dec2fc4e62ede96eb6acd95e52f1ad581182b79bc6a
   rake (13.4.2) sha256=cb825b2bd5f1f8e91ca37bddb4b9aaf345551b4731da62949be002fa89283701
+  rexml (3.4.4) sha256=19e0a2c3425dfbf2d4fc1189747bdb2f849b6c5e74180401b15734bc97b5d142
   sshkit (1.25.0) sha256=c8c6543cdb60f91f1d277306d585dd11b6a064cb44eab0972827e4311ff96744
+  terminal-table (3.0.2) sha256=f951b6af5f3e00203fb290a669e0a85c5dd5b051b3b023392ccfd67ba5abae91
+  unicode-display_width (2.6.0) sha256=12279874bba6d5e4d2728cef814b19197dbb10d7a7837a869bab65da943b7f5a
 
 RUBY VERSION
   ruby 3.4.9
