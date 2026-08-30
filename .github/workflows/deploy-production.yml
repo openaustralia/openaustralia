@@ -87,10 +87,22 @@ jobs:
       - name: Deploy to production
         # Only set PRODUCTION_BRANCH when it's not main, so Capistrano's own
         # "deploying X NOT main branch" notice doesn't fire on the common case.
+        # BRANCH comes in via env:, not interpolated directly into the script -
+        # ${{ inputs.branch }} inline here would paste its raw value straight
+        # into the shell text at template time, letting a branch name with
+        # shell metacharacters (eg `main"; rm -rf /; echo "`) run as code. env:
+        # instead sets a real shell variable, which "$BRANCH" then just reads,
+        # not re-executes - true regardless of what's in it. Triggering this
+        # workflow already needs write access plus a listed reviewer's
+        # approval, so this isn't reachable by an outside attacker, but it's
+        # a free, standard fix either way (see GitHub's own "Understanding the
+        # risk of script injection" docs).
+        env:
+          BRANCH: ${{ inputs.branch }}
         run: |
-          if [ "${{ inputs.branch }}" = "main" ]; then
+          if [ "$BRANCH" = "main" ]; then
             bundle exec cap production deploy
           else
-            export PRODUCTION_BRANCH="${{ inputs.branch }}"
+            export PRODUCTION_BRANCH="$BRANCH"
             bundle exec cap production deploy
           fi
