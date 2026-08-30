@@ -54,13 +54,25 @@ set :aws_ec2_default_filters, (proc {
 
 # SSH options - proxied through AWS SSM Session Manager, so no direct SSH
 # access to the instance is needed. Key auth still happens over the tunnel.
+#
+# --profile oaf only when NOT running in GitHub Actions - same "oaf" pin as
+# infrastructure repo's bin/ssh-config (its own comment explains why: this
+# ProxyCommand string runs later, at `ssh` time, potentially from a
+# completely different shell/context than whatever ran this file, so it
+# can't rely on AWS_PROFILE being set there either - only ad hoc commands an
+# operator runs themselves get to assume that). But there is no "oaf" profile
+# on a GitHub Actions runner - deploy-production.yml/deploy-staging.yml
+# federate via OIDC (configure-aws-credentials) and export temporary
+# credentials as plain environment variables instead, which a --profile flag
+# would shadow rather than use.
+ssm_proxy_profile = ENV['GITHUB_ACTIONS'] ? '' : '--profile oaf '
 set :ssh_options, {
   forward_agent: true,
   user: 'deploy',
   keys: [ENV['DEPLOY_SSH_KEY'], '~/.ssh/id_ed25519', '~/.ssh/id_rsa'].compact,
   verify_host_key: :accept_new_or_local_tunnel,
   proxy: Net::SSH::Proxy::Command.new(
-    'aws ssm start-session --profile oaf --target %h ' \
+    "aws ssm start-session #{ssm_proxy_profile}--target %h " \
     '--document-name AWS-StartSSHSession --parameters portNumber=%p'
   ),
   # verbose: :info
