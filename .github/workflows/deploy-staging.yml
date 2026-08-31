@@ -1,0 +1,84 @@
+---
+name: Deploy to staging
+
+# Runs only on a push to main - which on this repo only ever happens when a
+# maintainer merges an approved, reviewed PR (branch protection blocks direct
+# pushes and force-pushes). Forked PRs can never trigger this workflow and are
+# never handed the deploy key: GitHub does not expose secrets to pull_request
+# runs from forks, and this workflow doesn't listen for that event anyway.
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  # Required to federate with AWS via OIDC (configure-aws-credentials below) -
+  # no long-lived AWS credentials are stored in this repo as a result.
+  id-token: write
+
+concurrency:
+  group: deploy-staging
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # The "staging" environment holds DEPLOY_SSH_KEY and AWS_DEPLOY_ROLE_ARN,
+    # and has a deployment branch policy restricting it to main - a second,
+    # GitHub-enforced gate independent of this file. Configure under Settings
+    # > Environments. AWS_DEPLOY_ROLE_ARN is a plain variable, not a secret -
+    # an IAM role ARN isn't sensitive on its own, the AWS-side trust policy
+    # (infrastructure repo's terraform/github-actions-deploy.tf) is what
+    # actually restricts who can assume it, scoped to this exact repo+environment.
+    environment: staging
+    steps:
+      - name: Check out repository
+        # actions/checkout v7.0.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Set up Ruby
+        # ruby/setup-ruby v1.321.0
+        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
+        with:
+          bundler-cache: true
+
+      # Port 22 is closed on the webserver security group - deploy reaches the
+      # server the same way operators already do (infrastructure repo's
+      # bin/ssh-config), by tunnelling SSH through an AWS Systems Manager
+      # session instead of a direct network connection. Capistrano's own
+      # ssh_options (openaustralia/config/deploy.rb) does the EC2 instance
+      # lookup and the SSM ProxyCommand itself now (capistrano-aws +
+      # Net::SSH::Proxy::Command) - this step just puts credentials in the
+      # environment for it (and for the plugin below) to use; there's nothing
+      # else in this workflow that needs to know about SSM directly.
+      - name: Configure AWS credentials
+        # aws-actions/configure-aws-credentials v6.2.3
+        uses: aws-actions/configure-aws-credentials@e6de054238d6b7531b4efff3b6587d9aade6a06c
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ap-southeast-2
+
+      - name: Install the SSM Session Manager plugin
+        # Not preinstalled on GitHub-hosted runners - needed for Capistrano's
+        # own `aws ssm start-session` ProxyCommand (config/deploy.rb) to work,
+        # same as it would for an operator running this locally.
+        run: |
+          curl -fsSL "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb" -o /tmp/session-manager-plugin.deb
+          sudo dpkg -i /tmp/session-manager-plugin.deb
+
+      # Deliberately not using a marketplace "ssh deploy" action here: keeping
+      # the deploy key handling to plain, auditable shell with no third-party
+      # code in the loop.
+      - name: Start ssh-agent
+        run: |
+          eval "$(ssh-agent -s)"
+          echo "SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >> "$GITHUB_ENV"
+          echo "SSH_AGENT_PID=$SSH_AGENT_PID" >> "$GITHUB_ENV"
+
+      - name: Add deploy key
+        run: ssh-add - <<< "${{ secrets.DEPLOY_SSH_KEY }}"
+
+      - name: Deploy to staging
+        run: bundle exec cap staging deploy
