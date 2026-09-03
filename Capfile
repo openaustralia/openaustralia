@@ -44,6 +44,15 @@ namespace :git do
       # Copy contents (not the directory itself) to release path
       execute :mkdir, '-p', release_path
       execute :cp, '-a', "#{cached_copy}/.", "#{release_path}/"
+
+      # twfy/REVISION: this submodule's own HEAD, for Sentry release tracking
+      # (twfy's init.php reads it) - not the umbrella repo's own commit, which
+      # Capistrano's default deploy:set_current_revision would capture instead
+      # (via git:set_current_revision, itself no-op here: repo_path is never
+      # populated by this custom task). It's twfy's code that actually runs,
+      # so it's twfy's commit that needs to identify a deploy in Sentry.
+      twfy_revision = capture(:git, '-C', "#{cached_copy}/twfy", 'rev-parse', 'HEAD').strip
+      execute :bash, '-c', "\"echo #{twfy_revision} > #{release_path}/twfy/REVISION\""
     end
   end
 end
