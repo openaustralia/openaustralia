@@ -1,15 +1,19 @@
 ---
 name: Deploy to staging
 
-# Runs only on a push to main - which on this repo only ever happens when a
+# Runs on a push to main - which on this repo only ever happens when a
 # maintainer merges an approved, reviewed PR (branch protection blocks direct
 # pushes and force-pushes). Forked PRs can never trigger this workflow and are
 # never handed the deploy key: GitHub does not expose secrets to pull_request
 # runs from forks, and this workflow doesn't listen for that event anyway.
+# workflow_dispatch allows a maintainer to re-run a staging deploy manually
+# from the Actions tab without needing a new commit; it's still gated by the
+# same repo write access and the "staging" environment's branch policy below.
 on:
   push:
     branches:
       - main
+  workflow_dispatch: {}
 
 permissions:
   contents: read
