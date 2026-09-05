@@ -111,10 +111,14 @@ namespace :sentry do
         rescue StandardError => e
           warn "Sentry: set-commits via the GitHub integration failed, trying local git history: #{e.message}"
           begin
-            if cli == "sentry"
-              execute :sentry, "release", "set-commits", versioned, "--local"
-            else
-              execute :"sentry-cli", "releases", "set-commits", release, "--local"
+            # The deployed code is the twfy submodule, so read local commits
+            # from its checkout, not this umbrella repository's history.
+            within File.expand_path("../../../twfy", __dir__) do
+              if cli == "sentry"
+                execute :sentry, "release", "set-commits", versioned, "--local"
+              else
+                execute :"sentry-cli", "releases", "set-commits", release, "--local"
+              end
             end
           rescue StandardError => e
             warn "Sentry: associating commits failed, continuing deploy: #{e.message}"
