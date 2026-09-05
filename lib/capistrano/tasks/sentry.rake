@@ -14,6 +14,13 @@
 namespace :sentry do
   desc "Record the release and deploy in Sentry"
   task :release do
+    # The web app reports the SHA written into its deployed REVISION file,
+    # rather than this umbrella repository's revision.
+    on primary(:app) do
+      set :current_revision, capture(:cat, release_path.join("twfy/REVISION")).strip
+    end
+    set :sentry_release_repo, "openaustralia/twfy"
+
     run_locally do
       # CLI v4 renamed the binary from sentry-cli to sentry, so support both,
       # preferring v4 (https://cli.sentry.dev/migrating-from-v3/). A candidate
