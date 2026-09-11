@@ -16,13 +16,23 @@ init-bundle: .bundle/bundle-installed
 	mkdir -p .bundle
 	touch .bundle/bundle-installed
 
+# Port 22 is closed on the webserver security group - reach it via AWS
+# Systems Manager instead of a direct connection, same as an operator would
+# (see infrastructure repo's bin/ssh-config). The instance ID is resolved
+# fresh each time rather than hardcoded, since it goes stale across a
+# blue/green cutover or AMI refresh otherwise.
+OAF_INSTANCE_ID = $$(aws ec2 describe-instances --profile oaf \
+	--filters "Name=tag:PublicHostname,Values=www.openaustralia.org.au" "Name=instance-state-name,Values=running" \
+	--query "Reservations[].Instances[].InstanceId" --output text)
+SSH_VIA_SSM = ssh -o 'ProxyCommand=sh -c "aws ssm start-session --profile oaf --target %h --document-name AWS-StartSSHSession --parameters portNumber=%p"'
+
 staging-deploy: .bundle/bundle-installed
 	bundle exec cap staging deploy
-	ssh deploy@openaustralia.org.au ls -l /srv/www/staging/releases/
+	$(SSH_VIA_SSM) deploy@$(OAF_INSTANCE_ID) ls -l /srv/www/staging/releases/
 
 production-deploy: .bundle/bundle-installed
 	bundle exec cap production deploy
-	ssh deploy@openaustralia.org.au ls -l /srv/www/production/releases/
+	$(SSH_VIA_SSM) deploy@$(OAF_INSTANCE_ID) ls -l /srv/www/production/releases/
 
 staging-parse-members: .bundle/bundle-installed
 	bundle exec cap staging parse:members
