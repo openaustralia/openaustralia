@@ -36,15 +36,16 @@ Note the order: **migrations run before the `current` symlink flips**. A failure
 ## Symptom: the deploy fails part-way through
 
 **Diagnose (READ-ONLY)** Find the failing step in the output, then use the table.
+Each deploy that finishes adds a line to `/srv/www/<stage>/revisions.log` (`Branch main (at <sha>) deployed as release <timestamp> by <user>`), so the last lines show which releases completed.
 
 | Failing step | Cause | Effect on the live site |
 |---|---|---|
-| `deploy:compile_lockfile` | `gcc` is missing on the server. UNVERIFIED: the infrastructure repository does not install it explicitly | None. The release is not live yet |
+| `deploy:compile_lockfile` | `gcc` is missing or broken on the server. The server has `gcc` 11.4 from `build-essential` | None. The release is not live yet |
 | `composer:install` | `composer` or the PHP extensions are missing, or Packagist is unreachable | None |
 | `deploy:migrate` | A migration failed, or the database is unreachable | None yet. A migration that partly ran may have changed the schema. See [Database and migrations](database-and-migrations.md) |
 | `deploy:npm_build_css` | Node or npm is missing, or the registry is unreachable | The migration has already run, but the old code is still live. Fix and re-deploy |
 | `deploy:restart` | `deploy` cannot run `sudo /usr/sbin/apache2ctl restart` without a password (it is the only sudo rule) | **The new release is live on disk but Apache was not restarted.** Re-run the restart or the deploy |
-| `sentry:release` or tagging | Sentry CLI not signed in, or `git push` of tags refused | None. Sentry failures only warn. UNVERIFIED: `capistrano-tagging3` tags `fetch(:revision)`, which the custom `git:create_release` never sets, so a tag may name your local `HEAD` and not the deployed commit |
+| `sentry:release` or tagging | Sentry CLI not signed in, or `git push` of tags refused | None. Sentry failures only warn. The `production_<timestamp>` tags name the deployed commit for CI deploys (checked for two recent ones). UNVERIFIED for a deploy from your own machine, where the tag may name your checkout's `HEAD` |
 
 **Fix (CHANGES PRODUCTION)** Fix the cause, then run the same deploy again. It is safe to repeat.
 Check: the new release directory exists under `releases/`, `current` points at it, and the home page loads.
@@ -74,6 +75,7 @@ Treat them as a production action. Recent deploys are tagged by `capistrano-tagg
 
 ## Known gaps
 
-- UNVERIFIED: `config/deploy.rb` links `searchdb` to `shared/shared/search/searchdb`, but the server config sets `XAPIANDB` to `shared/search/searchdb`. Check `ls -l current/searchdb` and `shared`. See [Search index](search-index.md).
-- UNVERIFIED: the Capfile links both `debates/debates.rss` and `senate/senate.rss` to `shared/rss/senate.rss`. This looks like a copy-and-paste error.
+- The Capfile links `current/searchdb` to `shared/shared/search/searchdb`, which does not exist on either stage, so the link dangles. Nothing uses it: `XAPIANDB` is `shared/search/searchdb`. Checked on the server. See [Search index](search-index.md).
+- The Capfile links both `debates/debates.rss` and `senate/senate.rss` to `shared/rss/senate.rss`, and `shared/rss` holds only that file and `mp/`.
+  `make_rss.pl` writes the House feed and then the Senate feed through those links, so **the House of Representatives feed is overwritten by the Senate feed**. Checked on the server and in `twfy/scripts/make_rss.pl`.
 - `deploy:setup_db` loads `db/schema.sql` into the `:db` role. No server has that role, so it does nothing. Do not use it.

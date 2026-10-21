@@ -11,6 +11,7 @@ Four separate jobs keep the people data current. Only one of them is scheduled.
 
 `dailyupdate` then runs `mpinfoin.pl`, which loads extra member information from other sites.
 Terms: [`CONTEXT.md`](../../CONTEXT.md). Logs: [Cron and monitoring](cron-and-monitoring.md).
+To see when each job last wrote its output, run `ls -l /srv/www/<stage>/shared/pwdata/members/`. The member XML files date from the last `parse-members.rb` run, and the two `links-*.xml` files from the last `dailyupdate`.
 
 ## Symptom: a new member, a resignation or a party change is not on the site
 

@@ -12,7 +12,7 @@ Terms: [`CONTEXT.md`](../../CONTEXT.md).
 | When | What | Command |
 |---|---|---|
 | Weekday mornings, inside `morningupdate` | Index what changed since the last run | `index.pl "$XAPIANDB" sincefile "$XAPIANDB/../searchdb-lastupdated"` |
-| Sundays, inside `weeklyupdate` | Compact the index with `xapian-compact` (`compactsearchdb`) | `./compactsearchdb` |
+| Sundays, inside `weeklyupdate` | Compact the index with `xapian-compact` (`compactsearchdb`). **Not currently running:** `weeklyupdate` fails before it gets there. See "Known fault" below | `./compactsearchdb` |
 
 `sincefile` indexes rows whose `hansard.modified` is at or after the time stored in `searchdb-lastupdated`, then writes the new time.
 **If that file does not exist, `sincefile` indexes everything.** That is slow and uses a lot of memory, so do not delete the file casually.
@@ -64,13 +64,23 @@ Take a copy of the existing index first (`cp -a searchdb searchdb-before-rebuild
 
 `compactsearchdb` leaves `searchdb-previous` after each run, and may leave `searchdb-compacted` if it was interrupted.
 They are safe to delete once search works. **Do not delete `searchdb`.**
+Check the disk first with `df -h /data`. On 2026-10-21 `/data` was 73% full (5.2 GB free), `searchdb` was 3.0 GB and `searchdb-previous` 2.3 GB.
+A compaction writes a full new copy beside the live index, so it needs free space about the size of the index.
+
+## Known fault: weekly compaction has not run since July
+
+Observed 2026-10-21. `weeklyupdate` has exited with status 1 on each of the last 13 Sundays (since 26 July), so `compactsearchdb`, its last step, has not run in that time.
+It fails silently, with no error message. Its first step reads the latest English Wikipedia dump date from `dumps.wikimedia.org`, matching `"enwiki/<date>/` with a trailing slash. The page now links `enwiki/<date>` without one, so the match is empty, and `set -e` stops the script inside the command substitution before it can print its own message.
+The same failure also stops the weekly refresh of the Wikipedia titles table.
+Checked read-only from the server: the page loads (HTTP 200), the script's pattern matches nothing, and a looser pattern matches `enwiki/20261001`.
+Until the script is fixed, compact by hand (CHANGES PRODUCTION) only if disk space is a problem, with `./compactsearchdb` from `current/twfy/scripts`, after checking free space as above. The lasting fix is to change the match in `weeklyupdate`, which is a change in the `twfy` repository.
 
 `compactsearchdb` also shares the lock `morningupdate-lockfile`, so it cannot run at the same time as `morningupdate`.
 If it ran while the lock was held, it prints `morningupdate or compactsearchdb is already running`.
 
 ## Known gaps
 
-- UNVERIFIED: `config/deploy.rb` links `current/searchdb` to `shared/shared/search/searchdb`, a doubled `shared`. The server config puts the index at `shared/search/searchdb`. Nothing here depends on `current/searchdb`, but the mismatch needs confirming.
+- The Capfile links `current/searchdb` to `shared/shared/search/searchdb`, a doubled `shared` that does not exist on either stage. The link dangles and nothing uses it. The real index is at `shared/search/searchdb`, which is a link to `/data/<stage>/search/searchdb`. Checked on the server.
 - `compactsearchdb` reads the exit code of the lock check after `exit` handling, so a lock failure may report the wrong code. Read the output, not the exit status.
 - The `check` action reports documents missing from the index but does not repair them.
 

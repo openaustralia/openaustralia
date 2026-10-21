@@ -16,7 +16,7 @@ Terms: [`CONTEXT.md`](../../CONTEXT.md). Log and monitor locations: [Cron and mo
 
 **Diagnose (READ-ONLY)**
 
-1. Read the end of `/srv/www/<stage>/log/morningupdate.log` and the parser's own log, `/srv/www/<stage>/log/parser.log`. The cron email carries stdout, which holds the progress bar and the error.
+1. Read the end of `/srv/www/<stage>/log/morningupdate.log` and the parser's own log, `/srv/www/<stage>/shared/pwdata/parser.log`. The parser's configuration names `/srv/www/<stage>/log/parser.log`, but that file does not exist on production. The cron email carries stdout, which holds the progress bar and the error.
 2. Match the error text.
 
 | Error text (search for it) | Meaning | Where it is raised |
@@ -43,7 +43,8 @@ Then re-run the day (below).
 The parser keeps each fetched day in `RAWDATA/origxml/<house>_debates/<date>.xml` and **treats an empty file as "parliament did not sit" for ever**.
 If APH had a bad moment and the link was missing, the parser wrote an empty file, and later runs trust it.
 
-1. Confirm the file is empty: `ls -l /srv/www/<stage>/shared/pwdata/origxml/representatives_debates/<date>.xml`.
+1. Confirm the file is empty (`ls -l /srv/www/<stage>/shared/pwdata/origxml/representatives_debates/<date>.xml`), **and that the house sat that day**.
+   About half of the files are empty on purpose: on production, 1,288 of 2,539 House files and 1,299 of 2,339 Senate files were empty when checked on 2026-10-21, because parliament did not sit. An empty file alone proves nothing. Check the day against the parliamentary sitting calendar first.
 2. Delete that one file (and the matching `senate_debates` one if needed). Undo: not possible, but the next run fetches it again from APH.
 3. Re-run the day.
 
@@ -63,7 +64,7 @@ Add `--force` to make `xml2db.pl` delete database rows for that day that are not
 **Verify** (the database load can fail silently, see below)
 
 - The day appears on the debates calendar for that year, for example `https://www.openaustralia.org.au/debates/?y=2017` (the parser README uses this to spot a missing day).
-- Check rows directly with read access to the database, for example the `hansard` table for that date. UNVERIFIED: the infrastructure repository gives the read-only account to Metabase only.
+- Check rows directly with the `mysql` client on the server, using the `DB_*` values in `shared/general`, for example the `hansard` table for that date. Never paste the password into a ticket or chat.
 - Then re-index (next section), and skip duplicate alerts if you loaded old days.
 
 ## The database load can fail without anyone noticing
