@@ -7,13 +7,13 @@ What is backed up, from the [infrastructure repository](https://gitlab.com/opena
 
 | Data | How | Where it lives |
 |---|---|---|
-| The database (members, debates, alerts, users, suppressions) | Automated snapshots on the managed database server | Not on the web server. Retention is set in `terraform/database.tf` |
-| Files under `/data` on the server | `restic` backs up all of `/data` nightly to offsite object storage. Retention and an integrity check run on Sundays | `/data/<stage>/` holds `pwdata`, `images`, `search`, `html_cache`, `regmem_scan` and `alerts-lastsent`. The profile covers the whole of `/data`, so staging's directories are included |
+| The database (members, debates, alerts, users, suppressions) | Automated daily snapshots on the managed database server, plus point-in-time restore. Kept for 32 days when checked on 2026-10-21, with the newest snapshot under a day old | Not on the web server. Retention is set in `terraform/database.tf` |
+| Files under `/data` on the server | `restic` backs up all of `/data` nightly at 03:00 to offsite object storage (the cron entry is in `/etc/cron.d/restic-openaustralia_data`, and the log is `/var/log/restic/openaustralia_data.log`). The 2026-10-21 run completed, saving about 14,600 files (13 GiB). Retention and an integrity check run on Sundays | `/data/<stage>/` holds `pwdata`, `images`, `search`, `html_cache`, `regmem_scan` and `alerts-lastsent`. The profile covers the whole of `/data`, so staging's directories are included |
 | Code | Git (`openaustralia/openaustralia` and the submodule repositories) | GitHub |
 
 What is **not** backed up:
 
-- **`shared/backup/`**: `twfy/scripts/dumpallforbackup` writes `mysqldump` files there (`DBBACKUP`), keeping 14 plus one per month. Nothing schedules it on the server, Ansible does not create the directory and it is not under `/data`. UNVERIFIED: whether anything creates or runs it.
+- **`shared/backup/`**: `twfy/scripts/dumpallforbackup` writes `mysqldump` files there (`DBBACKUP` in `shared/general` is `/srv/www/<stage>/shared/backup/`), keeping 14 plus one per month. Checked on the server: the directory does not exist on either stage, nothing in the `deploy` crontab or `/etc/cron.d` runs the script, and `shared/backup` is not under `/data`. So there are no `mysqldump` files.
 - **Archives from before December 2025**: an earlier backup tool's archives cannot be recovered (see ADR 0004 in the infrastructure repository).
 
 Terms: [`CONTEXT.md`](../../CONTEXT.md).

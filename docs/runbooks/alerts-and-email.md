@@ -83,11 +83,12 @@ It verifies a signature using keys that it fetches from Postal and caches in the
 | 405 | Not a POST |
 | 200 | Handled. Only bounce and delivery-failure events create suppressions, and sender-side refusals are ignored |
 
-**Diagnose (READ-ONLY)** Check that the web server can reach Postal's key address, and that `POSTAL_JWKS_URL` in `conf/general` is unset or correct.
+**Diagnose (READ-ONLY)** Check that the web server can reach Postal's key address, and that `POSTAL_JWKS_URL` in `conf/general` is unset or correct. It is unset on production, so the default Postal address in `event.php` applies.
+The Apache production and staging virtual hosts both rewrite `/postal/event` to `event.php`, which keeps a POST from being redirected.
 Webhook deliveries and retries are in Postal's own admin pages (the [infrastructure repository](https://gitlab.com/openaustralia/infrastructure) has the Postal documentation in `docs/POSTAL.md`).
 
 ## Known gaps
 
 - The mail charset is hard-coded as `iso-8859-1`, while the database is `utf8mb4`.
-- A mail catcher can replace real delivery on non-production hosts. If staging shows no mail, check `~/log/mail/` on the server. UNVERIFIED.
+- On production, mail goes out through `msmtp` (`/etc/msmtprc`), and there is no mail catcher (`~deploy/log/mail` does not exist). Checked on the server. UNVERIFIED for staging, which can be set to catch mail instead of sending it. If staging shows no mail, look in `~deploy/log/mail/`.
 - `scripts/fawkesuser/handlemail` is dead code (it begins with `exit;`). Bounces are handled only by the webhook.

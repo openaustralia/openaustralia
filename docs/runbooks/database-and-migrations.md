@@ -24,6 +24,7 @@ Consequences:
 
 1. Read the Phinx error in the deploy output. Note the migration version (a 14-digit timestamp).
 2. On the server, as `deploy`, run `vendor/bin/phinx status -c phinx.php` from the new release's `twfy` directory under `releases/`. It shows which migrations ran. (`current` is still the old release if the deploy aborted.)
+   For the live release: `sudo -u deploy bash -c 'cd /srv/www/production/current/twfy && vendor/bin/phinx status -c phinx.php'`. This works on the server and is read-only.
 3. Compare the database with what the migration was trying to do (`SHOW CREATE TABLE ...`). If the migration changed some of it, work out what.
 
 **Fix (CHANGES PRODUCTION)**
@@ -49,7 +50,7 @@ It is for a fresh install. For an existing database, mark the first migration as
 
 ## Backups
 
-The database server has automated backups. How long they are kept is set in `terraform/database.tf` in the infrastructure repository.
+The database server (MySQL 8.4, with a standby in a second zone) takes automated snapshots, keeps them for 32 days and supports point-in-time restore. That was the setting when checked on 2026-10-21. It is set in `terraform/database.tf` in the infrastructure repository.
 `scripts/dumpallforbackup` in `twfy` is not scheduled on the server. See [Backups and restore](backups-and-restore.md).
 
 ## Local development
@@ -70,5 +71,5 @@ Tests run against `test_twfy`. `make docker-test-db-create` and `make docker-tes
 
 ## Known gaps
 
-- UNVERIFIED: this repository does not document how to open a read-write database session on the server. Ask whoever manages the infrastructure repository.
+- To open a database session from the server, use the `mysql` client (installed) with the `DB_*` values in `shared/general`. The `deploy` user can read that file, and Phinx already uses it. Take care: it is the live read-write account. UNVERIFIED: whether a read-only account exists for people, rather than for Metabase.
 - There is no seeder for production data. Seeders are for development.
