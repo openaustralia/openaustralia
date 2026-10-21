@@ -33,7 +33,7 @@ The repository's cron file for file backups is separate (`restic`, nightly, as r
 | Logrotate | Daily, 30 kept, compressed, for `/srv/www/<stage>/log/*.log` |
 | Shipped off the server | The Apache `error.log`, syslog and the restic log go to CloudWatch (see the infrastructure repository) |
 
-`morningupdate` runs with `VERBOSE=true`, so its progress is in the stdout email.
+`morningupdate` runs with `VERBOSE=true`, so its progress is in the stdout email, and `rssgenerate` runs inline. Without `VERBOSE=true` it would be queued with `at`, which is not installed on the server.
 PHP's `error_log` is not set on the server (`log_errors` is on and `display_errors` is off), so PHP errors go to Apache's `error.log`. Checked on the server, where `PHP Fatal error` lines appear in it.
 
 ## How you find out something failed
@@ -46,16 +46,41 @@ PHP's `error_log` is not set on the server (`log_errors` is on and `display_erro
 
 **A job that exits 0 is not proof it worked.** The parse scripts ignore the exit status of the database load. See [Daily Hansard parse](daily-hansard-parse.md#the-database-load-can-fail-without-anyone-noticing).
 
-`twfy/www/includes/easyparliament/utility.php`'s `error_handler` does **not** email anyone, despite what its comment and the on-page message say. It writes to the error log. UNVERIFIED: whether it forwards errors to Sentry, which is configured only when `SENTRY_DSN` is set.
+`error_handler` in `twfy/www/includes/utility.php` does **not** email anyone, despite what its comment and the on-page message say. It writes to the error log. `init.php` initialises Sentry after installing the handler and says it chains to it, so warnings and uncaught exceptions probably reach Sentry when `SENTRY_DSN` is set. UNVERIFIED.
+
+## Which exit statuses to trust
+
+Each job's stderr log ends with a `time -v` summary that includes `Exit status`, and the Sentry monitor reports the same status. **For several jobs it cannot show a failure.**
+
+`morningupdate`, `rssgenerate` and `compactsearchdb` re-run themselves through `scripts/run-with-lockfile`. That program returns the raw wait status of the job it runs, and the operating system keeps only its low eight bits, so **a failed job comes back as exit 0**. Only 100 (busy) and 101 (lock error) survive. This was tested by compiling the program: an inner `exit 1` and an inner `exit 3` both returned 0.
+
+| Job | Is `Exit status` reliable? |
+|---|---|
+| `morningupdate` | **No.** A failed parse still logs `Exit status: 0` and reports success to Sentry. See the fault below |
+| `rssgenerate` | **No**, and it has no `set -e`: its status is only that of `mprss.php`, so a `make_rss.pl` failure is hidden too |
+| `compactsearchdb` | **No** for a failed compaction. If the lock is busy it exits 100 at once, without printing a message (it runs under `set -e`) |
+| `weeklyupdate` | Yes for everything before its last step. A failed compaction is hidden |
+| `dailyupdate` | Only partly. It has no `set -e`, so its status is that of its last command, `mpinfoin.pl`. A failure in `parse-member-links.rb` does not fail the job |
+| `alertmailer` | Yes |
+
+So "31 clean runs" of `morningupdate` in the logs proves nothing. To check the morning run, use the elapsed time, the stderr log, the data and Sentry's exceptions (below).
+
+## Known fault: a failed `morningupdate` reports success
+
+Observed 2026-10-21. The run on 2026-10-13 aborted in the parser with `Not an even number of people in the pairs voting` (the Senate day of 2026-10-12, issue #996). Its log shows the backtrace, an elapsed time of **18 seconds**, and `Exit status: 0`.
+A normal run takes about an hour and a half, because of the search indexing. The Senate day of 2026-10-12 has no `scrapedxml` file.
+
+How to spot a failed morning run:
+
+- **Elapsed time.** In `morningupdate.log`, a run that finishes in seconds or a few minutes did not index.
+- **The stderr log.** A Ruby backtrace from `parse-speeches.rb`.
+- **The data.** A day with a **non-empty** `origxml` file and no `scrapedxml` file. About half of all `origxml` files are empty on purpose, so list only the non-empty ones: `P=/srv/www/<stage>/shared/pwdata; for h in representatives_debates senate_debates; do find $P/origxml/$h -name '*.xml' -size +0 -mtime -400 -printf '%f\n' | sed 's/.xml//' | sort | while read d; do [ -s $P/scrapedxml/$h/$d.xml ] || echo "$h $d"; done; done`. On 2026-10-21 this printed one line, `senate_debates 2026-10-12`.
+- **Sentry**, which receives the parser's exception (`Configuration.report_errors`) even when the cron monitor stays green.
+- **The cron email**, which carries the `ERROR While processing` line.
 
 ## Known fault: `weeklyupdate` has failed every Sunday since late July
 
-Observed 2026-10-21. Each job's stderr log ends with a `time -v` summary that includes `Exit status`. Checking it across the retained logs:
-
-| Job | Retained runs | Non-zero exit |
-|---|---|---|
-| `dailyupdate`, `morningupdate`, `alertmailer` | 31 each | none |
-| `weeklyupdate` | 24 | the 13 most recent (since the Sunday of 26 July) |
+Observed 2026-10-21. Across the retained logs, `weeklyupdate` shows `Exit status: 1` for the 13 most recent runs (since the Sunday of 26 July) and 0 for the 11 before. `dailyupdate` and `alertmailer` show 0 for all of their 30 days.
 
 The log shows only `Command exited with non-zero status 1`, with no message, because the script stops silently. The cause and the effects are described under "Known fault" in [Search index](search-index.md): the Wikipedia titles refresh and the index compaction have both stopped.
 This should have raised a Sentry cron-monitor issue every week. UNVERIFIED: whether it did, and whether anyone saw it. Check the monitor in Sentry before relying on this alert path.
@@ -78,10 +103,11 @@ A "missed" check-in with no error usually means the job was **already running** 
 
 | Exit code | Meaning |
 |---|---|
-| 100 | Another copy holds the lock. This is normal if a run is still going |
+| 100 | Another copy holds the lock. `morningupdate` prints the message above. `compactsearchdb` exits 100 without printing anything |
 | 101 | Could not get the lock for some other reason: a usage error, or a missing file |
+| 0 | Success, **or a failed job** (see "Which exit statuses to trust") |
 
-**Diagnose (READ-ONLY)** `pgrep -fa 'morningupdate|compactsearchdb'`. The lock is an `fcntl` lock, so it is released when the process exits, even after a crash. There is no stale lock file to remove.
+**Diagnose (READ-ONLY)** `pgrep -fa 'morningupdate|compactsearchdb'`. The lock is an `fcntl` lock, so it is released when the process exits, even after a crash. The lock file itself (`morningupdate-lockfile`) is created in `twfy/scripts` of the release that started the run, so it can be left behind and is harmless. A run started before a deploy and one started after it use different lock files.
 `dailyupdate`, `weeklyupdate` and `alertmailer` take **no** lock.
 If `run-with-lockfile` is missing, the deploy did not build it. See `deploy:compile_lockfile` in [Deploy and rollback](deploy-and-rollback.md).
 

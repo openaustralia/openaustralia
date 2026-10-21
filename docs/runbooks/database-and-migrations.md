@@ -33,6 +33,11 @@ Consequences:
 - If it partly ran, do not run it again blindly. Fix by hand to the state the migration expects, or write a new migration that tolerates both states. Ask the on-call engineer before touching production data.
 - To step back one migration (only if the migration has a working `down`), run `vendor/bin/phinx rollback -c phinx.php`, and add `-t <version>` for a specific target.
   Check `status` afterwards. Undo: `vendor/bin/phinx migrate -c phinx.php`.
+  **Some rollbacks destroy data:**
+  - Rolling back `20261009000000_create_email_suppressions` **drops `email_suppressions`**. That loses the suppression history, and `alertmailer` and `send_email` then query a missing table.
+  - The `down` of `20260530000001_drop_trackbacks_table` and `20260614000000_drop_campaigners_tables` recreates the tables **empty**.
+  - `20260530000000_initial_schema` cannot be rolled back (it throws `IrreversibleMigrationException`).
+  Take a snapshot or a `mysqldump` of the affected table first.
 
 **Escalate**: tell the on-call engineer before changing a production table. If people cannot use the site while this is open, the CEO decides whether to post a notice and signs off the wording.
 

@@ -60,7 +60,7 @@ One deployed copy of the code, in `releases/<timestamp>`. The `current` symlink 
 `/srv/www/<stage>/shared`. It holds config, data, feeds and images that survive from one release to the next, and is linked into each release.
 
 **Pointer bump**:
-Moving a submodule's pinned commit forward in this repository. Dependabot opens one for each lagging submodule, daily. A merged bump to `main` deploys to staging.
+Moving a submodule's pinned commit forward in this repository. Dependabot opens one for each lagging submodule, daily. A merged bump deploys nothing: a person runs the deploy.
 
 **Parse**:
 Turning Hansard or member data into XML, and loading it into the database. The scheduled morning parse covers one working day.

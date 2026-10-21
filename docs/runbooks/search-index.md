@@ -17,7 +17,14 @@ Terms: [`CONTEXT.md`](../../CONTEXT.md).
 `sincefile` indexes rows whose `hansard.modified` is at or after the time stored in `searchdb-lastupdated`, then writes the new time.
 **If that file does not exist, `sincefile` indexes everything.** That is slow and uses a lot of memory, so do not delete the file casually.
 
-`index.pl` actions: `all`, `lastweek`, `lastmonth`, `daterange <from> <to>`, `sincefile <file>`, `check`.
+`index.pl` actions: `all`, `lastweek`, `lastmonth`, `daterange <from> <to>`, `sincefile <file>`, `check`. An optional last argument, a number, restricts a run to one section, for example `daterange <from> <to> 101` for the Senate. `cronquiet` as the last argument silences output.
+
+**Take care with `index.pl`:**
+
+- **A mistyped database path silently creates a new, empty index there.** The script opens the index with create-or-open and only checks that the argument is not empty. Combined with `all`, or with `sincefile` and a missing timestamp file, it then indexes everything into the wrong place. Copy the path from `XAPIANDB`, and run `ls` on it first.
+- **`check` deletes.** It opens the index for writing and deletes every document whose term is not in MySQL. The "needs adding to Xapian indexing" lines are only printed, and nothing is added. It takes the write lock, so it cannot run with an indexer. `search/indexall.sh` ends with `check`, so running it deletes too.
+- Only one writer at a time. A second indexer, or `check`, fails with `DatabaseLockError`.
+- An empty run (nothing changed) creates no new index batch.
 `all` can leak memory and fail. Index by `daterange` in chunks instead. `search/indexall.sh` is a leftover from the UK site (it loops 1999 to 2007). Do not use it.
 
 ## Symptom: new debates are on the site but search cannot find them
@@ -81,7 +88,8 @@ If it ran while the lock was held, it prints `morningupdate or compactsearchdb i
 ## Known gaps
 
 - The Capfile links `current/searchdb` to `shared/shared/search/searchdb`, a doubled `shared` that does not exist on either stage. The link dangles and nothing uses it. The real index is at `shared/search/searchdb`, which is a link to `/data/<stage>/search/searchdb`. Checked on the server.
-- `compactsearchdb` reads the exit code of the lock check after `exit` handling, so a lock failure may report the wrong code. Read the output, not the exit status.
-- The `check` action reports documents missing from the index but does not repair them.
+- `compactsearchdb` runs under `set -e`. If another run holds the lock, it exits 100 at once and prints nothing. If the compaction itself fails, the exit status is hidden (see [Cron and monitoring](cron-and-monitoring.md#which-exit-statuses-to-trust)), so check the directories afterwards. It also runs `rm -fr` on `searchdb-compacted` and `searchdb-previous` with `$XAPIANDB` unquoted, so never run it with `XAPIANDB` blank or from the wrong directory.
+- The search page (`searchengine.php`) catches no Xapian exception. A missing or unreadable `XAPIANDB` path is an uncaught fatal on every search.
+- `search/indexall.sh` (UK years 1999 to 2007, ending in `check`), `breaktest.sh` and `search.pl` are leftovers. Do not run them.
 
 **Escalate**: tell the on-call engineer. If search has been down for people for more than a day, the CEO decides whether to post a notice and signs off the wording.
