@@ -43,7 +43,7 @@ To trigger a check immediately instead of waiting for the daily run, open **Insi
 then the **Dependabot** tab in this repository, find the `gitsubmodule` entry under recent update jobs, and select
 **Check for updates**.
 
-Set `DEPLOY_SSH_KEY` ENV var if you are using a different ssh key for deployment than `~/.ssh/id_ed25519` (preferred) or `~/.ssh/id_rsa`.
+Set the `DEPLOY_SSH_KEY` ENV var to the path of a key file if you are using a different ssh key for deployment than `~/.ssh/id_ed25519` (preferred) or `~/.ssh/id_rsa`. (In GitHub Actions, `DEPLOY_SSH_KEY` is instead an environment secret holding the key itself.)
 
 By default the `main` branch is deployed to both production and staging. You can override this using:
 * `STAGING_BRANCH` ENV var if you want a different staging branch;
@@ -80,12 +80,12 @@ Deploys also run from GitHub Actions (`.github/workflows/`), using the same Capi
 
 The Make targets below do the same thing from your own machine.
 
-To deploy the OVERRIDE_BRANCH / staging branch to ([Staging](https://www.test.openaustralia.org.au/)):
+To deploy the staging branch (`main`, or whatever `STAGING_BRANCH` is set to) to ([Staging](https://www.test.openaustralia.org.au/)):
 ```bash
   make staging-deploy
 ```
 
-If you've updated data about members you'll need to parse that and import it. This happens automatically once a day or you can run it using this Capistrano task:
+If you've updated data about members you'll need to parse that and import it. Nothing schedules this: the production cron jobs run `dailyupdate` (which refreshes member links, not the member list), `morningupdate`, `weeklyupdate` and `alertmailer`. Run it with this Capistrano task:
 ```bash
   make staging-parse-members
 ```
@@ -118,9 +118,10 @@ Capistrano fills that gap during deploy via the [capistrano-composer][cc] gem
    `before 'deploy:updated', 'composer:install'`. We point it at the twfy
    subdirectory with `set :composer_working_dir, -> { release_path.join('twfy') }`
    and install with `--no-dev --prefer-dist --no-interaction --optimize-autoloader`.
-3. This produces `release_path/twfy/vendor/` before
-   `deploy:symlink_shared`, `deploy:compile_lockfile`, and the Apache restart
-   run. The application's `twfy/www/includes/easyparliament/init.php` does a
+3. This produces `release_path/twfy/vendor/` after `deploy:symlink_shared` and
+   `deploy:compile_lockfile` (which run earlier, in `deploy:updating`) and before
+   the `current` symlink flips and the Apache restart runs. The application's
+   `twfy/www/includes/easyparliament/init.php` does a
    `require_once .../vendor/autoload.php`, so the dependency tree must be on
    disk before Apache serves any traffic from the new release.
 4. On rollback the gem also runs `composer:install` before `deploy:reverted`,
@@ -133,7 +134,7 @@ Bumping a PHP dependency therefore needs **no special deploy step** — update
 `composer.json` / `composer.lock` in the `twfy` repo, push, bump the submodule
 pointer in this repo (`make update-twfy`), and deploy as usual.
 
-Server prerequisites (one-time, managed by Ansible, not by Capistrano):
+Server prerequisites (one-time, managed by Ansible in the [`openaustralia/infrastructure`](https://gitlab.com/openaustralia/infrastructure) repository on GitLab, not by Capistrano):
 
 * `composer` on the `deploy` user's `$PATH`.
 * `php-cli` with the same extensions the runtime needs (at minimum
