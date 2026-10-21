@@ -45,8 +45,6 @@ then the **Dependabot** tab in this repository, find the `gitsubmodule` entry un
 
 Set `DEPLOY_SSH_KEY` ENV var if you are using a different ssh key for deployment than `~/.ssh/id_ed25519` (preferred) or `~/.ssh/id_rsa`.
 
-You do this by adding and committing, just like you would with any other change in Git. Here's what it looks like to update both the parser and the web application's submodules:
-
 By default the `main` branch is deployed to both production and staging. You can override this using:
 * `STAGING_BRANCH` ENV var if you want a different staging branch;
 * `PRODUCTION_BRANCH` ENV var if you want a different production branch, eg whilst setting up a new server.
@@ -59,6 +57,8 @@ set in `config/deploy/staging.rb` and `config/deploy/production.rb`. So to deplo
 staging, run it as `STAGING_BRANCH=your-branch-name make staging-deploy`, not just `make staging-deploy` from
 that branch locally.
 
+To bump submodule pointers by hand instead of waiting for Dependabot, update the parser and the web application like this:
+
 ```bash
   cd openaustralia
   make check-submodules # to check what has changed
@@ -66,9 +66,19 @@ that branch locally.
   make update-twfy
   make update-openaustralia-parser
 ```
-That will commit the changes for you. Have a look around with `git status` then push to a branch for a PR, or direct to `main`, depending on how brave you feel today.
+That will commit the changes for you. Have a look around with `git status`, then push to a branch and open a pull request. Don't push straight to `main`: it is protected, and a push to `main` deploys to staging automatically (see below).
 
-Once the submodule change is in `main` branch on github, you're ready to deploy:
+Once the submodule change is in the `main` branch on GitHub, you're ready to deploy.
+
+### Deploying from GitHub Actions
+
+Deploys also run from GitHub Actions (`.github/workflows/`), using the same Capistrano tasks, AWS OIDC and the SSM tunnel, so no `oaf` AWS profile or local SSH key is needed:
+
+* `deploy-staging.yml` runs automatically on every push to `main`, and can be re-run from the Actions tab.
+* `deploy-staging-branch.yml` is manual: choose any branch to preview on staging.
+* `deploy-production.yml` is manual: choose a branch (default `main`). The `production` environment requires a listed reviewer to approve the run before it starts.
+
+The Make targets below do the same thing from your own machine.
 
 To deploy the OVERRIDE_BRANCH / staging branch to ([Staging](https://www.test.openaustralia.org.au/)):
 ```bash
