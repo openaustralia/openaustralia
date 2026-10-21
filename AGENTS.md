@@ -30,15 +30,18 @@ make init-submodules       # git submodule update --init
 make init-bundle           # bundle install (deploy tooling)
 make check-submodules      # report which submodules lag their branch
 make update-<name>         # fetch/pull a submodule then commit the pointer bump (twfy,
-                           # openaustralia-parser, rblib, phplib, perllib - no update-shlib exists)
+                           # openaustralia-parser, rblib, phplib, perllib, shlib)
 make staging-deploy        # bundle exec cap staging deploy
 make production-deploy     # bundle exec cap production deploy
 make staging-parse-members / production-parse-members
 ```
 
 - The `update-*` targets are interactive (`git add --patch`) and **commit for you**.
-- `check-submodules` may suggest `make update-shlib`, which doesn't exist; bump that pointer by hand.
-- Dependabot bumps submodule pointers daily (`.github/dependabot.yml`); there is no CI in this repo.
+- Dependabot bumps submodule pointers daily (`.github/dependabot.yml`).
+- There are no test or lint workflows here, but `.github/workflows/` holds three deploy workflows:
+  `deploy-staging.yml` runs **automatically on every push to `main`** (so merging a pointer bump deploys it to staging),
+  `deploy-staging-branch.yml` is manual (any branch to staging), and `deploy-production.yml` is manual and needs a
+  listed reviewer to approve the run. All three run `bundle exec cap <stage> deploy` over AWS OIDC and an SSM tunnel.
 
 ## Deployment
 
@@ -62,6 +65,12 @@ specific go-ahead for that exact action, right now, however routine the request 
   task clones straight from GitHub on the deploy target, at the branch named by `STAGING_BRANCH`/`PRODUCTION_BRANCH`
   (default `main`). Testing an unmerged branch means `STAGING_BRANCH=that-branch make staging-deploy`, not just
   running the target while that branch is checked out.
+- Every successful deploy runs `sentry:release` (`lib/capistrano/tasks/sentry.rake`, hooked `after deploy:finished`)
+  on the deployer's machine, recording the release in Sentry against the `twfy` revision. It is best-effort: it needs
+  the Sentry CLI signed in, and a failure there doesn't fail the deploy.
+- `ansible.cfg` points at `provisioning/roles`, which isn't in this repository. The server's EC2 instance is defined
+  in Terraform in the `infrastructure` repository (see the comment in `config/deploy.rb`); where the Ansible roles
+  the README mentions now live is unverified.
 - The stack is old in places; check what a file actually targets before assuming modern Ruby/PHP idioms apply.
 
 ## Agent skills
