@@ -14,6 +14,7 @@ What is backed up, from the [infrastructure repository](https://gitlab.com/opena
 What is **not** backed up:
 
 - **`shared/backup/`**: `twfy/scripts/dumpallforbackup` writes `mysqldump` files there (`DBBACKUP` in `shared/general` is `/srv/www/<stage>/shared/backup/`), keeping 14 plus one per month. Checked on the server: the directory does not exist on either stage, nothing in the `deploy` crontab or `/etc/cron.d` runs the script, and `shared/backup` is not under `/data`. So there are no `mysqldump` files.
+  If anyone does run the script: it keeps the 14 newest dumps and moves every dump dated the 1st of a month to `firsts/`, where they stay for ever. It dumps `--all-databases`, so the file `openaustralia-all-including-sensitive-data-<date>.sql.bz2` holds personal data (email addresses and password hashes), and it passes the database password on the `mysqldump` command line. Keep any such file out of tickets and chat, and do not leave it in a release directory, which is pruned.
 - **Archives from before December 2025**: an earlier backup tool's archives cannot be recovered (see ADR 0004 in the infrastructure repository).
 
 Terms: [`CONTEXT.md`](../../CONTEXT.md).

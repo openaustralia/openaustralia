@@ -14,7 +14,19 @@ How it decides what to send:
 - It takes no lock. Two runs at once can send twice.
 
 `alerts-lastsent` on the server is `/srv/www/<stage>/shared/alerts-lastsent` (linked into `current/twfy/scripts`).
-Flags: `--nomail` (do everything but send), `--only=<email>`, `--from=<email>`, `--to=<email>` (`--only` cannot be combined with the others).
+Flags:
+
+| Flag | Effect |
+|---|---|
+| `--nomail` | Plans and prints, sends nothing, and leaves `alerts-lastsent` alone |
+| `--only=<email>` | Handles one address. It also leaves `alerts-lastsent` alone and sends no stats mail |
+| `--from=<email>` | Skips every address that sorts **at or before** it (lower-cased). Alerts are handled in address order |
+| `--to=<email>` | Skips every address that sorts at or after it |
+
+`--from` and `--to` do **not** protect `alerts-lastsent`: a run with only those flags sends, **rewrites `alerts-lastsent` to the latest batch and the current time**, and sends the stats mail. Only `--nomail` or `--only` leave the file alone.
+`--only` with `--from` or `--to` prints `Can't have both from/to and only!` and exits with status 0.
+If `alerts-lastsent` is missing, the mailer warns and starts from today at 00:00 and batch 0, which builds a query over every batch.
+Items older than 8 weeks (`AlertMaxAge`), items before 2008-01-14, and items in `gidredirect` are skipped, and at most 3 items are shown per section and per alert.
 
 ## Symptom: alert emails did not go out
 
@@ -25,13 +37,17 @@ Flags: `--nomail` (do everything but send), `--only=<email>`, `--from=<email>`, 
 3. Read `alerts-lastsent`. A second line that is ahead of the real last batch (`select max(indexbatch_id) from indexbatch`) means someone bumped it to skip alerts, and the next batches are fine.
 4. Look at the stats mail from the last run. A large `Suppressed addresses skipped` figure points to a delivery problem. See below.
 
-**Fix (CHANGES PRODUCTION)** If the job failed before sending, re-run it:
+**Fix (CHANGES PRODUCTION)** If the job failed **before it sent anything**, re-run it. If it failed **part-way**, do not simply re-run it: there is no record of who was already emailed, so a plain re-run emails the earlier addresses again.
+Read `alertmailer.log` and the stdout email for the last `SEND n : Sending email to <address>` line, and resume after that address with `--from=<that address>` (lower case). Use `--nomail --from=<address>` first, to see what it would do.
 
 ```
 cd /srv/www/<stage>/current/twfy/scripts
 php -q alertmailer.php --nomail     # first, to see what it would do
 php -q alertmailer.php
 ```
+
+Check after any run that `alerts-lastsent` has the batch you expect.
+
 
 Check: the stats mail, and one test subscription. Undo: sent email cannot be unsent.
 Do not run it while another copy is running. Check with `pgrep -fa alertmailer`.
@@ -81,7 +97,14 @@ It verifies a signature using keys that it fetches from Postal and caches in the
 | 403 | The request was unsigned or the signature failed |
 | 503 | The site could not fetch Postal's signing keys. Postal will retry |
 | 405 | Not a POST |
-| 200 | Handled. Only bounce and delivery-failure events create suppressions, and sender-side refusals are ignored |
+| 200 | Handled, or deliberately ignored (it logs which) |
+
+What creates a suppression: only the events `MessageBounced` and `MessageDeliveryFailed`, for mail that carries an `X-Postal-Tag` of `alert`, `confirmation`, `password` or `notice` (anything else is "ignored, not mail we tagged").
+A `MessageDeliveryFailed` whose reply starts with a 5.7.x code is ignored, because it blames our server and not the address. That rule does not apply to `MessageBounced`.
+A failure older than the last lift is ignored. A bounce of a confirmation or password email also suppresses **alerts** for that address.
+A suppression only stops mail of the `alert` kind. Confirmation, password and notice emails are still sent to a suppressed address.
+Postal's signing keys are cached in the system temporary directory for 15 minutes (a failed fetch for 60 seconds).
+The log lines contain no address.
 
 **Diagnose (READ-ONLY)** Check that the web server can reach Postal's key address, and that `POSTAL_JWKS_URL` in `conf/general` is unset or correct. It is unset on production, so the default Postal address in `event.php` applies.
 The Apache production and staging virtual hosts both rewrite `/postal/event` to `event.php`, which keeps a POST from being redirected.
