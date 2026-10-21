@@ -111,7 +111,8 @@ A "missed" check-in with no error usually means the job was **already running** 
 `dailyupdate`, `weeklyupdate` and `alertmailer` take **no** lock.
 If `run-with-lockfile` is missing, the deploy did not build it. See `deploy:compile_lockfile` in [Deploy and rollback](deploy-and-rollback.md).
 
-**Fix (CHANGES PRODUCTION)** If a job is truly stuck (no progress, no CPU), stop it: `kill <pid>`. Undo: start it again by hand from the runbook for that job. Do not `kill -9` a parse or an index run unless it will not stop, because it can leave a half-written index.
+**Fix (CHANGES PRODUCTION)** If a job is truly stuck (no progress, no CPU), stop the **worker**, not only the wrapper. `pgrep -fa` lists both: the `run-with-lockfile` wrapper and the process it started (a shell, `ruby`, `perl` or `php`). `run-with-lockfile` runs the job through `system()` and does not pass signals on, so killing only the wrapper releases the lock while the job carries on, and an immediate restart would overlap it.
+Use `pstree -p <wrapper pid>` to find the worker, `kill <worker pid>`, then check that nothing is left (`pgrep -fa 'morningupdate|parse-speeches|index.pl|xml2db|compactsearchdb'`) before you start the job again. Undo: start it again by hand from the runbook for that job. Do not `kill -9` a parse or an index run unless it will not stop, because it can leave a half-written index.
 
 ## Symptom: the host is down, or slow
 

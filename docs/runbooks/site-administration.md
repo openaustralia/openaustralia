@@ -10,7 +10,7 @@ People have one of these statuses: Viewer, User, Moderator, Administrator, Super
 
 - A **Moderator** can delete comments.
 - Only an **Administrator** or **Superuser** can open the admin section (`viewadminsection`).
-- Editing another person's account (`edituser`) needs a higher status than a Moderator.
+- Editing another person's account (`edituser`) needs **Superuser**. An Administrator can open the admin pages but cannot edit accounts.
 - Nothing in the code creates the first administrator, so the first one needs SQL (`UPDATE users SET status = ... WHERE user_id = ...`). A Superuser can set any person to Superuser from the edit page, so keep the number of Superusers small.
 
 ## The admin pages
@@ -41,11 +41,11 @@ Fix (CHANGES PRODUCTION): in `commentreports`, set `locked` and `lockedby` to NU
 - Edit an account at `/user/?pg=editother&u=<user id>`. It can change the email, the status, `deleted` and `confirmed`. Setting the status to Viewer removes the ability to comment or add glossary terms.
 - **"Deleting" an account is a soft delete** (`users.deleted = 1`). There is no hard delete anywhere in the site. A person whose account is deleted, or whose password changes, is logged out, because the login cookie includes a hash of the password.
 - **Changing an email** updates `users.email` and also `alerts.email` for that address. The new address is **not** asked to confirm, and `email_suppressions` is not touched, so an old suppressed address stays suppressed. See [Alerts and email](alerts-and-email.md).
-- A person can reset their own password at `/user/password/`. There is no administrator reset.
+- A person can reset their own password at `/user/password/`. A **Superuser** can also set a new password for someone on that person's edit page (the password fields there): leave them blank to keep the old one, and fill them in to replace it.
 
 ## Email alerts
 
-- To stop alerts for an address, run `scripts/delete-alerts` from `twfy/scripts` with addresses on standard input, one per line (CHANGES PRODUCTION): it runs `update alerts set deleted=1 where email=?` and prints the number of rows changed for each address. There is **no dry run**.
+- To stop alerts for an address, run `./delete-alerts` from `twfy/scripts` (it finds `../conf/general` from there) with addresses on standard input, one per line (CHANGES PRODUCTION): it runs `update alerts set deleted=1 where email=?` and prints the number of rows changed for each address. There is **no dry run**.
   Check one address first: `select alert_id, deleted from alerts where email = '<address>'`. Undo: set `deleted` back to 0.
 - An alert is only flagged as deleted. Signing up again, or following an undelete link, switches it back on. Unconfirmed alerts are never purged.
 - The links in alert emails are `/A/<id>-<token>` (confirm), `/D/<id>-<token>` (delete) and `/U/<id>-<token>` (user confirm). The Apache rewrite rules for them are in the infrastructure repository. The one-click unsubscribe link in alert emails posts to `/alert/unsubscribe/?t=<id>-<token>` and deletes **all** the alerts at that address, and a plain visit asks first.

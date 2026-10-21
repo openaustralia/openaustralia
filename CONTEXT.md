@@ -26,7 +26,7 @@ The people who have sat in either house, with their periods of service, parties 
 The directory that holds the parser's output: `origxml`, `rewritexml` and `scrapedxml`. On the server it is `shared/pwdata`, and it is also what the data site publishes.
 
 **origxml**:
-The XML exactly as fetched from APH, kept as a cache. An empty file means "no data for that day".
+The XML fetched from APH, kept as a cache, **after** the parser has cleaned its line endings and applied any patch from `data/patches`. It is not the untouched source: for that, use APH. An empty file means "no data for that day".
 
 **rewritexml**:
 The origxml after the parser has rewritten APH's format into the shape the rest of the system reads. Regenerated on every run.
