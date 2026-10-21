@@ -10,7 +10,10 @@ Terms such as `origxml`, `RAWDATA` and `alerts-lastsent` are defined in [`CONTEX
 |---|---|
 | A deploy failed, or a deploy left the site half updated | [Deploy and rollback](deploy-and-rollback.md) |
 | A day of debates is missing from the site | [Daily Hansard parse](daily-hansard-parse.md) |
-| The morning cron email or Sentry check-in shows a parser error | [Daily Hansard parse](daily-hansard-parse.md) |
+| The morning cron email or Sentry check-in shows a parser error | [Daily Hansard parse](daily-hansard-parse.md), then [Parse failures and patches](parse-failures-and-patches.md) for the fix |
+| The parser stops on one day with an error that needs a person: an unknown name, `Not an even number of people in the pairs voting`, `Patch failed`, `Unexpected tag` | [Parse failures and patches](parse-failures-and-patches.md) |
+| The parser fails on every date, before it parses anything | [Parse failures and patches](parse-failures-and-patches.md#data-file-errors-at-startup) |
+| You have fixed the data or written a patch and the day still fails the same way | [Parse failures and patches](parse-failures-and-patches.md#patches) (the cached XML bypasses a patch) |
 | A member is missing, has the wrong dates, or a division fails with "Couldn't figure out who" | [Members and links](members-and-links.md) and [Daily Hansard parse](daily-hansard-parse.md) |
 | A member photo is missing | [Members and links](members-and-links.md) |
 | New debates are on the site but search does not find them | [Search index](search-index.md) |
@@ -20,6 +23,10 @@ Terms such as `origxml`, `RAWDATA` and `alerts-lastsent` are defined in [`CONTEX
 | A migration failed, or the schema in CI differs from `db/schema.sql` | [Database and migrations](database-and-migrations.md) |
 | You need to restore files or the database | [Backups and restore](backups-and-restore.md) |
 | A Sentry cron monitor failed, or you need to find a log | [Cron and monitoring](cron-and-monitoring.md) |
+| A Dependabot bump or a library change broke something | [Deploy and rollback](deploy-and-rollback.md#pointer-bumps-dependabot) and [library errors](deploy-and-rollback.md#library-errors) |
+| A comment, account, alert, API key or privacy request needs handling | [Site administration](site-administration.md) |
+| A federal election, a redistribution or the new year is coming | [After an election, and yearly tasks](after-an-election-and-yearly-tasks.md) |
+| You found a script and are not sure it is safe | [Scripts not to run](scripts-not-to-run.md) |
 
 ## How the system fits together
 
