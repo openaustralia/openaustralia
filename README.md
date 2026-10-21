@@ -8,6 +8,8 @@ The submodules are:
 * The parser: [openaustralia/openaustralia-parser](https://github.com/openaustralia/openaustralia-parser)
 * Shared libraries: [openaustralia/phplib](https://github.com/openaustralia/phplib), [openaustralia/perllib](https://github.com/openaustralia/perllib), [openaustralia/rblib](https://github.com/openaustralia/rblib), [openaustralia/shlib](https://github.com/openaustralia/shlib)
 
+Something broken? See the [runbooks](docs/runbooks/README.md) for how to diagnose and fix deploys, the daily parse, search, alert emails, the database and backups.
+
 ## Setup
 
 ```bash
