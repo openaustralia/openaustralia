@@ -22,13 +22,16 @@ Terms: [`CONTEXT.md`](../../CONTEXT.md). Log and monitor locations: [Cron and mo
 | Error text (search for it) | Meaning | Where it is raised |
 |---|---|---|
 | `Couldn't figure out who ... is in division` | A name in a division list matches nobody. This is the most common failure | `lib/hansard_parser.rb` |
-| `Unknown speaker` or `Can't figure out which person the aph id ... belongs to` | A speaker or APH id is missing from the people data. Logged as a warning, not always fatal | `lib/hansard_parser.rb` |
-| `Unrecognised party` | A party code in a members CSV has no mapping | `lib/people_csv_reader.rb` |
-| `Unexpected tag`, `Unexpected value for contents` | APH changed its XML. The parser rejects tags it does not know | `lib/hansard_rewriter.rb`, `lib/hansard_day.rb`, `lib/hansard_speech.rb` |
-| `Link to XML download is missing` | The APH page had no "View/Save XML" link. See the cache warning below | `lib/hansard_parser.rb` |
+| `Unknown speaker` or `Can't figure out which person the aph id ... belongs to` | A speaker or APH id is missing from the people data. **Never fatal**: the speech is kept, unlinked. The genuinely fatal speaker errors are `Could not find house speaker ... for date` and `More than one match for name` | `lib/hansard_parser.rb`, `lib/people.rb` |
+| `Unrecognised party` | A party code in a members CSV has no mapping. It is raised when the CSV files load, so it **breaks every date**, not one | `lib/people_csv_reader.rb` |
+| `Unexpected tag`, `Unexpected value for contents`, `Assertion failed!` | APH changed its XML. The parser rejects tags it does not know | `lib/hansard_day.rb`, `lib/hansard_speech.rb`, `lib/hansard_rewriter.rb` (the last raises only `Assertion failed!`) |
+| `Link to XML download is missing` | The APH page had no "View/Save XML" link. **WARN level: it is in the parser log only, not the cron email, and the run exits 0.** See the cache warning below | `lib/hansard_parser.rb` |
 | `Patch failed` | A hand patch in `data/patches/` no longer applies to the fresh XML | `lib/patch.rb` |
-| `Could not determine division result` | A division has no result APH can resolve | `lib/hansard_division.rb` |
-| HTTP 403 or 429 after retries | APH is blocking the scraper. It uses a user agent APH allowlisted, so a block can mean the allowlist changed | `lib/aph_mechanize_agent.rb` |
+| `Could not determine division result` | A **tied House** division whose result text matches nothing the parser knows | `lib/hansard_division.rb` |
+| `Not an even number of people in the pairs voting` | APH's pairs list has an odd number of names. Needs a patch | `lib/hansard_division.rb` |
+| HTTP 403, 429, 502, 503 or 504 after five tries | APH is blocking or failing. Other codes (404, 500) and network errors are not retried and abort at once. The scraper uses a user agent APH allowlisted, so a persistent block can mean the allowlist changed | `lib/aph_mechanize_agent.rb` |
+
+**For the fix itself, including patches and every error that needs a person, see [Parse failures and patches](parse-failures-and-patches.md).** This page only triages.
 
 3. Confirm what loaded. A parse that aborts loads **nothing**, even for days that parsed before the failure, because the database load runs only after every day has parsed.
    The XML for good days is still on disk under `RAWDATA/scrapedxml/`.
@@ -58,8 +61,8 @@ cd /srv/www/<stage>/current/openaustralia-parser
 ./bin/run parse-speeches.rb <yyyy-mm-dd> [<yyyy-mm-dd>]
 ```
 
-Add `--force` to make `xml2db.pl` delete database rows for that day that are not in the XML. Use `--interactive` to choose Retry, Patch or Continue per failure.
-`--no-load` parses without touching the database, which is a safe way to test a fix.
+Add `--force` to make `xml2db.pl` delete database rows for that day that are not in the XML. `--interactive` asks Retry, Patch, Continue or Quit per failure. Its Patch option does not help, so read the options table in [Parse failures and patches](parse-failures-and-patches.md#parse-speechesrb-options) first.
+`--no-load` skips the database load, but it **still writes** `origxml`, `rewritexml` and `scrapedxml` under `RAWDATA`. For a clean test add `--output-dir=<scratch directory>`.
 
 **Verify** (the database load can fail silently, see below)
 
@@ -72,6 +75,10 @@ Add `--force` to make `xml2db.pl` delete database rows for that day that are not
 `parse-speeches.rb`, `parse-members.rb` and `parse-member-links.rb` call `xml2db.pl` or `mpinfoin.pl` with `system(...)` and do not check the exit status.
 If the load fails (database down, bad XML), the Ruby script still exits 0, so `morningupdate` carries on to indexing and the Sentry cron check-in reports success.
 After any parse that touched the database, check the rows or the site, not just the exit code.
+
+**`xml2db.pl` is not transactional.** It loads days in ascending date order, the House (`--debates`) completely before the Senate (`--lordsdebates`). If it stops part-way on a House day (`speech without (sub)heading <id>`, `Got gid <g> twice`, a database error, or XML that is cut short), the days before it **are** loaded and the Senate is not loaded at all. So "an aborted parse loads nothing" is true only when the Ruby parser aborts, before the load starts.
+It also deletes `epobject` rows that have no `hansard` row each time it starts, and prints `Fixing up lonely epobjects`. A message like `strange, missing epobject <id> for gid <g> - part of db unexpectedly missing` followed by `deleting hansard object <g> and rebuilding` is it repairing a row, not an error.
+Its exit status is non-zero on a `die`, and the Ruby script ignores it. With none of `--date`, `--from` or `--to`, or no data type flag, it prints its usage and exits 0.
 
 ## Re-index after a backfill
 
@@ -94,6 +101,17 @@ Do the reload and re-index after the 10:00 run has finished and before the next 
 ## Known gaps
 
 - `previous-working-day` uses the server's date and skips weekends only.
-- APH selectors in `lib/hansard_rewriter.rb` are brittle. A new APH layout usually shows up as `Unexpected tag`.
+- APH selectors in `lib/hansard_rewriter.rb` are brittle. A new APH layout usually shows up as `Unexpected tag`. See [Parse failures and patches](parse-failures-and-patches.md#aph-changed-its-xml).
 
 **Escalate**: tell the on-call engineer. If a sitting day is missing from the public site by the next working day, the CEO decides whether a notice is needed, and signs off any wording.
+
+## Sitemap
+
+The last step of `morningupdate` runs `openaustralia-parser/bin/run sitemap.rb`, after the index and the RSS files. It writes `shared/sitemap.xml` and the `sitemaps/*.gz` files, which the site serves.
+A sitemap failure stops the rest of `morningupdate`, but, like a parse failure, **it is masked**: the run goes through the lock wrapper, so it still logs `Exit status: 0` and the Sentry monitor stays green (see [Cron and monitoring](cron-and-monitoring.md#which-exit-statuses-to-trust)). The parse, index and RSS steps have already succeeded by then. Check `sitemap.xml` and the `.gz` files as below, and re-run the sitemap by hand.
+
+- **A failed run leaves a broken file.** `sitemap.xml` is opened for writing at the start, so a failed or still-running job leaves an unterminated index, and a truncated `.gz` is possible. Check with `tail -c 100 shared/sitemap.xml`, which should end with `</sitemapindex>`, and `gzip -t shared/sitemaps/*.gz`. Old higher-numbered `.gz` files are not removed.
+- **Do not run it while `morningupdate` runs.** There is no lock, and two writers can corrupt the file. Check `pgrep -fa morningupdate` first.
+- **The news step runs PHP.** It runs `twfy/www/docs/news/editme.php` relative to the working directory. Errors are `unable to locate PHP binary` or `<php>: failed status ...`. A PHP notice on standard output misaligns the output and gives an `ArgumentError` from `Time.parse`. `EXCLUDE_NEWS=1` skips the news step, but UNVERIFIED: it may then fail with `undefined method 'utc' for nil` if the last file holds only member URLs.
+- It reads every `hansard` row one at a time, so it is slow and heavy on the database. On an empty database it raises.
+- `--output-dir` must end with `/`, and its help text wrongly mentions postcodes.
