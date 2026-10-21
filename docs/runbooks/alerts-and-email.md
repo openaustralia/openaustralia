@@ -1,0 +1,93 @@
+# Alerts and email
+
+People subscribe to email alerts about what their representatives say. `twfy/scripts/alertmailer.php` sends them on weekday mornings (10:00, Australia/Sydney, production only), after `morningupdate` has loaded and indexed the day.
+Outgoing mail goes through the host mail agent to the OAF Postal server. Postal tells the site about permanent failures through a signed webhook, and the site then **suppresses** that address.
+Terms (suppression, lift, index batch): [`CONTEXT.md`](../../CONTEXT.md) and `twfy/CONTEXT.md`.
+
+How it decides what to send:
+
+- `alerts-lastsent` holds two lines: a Unix time, then the last index batch sent. The alertmailer builds a query for every batch after that one, and for each alert it sends only what is newer.
+- It writes the file back at the end of a run.
+- It skips suppressed addresses and counts them (`Suppressed addresses skipped: N` in its stats mail).
+- It skips items older than a maximum age (`AlertMaxAge`).
+- It reads and writes `alerts-lastsent` **in the current directory**, so run it from `twfy/scripts`.
+- It takes no lock. Two runs at once can send twice.
+
+`alerts-lastsent` on the server is `/srv/www/<stage>/shared/alerts-lastsent` (linked into `current/twfy/scripts`).
+Flags: `--nomail` (do everything but send), `--only=<email>`, `--from=<email>`, `--to=<email>` (`--only` cannot be combined with the others).
+
+## Symptom: alert emails did not go out
+
+**Diagnose (READ-ONLY)**
+
+1. Did the 10:00 job run? Check the Sentry cron monitor and `/srv/www/<stage>/log/alertmailer.log`. See [Cron and monitoring](cron-and-monitoring.md).
+2. Did the morning parse and index finish first? Alerts only cover indexed batches. See [Daily Hansard parse](daily-hansard-parse.md) and [Search index](search-index.md).
+3. Read `alerts-lastsent`. A second line that is ahead of the real last batch (`select max(indexbatch_id) from indexbatch`) means someone bumped it to skip alerts, and the next batches are fine.
+4. Look at the stats mail from the last run. A large `Suppressed addresses skipped` figure points to a delivery problem. See below.
+
+**Fix (CHANGES PRODUCTION)** If the job failed before sending, re-run it:
+
+```
+cd /srv/www/<stage>/current/twfy/scripts
+php -q alertmailer.php --nomail     # first, to see what it would do
+php -q alertmailer.php
+```
+
+Check: the stats mail, and one test subscription. Undo: sent email cannot be unsent.
+Do not run it while another copy is running. Check with `pgrep -fa alertmailer`.
+
+## Symptom: alerts went out twice, or for old debates
+
+Cause: a second run, or reloaded old days. Every reload gives the day's items a new index batch, and the next alert run treats them as new.
+
+**Stop it before it happens (CHANGES PRODUCTION).** The bump skips *every* batch up to the number you set, including real ones, so the timing matters.
+
+1. Do the reload and the re-index **after the 10:00 `alertmailer` run has finished, and before the next 09:05 `morningupdate`**. By then every genuine batch has already been emailed.
+2. Check the highest batch with `select max(indexbatch_id) from indexbatch`.
+3. Set the first line of `alerts-lastsent` to the current time (`date +%s`) and the second line to **exactly that highest batch number**. Do not add one: the next genuine batch is `max + 1`, and the mailer would skip it.
+4. Run `php -q alertmailer.php --nomail` and confirm it plans no old items.
+
+If you must reload between 09:05 and 10:00, today's genuine batch may already be indexed, and bumping would skip its alerts too.
+In that case use the manual date check in the script instead. The parser README explains it, under "Skipping email alerts after fixing a scraper failure".
+
+**Escalate**: an alert sent in error is public-facing. Tell the on-call engineer at once. The CEO signs off any apology or correction notice to subscribers.
+
+## Symptom: one person has stopped getting alerts
+
+Check for a **suppression**. Postal marks an address as suppressed after a hard bounce, and the site stops sending until someone lifts it.
+Their alerts are never deleted. Following a confirmation link does **not** lift a suppression.
+
+**Diagnose (READ-ONLY)** `select * from email_suppressions where email = '<address>'` (use a fictional address in your notes, never paste a real one into a ticket).
+Confirm with the person that their mailbox now works.
+
+**Fix (CHANGES PRODUCTION)**
+
+```
+cd /srv/www/<stage>/current/twfy/scripts
+php lift-suppression.php person@example.org
+```
+
+It keeps the suppression row with the time it was lifted. Alerts resume at the next run.
+Undo: a further hard bounce suppresses the address again.
+Do not use `import-suppressions.php`. It is a one-off bulk import that handles personal data.
+
+## Symptom: the Postal webhook returns errors
+
+The endpoint is `/postal/event` (`twfy/www/docs/postal/event.php`).
+It verifies a signature using keys that it fetches from Postal and caches in the system temporary directory.
+
+| Response | Meaning |
+|---|---|
+| 403 | The request was unsigned or the signature failed |
+| 503 | The site could not fetch Postal's signing keys. Postal will retry |
+| 405 | Not a POST |
+| 200 | Handled. Only bounce and delivery-failure events create suppressions, and sender-side refusals are ignored |
+
+**Diagnose (READ-ONLY)** Check that the web server can reach Postal's key address, and that `POSTAL_JWKS_URL` in `conf/general` is unset or correct.
+Webhook deliveries and retries are in Postal's own admin pages (the [infrastructure repository](https://gitlab.com/openaustralia/infrastructure) has the Postal documentation in `docs/POSTAL.md`).
+
+## Known gaps
+
+- The mail charset is hard-coded as `iso-8859-1`, while the database is `utf8mb4`.
+- A mail catcher can replace real delivery on non-production hosts. If staging shows no mail, check `~/log/mail/` on the server. UNVERIFIED.
+- `scripts/fawkesuser/handlemail` is dead code (it begins with `exit;`). Bounces are handled only by the webhook.
