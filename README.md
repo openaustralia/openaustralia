@@ -66,19 +66,23 @@ To bump submodule pointers by hand instead of waiting for Dependabot, update the
   make update-twfy
   make update-openaustralia-parser
 ```
-That will commit the changes for you. Have a look around with `git status`, then push to a branch and open a pull request. Don't push straight to `main`: it is protected, and a push to `main` deploys to staging automatically (see below).
+That will commit the changes for you. Have a look around with `git status`, then push to a branch and open a pull request. Don't push straight to `main`: it is protected.
 
-Once the submodule change is in the `main` branch on GitHub, you're ready to deploy.
+Once the submodule change is in the `main` branch on GitHub, you're ready to deploy. Merging does not deploy anything by itself: today every deploy is run by a person with the Make targets below.
 
-### Deploying from GitHub Actions
+### Deploying from GitHub Actions (not working yet)
 
-Deploys also run from GitHub Actions (`.github/workflows/`), using the same Capistrano tasks, AWS OIDC and the SSM tunnel, so no `oaf` AWS profile or local SSH key is needed:
+`.github/workflows/` holds three deploy workflows that are meant to run the same Capistrano tasks over AWS OIDC and the SSM tunnel, with no `oaf` AWS profile or local SSH key:
 
-* `deploy-staging.yml` runs automatically on every push to `main`, and can be re-run from the Actions tab.
+* `deploy-staging.yml` starts on every push to `main`, and can be started by hand from the Actions tab.
 * `deploy-staging-branch.yml` is manual: choose any branch to preview on staging.
 * `deploy-production.yml` is manual: choose a branch (default `main`). The `production` environment requires a listed reviewer to approve the run before it starts.
 
-The Make targets below do the same thing from your own machine.
+**None of them has ever succeeded.** On 2026-10-21 all 18 recorded `deploy-staging.yml` runs had failed and 2 more had failed to start, the one `deploy-production.yml` run had failed, and `deploy-staging-branch.yml` had never run.
+Each failure is at the "Configure AWS credentials" step: the workflows read the variable `AWS_DEPLOY_ROLE_ARN`, and neither the repository nor the `staging` and `production` environments has any variables set.
+The workflows also do not check out submodules, which `config/deploy.rb` needs (it reads `openaustralia-parser/.ruby-version` when it loads), so setting the variable alone is unlikely to be enough.
+
+Use the Make targets below, from your own machine, until the workflows are fixed.
 
 To deploy the staging branch (`main`, or whatever `STAGING_BRANCH` is set to) to ([Staging](https://www.test.openaustralia.org.au/)):
 ```bash

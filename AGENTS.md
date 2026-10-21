@@ -39,9 +39,12 @@ make staging-parse-members / production-parse-members
 - The `update-*` targets are interactive (`git add --patch`) and **commit for you**.
 - Dependabot bumps submodule pointers daily (`.github/dependabot.yml`).
 - There are no test or lint workflows here, but `.github/workflows/` holds three deploy workflows:
-  `deploy-staging.yml` runs **automatically on every push to `main`** (so merging a pointer bump deploys it to staging),
-  `deploy-staging-branch.yml` is manual (any branch to staging), and `deploy-production.yml` is manual and needs a
-  listed reviewer to approve the run. All three run `bundle exec cap <stage> deploy` over AWS OIDC and an SSM tunnel.
+  `deploy-staging.yml` starts on every push to `main`, `deploy-staging-branch.yml` is manual (any branch to staging),
+  and `deploy-production.yml` is manual and needs a listed reviewer to approve the run. They are meant to run
+  `bundle exec cap <stage> deploy` over AWS OIDC and an SSM tunnel, but **none has ever succeeded**: every recorded run
+  failed at "Configure AWS credentials" because the `AWS_DEPLOY_ROLE_ARN` variable is not set (checked 2026-10-21), and
+  they do not check out submodules. So merging to `main` does not deploy; deploys are run by a person with
+  `make staging-deploy` and `make production-deploy`.
 
 ## Deployment
 
