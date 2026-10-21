@@ -30,23 +30,33 @@ make init-submodules       # git submodule update --init
 make init-bundle           # bundle install (deploy tooling)
 make check-submodules      # report which submodules lag their branch
 make update-<name>         # fetch/pull a submodule then commit the pointer bump (twfy,
-                           # openaustralia-parser, rblib, phplib, perllib - no update-shlib exists)
+                           # openaustralia-parser, rblib, phplib, perllib, shlib)
 make staging-deploy        # bundle exec cap staging deploy
 make production-deploy     # bundle exec cap production deploy
 make staging-parse-members / production-parse-members
 ```
 
 - The `update-*` targets are interactive (`git add --patch`) and **commit for you**.
-- `check-submodules` may suggest `make update-shlib`, which doesn't exist; bump that pointer by hand.
-- Dependabot bumps submodule pointers daily (`.github/dependabot.yml`); there is no CI in this repo.
+- Dependabot bumps submodule pointers daily (`.github/dependabot.yml`).
+- There are no test or lint workflows here, but `.github/workflows/` holds three deploy workflows:
+  `deploy-staging.yml` starts on every push to `main`, `deploy-staging-branch.yml` is manual (any branch to staging),
+  and `deploy-production.yml` is manual and needs a listed reviewer to approve the run. They are meant to run
+  `bundle exec cap <stage> deploy` over AWS OIDC and an SSM tunnel, but **none has ever succeeded**: every recorded run
+  failed at "Configure AWS credentials" because the `AWS_DEPLOY_ROLE_ARN` variable is not set (checked 2026-10-21), and
+  they do not check out submodules. So merging to `main` does not deploy; deploys are run by a person with
+  `make staging-deploy` and `make production-deploy`.
 
 ## Deployment
 
 Capistrano 3, defined in `Capfile` and `config/deploy.rb`, stages `production` and `staging`
-(`config/deploy/*.rb`) - both on the same host (`openaustralia.org.au`), differing only by `deploy_to` path. The
-deploy keeps a `cached-copy` with submodules initialised, symlinks shared config into the release
-(`twfy/conf/general` and `openaustralia-parser/configuration.yml` live in `shared/`, not in git), compiles
-`twfy/scripts/run-with-lockfile`, runs Phinx migrations inside `twfy`, and restarts Apache with sudo.
+(`config/deploy/*.rb`) - both on the same server, differing only by `deploy_to` path and the branch variable. The
+server is found through EC2 tags (`Application` and `Roles`, see `config/deploy.rb`); there is no `Stage` tag, so a
+single running instance serves both stages. The deploy keeps a `cached-copy` with submodules initialised,
+symlinks shared config into the release (`twfy/conf/general` and `openaustralia-parser/configuration.yml` live in
+`shared/`, not in git), compiles `twfy/scripts/run-with-lockfile`, runs `composer install`, then Phinx migrations and
+the Tailwind CSS build (`npm ci`, `npm run build:css`) inside `twfy`, and restarts Apache with sudo. Migrations run
+before the `current` symlink flips, so a failure after that step leaves the database ahead of the live code.
+The `capistrano-tagging3` gem tags each deploy, and `sentry:release` records it in Sentry.
 `scripts/tag-prod.sh` / `tag-staging.sh` **force-push** the `PRODUCTION`/`STAGING` tags.
 
 Treat every `*-deploy`, `parse:*` and tag command as a live production action: never run one without an explicit,
@@ -62,6 +72,16 @@ specific go-ahead for that exact action, right now, however routine the request 
   task clones straight from GitHub on the deploy target, at the branch named by `STAGING_BRANCH`/`PRODUCTION_BRANCH`
   (default `main`). Testing an unmerged branch means `STAGING_BRANCH=that-branch make staging-deploy`, not just
   running the target while that branch is checked out.
+- Every successful deploy runs `sentry:release` (`lib/capistrano/tasks/sentry.rake`, hooked `after deploy:finished`)
+  on the deployer's machine, recording the release in Sentry against the `twfy` revision. It is best-effort: it needs
+  the Sentry CLI signed in, and a failure there doesn't fail the deploy.
+- `ansible.cfg` points at `provisioning/roles`, which isn't in this repository. The server's EC2 instance is defined
+  in Terraform, and its Ansible roles (packages, Apache, cron, shared directories) live in the
+  [`openaustralia/infrastructure`](https://gitlab.com/openaustralia/infrastructure) repository on GitLab (see the
+  comment in `config/deploy.rb`; the GitHub copy is archived). That repository also installs the production cron
+  jobs, and turns them off for staging.
+- `deploy_via` and `use_sudo` in `config/deploy.rb` are Capistrano 2 settings. Capistrano 3.20 ignores them; the
+  Apache restart's `sudo` is written out in the `Capfile`.
 - The stack is old in places; check what a file actually targets before assuming modern Ruby/PHP idioms apply.
 
 ## Agent skills
