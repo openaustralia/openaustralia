@@ -39,8 +39,10 @@ Terms: [`CONTEXT.md`](../../CONTEXT.md).
 
 ```
 cd /srv/www/<stage>/current/twfy
+export XAPIANDB=/srv/www/<stage>/shared/search/searchdb
 ./search/index.pl "$XAPIANDB" daterange 2018-06-25 2018-08-17
 ```
+`index.pl` takes the index path as its first argument and does not read `XAPIANDB` from `conf/general`, and a fresh SSH session has no `XAPIANDB`, so set it as shown (and check with `ls` that the path exists).
 
 Check: search for a phrase from one of those days. Undo: not needed, indexing a day again only refreshes it.
 Each run takes a new batch number. If these days are old, skip the alert emails. See [Alerts and email](alerts-and-email.md).

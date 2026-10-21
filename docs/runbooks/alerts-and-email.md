@@ -38,7 +38,21 @@ Items older than 8 weeks (`AlertMaxAge`), items before 2008-01-14, and items in 
 4. Look at the stats mail from the last run. A large `Suppressed addresses skipped` figure points to a delivery problem. See below.
 
 **Fix (CHANGES PRODUCTION)** If the job failed **before it sent anything**, re-run it. If it failed **part-way**, do not simply re-run it: there is no record of who was already emailed, so a plain re-run emails the earlier addresses again.
-Read `alertmailer.log` and the stdout email for the last `SEND n : Sending email to <address>` line, and resume after that address with `--from=<that address>` (lower case). Use `--nomail --from=<address>` first, to see what it would do.
+**The log line is written before the send.** `alertmailer.php` prints `SEND n : Sending email to <address> ...` and only then hands the message to the mail system, so the **last** `SEND` line may not have been sent. `--from=<address>` is exclusive: it skips that address and everything that sorts before it.
+Find the last `SEND` line in `alertmailer.log` and the stdout email, then choose the resume address:
+
+- If the message to the last address **was** handed over (check Postal's message log for that address), resume with `--from=<that address>`.
+- If it was **not**, or you cannot tell, resume with `--from=<the address on the SEND line before it>`. That sends to the uncertain address again, which risks one duplicate alert. Skipping it risks a missed alert that cannot be recovered, because the finished run moves `alerts-lastsent` on.
+
+Use lower case for the address. Then:
+
+```
+cd /srv/www/<stage>/current/twfy/scripts
+php -q alertmailer.php --nomail --from=<resume address>    # first, to see what it would do
+php -q alertmailer.php --from=<resume address>
+```
+
+If nothing had been sent, run it without `--from`:
 
 ```
 cd /srv/www/<stage>/current/twfy/scripts

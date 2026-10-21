@@ -166,7 +166,7 @@ Use a scratch output directory as well:
 ./bin/run parse-speeches.rb --no-load --output-dir=/tmp/parse-test <yyyy-mm-dd>
 ```
 
-This fetches from APH (using the allowlisted scraper) and writes only under `/tmp/parse-test`. It uses its own cache, so the patch is applied. It is better run on your own machine in a checkout with the patch in place. UNVERIFIED: this scratch-directory test has not been run on the server.
+This fetches from APH (using the allowlisted scraper) and writes only under `/tmp/parse-test`. The first run in a directory has no cache, so it fetches fresh and the patch is applied. **Use a new directory for every test**, or delete `origxml/<house>_debates/<date>.xml` in it first: a second run reads the cached `origxml` and does not apply a revised patch, so it can repeat an old failure or pass without testing the latest patch. It is better run on your own machine in a checkout with the patch in place. UNVERIFIED: this scratch-directory test has not been run on the server.
 
 ### Deploy a patch and re-run the day (CHANGES PRODUCTION)
 
@@ -205,7 +205,7 @@ Reloading may change identifiers, so it needs `--force` on the database load, an
 |---|---|
 | Dates | One or two. `today`, `yesterday`, `previous-working-day` or any date Ruby parses. Use `yyyy-mm-dd`. `previous-working-day` uses the server clock and the weekday only |
 | `--no-load` | Skips the database load, and prints the command it would have run. Still writes `origxml`, `rewritexml`, `scrapedxml` and the log |
-| `--output-dir=PATH` | Writes `origxml`, `rewritexml`, `scrapedxml` and `parser.log` under `PATH` instead of `RAWDATA`. It has its own cache, so it refetches. A database load still reads `RAWDATA`, so use it only with `--no-load` |
+| `--output-dir=PATH` | Writes `origxml`, `rewritexml`, `scrapedxml` and `parser.log` under `PATH` instead of `RAWDATA`. It has its own cache: the first run in a directory fetches fresh, and later runs reuse that `origxml`. A database load still reads `RAWDATA`, so use it only with `--no-load` |
 | `--force` | Passes `--force` to `xml2db.pl`, which deletes database rows for the date range that are not in the XML |
 | `--proof` | Refetches only days whose XML is marked as proof |
 | `--interactive` | On an error, asks `Retry / Patch / Continue / Quit?` (first letter only). **Retry** re-parses from the cache, so it fetches nothing. **Patch** runs `create_patch.rb` and then retries at once, before you have written the patch, so it does not help. Make the patch in another terminal, delete the `origxml`, then choose Retry. **Continue** skips that house and day, but the load still runs for the rest. **Quit** aborts |

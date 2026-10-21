@@ -87,10 +87,12 @@ To index a date range explicitly, as the `deploy` user (the action name and the 
 
 ```
 cd /srv/www/<stage>/current/twfy
+export XAPIANDB=/srv/www/<stage>/shared/search/searchdb
 ./search/index.pl "$XAPIANDB" daterange 2018-06-25 2018-08-17
 ```
+`index.pl` takes the index path as its first argument and does not read `XAPIANDB` from `conf/general`, and a fresh SSH session has no `XAPIANDB`, so set it as shown (and check with `ls` that the path exists).
 
-Set `XAPIANDB` to the server's `searchdb` path first. See [Search index](search-index.md).
+See [Search index](search-index.md).
 The parser README has a worked example with its spacing wrong (`daterange2018-06-25`).
 
 ## Stop alert emails for old days you reloaded
