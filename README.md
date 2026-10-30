@@ -8,6 +8,8 @@ The submodules are:
 * The parser: [openaustralia/openaustralia-parser](https://github.com/openaustralia/openaustralia-parser)
 * Shared libraries: [openaustralia/phplib](https://github.com/openaustralia/phplib), [openaustralia/perllib](https://github.com/openaustralia/perllib), [openaustralia/rblib](https://github.com/openaustralia/rblib), [openaustralia/shlib](https://github.com/openaustralia/shlib)
 
+Something broken? See the [runbooks](docs/runbooks/README.md) for how to diagnose and fix deploys, the daily parse, search, alert emails, the database and backups.
+
 ## Setup
 
 ```bash
@@ -43,9 +45,7 @@ To trigger a check immediately instead of waiting for the daily run, open **Insi
 then the **Dependabot** tab in this repository, find the `gitsubmodule` entry under recent update jobs, and select
 **Check for updates**.
 
-Set `DEPLOY_SSH_KEY` ENV var if you are using a different ssh key for deployment than `~/.ssh/id_ed25519` (preferred) or `~/.ssh/id_rsa`.
-
-You do this by adding and committing, just like you would with any other change in Git. Here's what it looks like to update both the parser and the web application's submodules:
+Set the `DEPLOY_SSH_KEY` ENV var to the path of a key file if you are using a different ssh key for deployment than `~/.ssh/id_ed25519` (preferred) or `~/.ssh/id_rsa`. (In GitHub Actions, `DEPLOY_SSH_KEY` is instead an environment secret holding the key itself.)
 
 By default the `main` branch is deployed to both production and staging. You can override this using:
 * `STAGING_BRANCH` ENV var if you want a different staging branch;
@@ -59,6 +59,8 @@ set in `config/deploy/staging.rb` and `config/deploy/production.rb`. So to deplo
 staging, run it as `STAGING_BRANCH=your-branch-name make staging-deploy`, not just `make staging-deploy` from
 that branch locally.
 
+To bump submodule pointers by hand instead of waiting for Dependabot, update the parser and the web application like this:
+
 ```bash
   cd openaustralia
   make check-submodules # to check what has changed
@@ -66,16 +68,30 @@ that branch locally.
   make update-twfy
   make update-openaustralia-parser
 ```
-That will commit the changes for you. Have a look around with `git status` then push to a branch for a PR, or direct to `main`, depending on how brave you feel today.
+That will commit the changes for you. Have a look around with `git status`, then push to a branch and open a pull request. Don't push straight to `main`: it is protected.
 
-Once the submodule change is in `main` branch on github, you're ready to deploy:
+Once the submodule change is in the `main` branch on GitHub, you're ready to deploy. Merging does not deploy anything by itself: today every deploy is run by a person with the Make targets below.
 
-To deploy the OVERRIDE_BRANCH / staging branch to ([Staging](https://www.test.openaustralia.org.au/)):
+### Deploying from GitHub Actions (not working yet)
+
+`.github/workflows/` holds three deploy workflows that are meant to run the same Capistrano tasks over AWS OIDC and the SSM tunnel, with no `oaf` AWS profile or local SSH key:
+
+* `deploy-staging.yml` starts on every push to `main`, and can be started by hand from the Actions tab.
+* `deploy-staging-branch.yml` is manual: choose any branch to preview on staging.
+* `deploy-production.yml` is manual: choose a branch (default `main`). The `production` environment requires a listed reviewer to approve the run before it starts.
+
+**None of them has ever succeeded.** On 2026-10-21 all 18 recorded `deploy-staging.yml` runs had failed and 2 more had failed to start, the one `deploy-production.yml` run had failed, and `deploy-staging-branch.yml` had never run.
+Each failure is at the "Configure AWS credentials" step: the workflows read the variable `AWS_DEPLOY_ROLE_ARN`, and neither the repository nor the `staging` and `production` environments has any variables set.
+The workflows also do not check out submodules, which `config/deploy.rb` needs (it reads `openaustralia-parser/.ruby-version` when it loads), so setting the variable alone is unlikely to be enough.
+
+Use the Make targets below, from your own machine, until the workflows are fixed.
+
+To deploy the staging branch (`main`, or whatever `STAGING_BRANCH` is set to) to ([Staging](https://www.test.openaustralia.org.au/)):
 ```bash
   make staging-deploy
 ```
 
-If you've updated data about members you'll need to parse that and import it. This happens automatically once a day or you can run it using this Capistrano task:
+If you've updated data about members you'll need to parse that and import it. Nothing schedules this: the production cron jobs run `dailyupdate` (which refreshes member links, not the member list), `morningupdate`, `weeklyupdate` and `alertmailer`. Run it with this Capistrano task:
 ```bash
   make staging-parse-members
 ```
@@ -108,9 +124,10 @@ Capistrano fills that gap during deploy via the [capistrano-composer][cc] gem
    `before 'deploy:updated', 'composer:install'`. We point it at the twfy
    subdirectory with `set :composer_working_dir, -> { release_path.join('twfy') }`
    and install with `--no-dev --prefer-dist --no-interaction --optimize-autoloader`.
-3. This produces `release_path/twfy/vendor/` before
-   `deploy:symlink_shared`, `deploy:compile_lockfile`, and the Apache restart
-   run. The application's `twfy/www/includes/easyparliament/init.php` does a
+3. This produces `release_path/twfy/vendor/` after `deploy:symlink_shared` and
+   `deploy:compile_lockfile` (which run earlier, in `deploy:updating`) and before
+   the `current` symlink flips and the Apache restart runs. The application's
+   `twfy/www/includes/easyparliament/init.php` does a
    `require_once .../vendor/autoload.php`, so the dependency tree must be on
    disk before Apache serves any traffic from the new release.
 4. On rollback the gem also runs `composer:install` before `deploy:reverted`,
@@ -123,7 +140,7 @@ Bumping a PHP dependency therefore needs **no special deploy step** — update
 `composer.json` / `composer.lock` in the `twfy` repo, push, bump the submodule
 pointer in this repo (`make update-twfy`), and deploy as usual.
 
-Server prerequisites (one-time, managed by Ansible, not by Capistrano):
+Server prerequisites (one-time, managed by Ansible in the [`openaustralia/infrastructure`](https://gitlab.com/openaustralia/infrastructure) repository on GitLab, not by Capistrano):
 
 * `composer` on the `deploy` user's `$PATH`.
 * `php-cli` with the same extensions the runtime needs (at minimum
