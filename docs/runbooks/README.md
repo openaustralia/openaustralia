@@ -2,7 +2,7 @@
 
 How to diagnose and fix problems with OpenAustralia.org.au.
 Find your symptom in the table, then follow the linked runbook.
-Terms such as `origxml`, `RAWDATA` and `alerts-lastsent` are defined in [`CONTEXT.md`](../../CONTEXT.md).
+Terms such as `origxml`, `RAWDATA` and `alerts-lastsent` are defined in [`GLOSSARY.md`](../../GLOSSARY.md).
 
 ## Find your symptom
 

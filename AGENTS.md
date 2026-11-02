@@ -101,7 +101,7 @@ See `docs/agents/triage-labels.md`.
 
 ### Domain docs
 
-Single-context: one `CONTEXT.md` and one `docs/adr/` at the root, both created lazily. The submodules are separate
+Single-context: one `GLOSSARY.md` and one `docs/adr/` at the root, both created lazily. The submodules are separate
 repositories and keep their own. See `docs/agents/domain.md`.
 
 ## Contributing

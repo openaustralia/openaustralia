@@ -2,7 +2,7 @@
 
 People subscribe to email alerts about what their representatives say. `twfy/scripts/alertmailer.php` sends them on weekday mornings (10:00, Australia/Sydney, production only), after `morningupdate` has loaded and indexed the day.
 Outgoing mail goes through the host mail agent to the OAF Postal server. Postal tells the site about permanent failures through a signed webhook, and the site then **suppresses** that address.
-Terms (suppression, lift, index batch): [`CONTEXT.md`](../../CONTEXT.md) and `twfy/CONTEXT.md`.
+Terms (suppression, lift, index batch): [`GLOSSARY.md`](../../GLOSSARY.md) and `twfy/GLOSSARY.md`.
 
 How it decides what to send:
 
