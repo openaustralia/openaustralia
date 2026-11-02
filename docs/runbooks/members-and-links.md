@@ -10,7 +10,7 @@ Four separate jobs keep the people data current. Only one of them is scheduled.
 | Photos | `member-images.rb` | No | Downloads official photos from APH into `images/mps`, `mpsL` and `mpsXL` |
 
 After `parse-member-links.rb`, `dailyupdate` runs `mpinfoin.pl` with **no arguments**, and that does much more than links: see "Member information (`mpinfoin.pl`)" below.
-Terms: [`CONTEXT.md`](../../CONTEXT.md). Logs: [Cron and monitoring](cron-and-monitoring.md).
+Terms: [`GLOSSARY.md`](../../GLOSSARY.md). Logs: [Cron and monitoring](cron-and-monitoring.md).
 To see when each job last wrote its output, run `ls -l /srv/www/<stage>/shared/pwdata/members/`. The five member XML files date from the last `parse-members.rb` run, and `websites.xml`, `links-abc-election.xml` and `links-register-of-interests.xml` from the last `dailyupdate`.
 
 **`--no-load` is not read-only.** On `parse-members.rb` and `parse-member-links.rb` it skips only the database load. It still rewrites the XML files in the live members directory. To test without touching them, add `--output-dir=<scratch directory>`, which both scripts accept. The directory must be writable by the user running the script (`deploy` on the server), so a directory made by `mktemp` as root fails with `Permission denied`. On the server, a check that raises an error does so before any file is written, so the old XML stays.

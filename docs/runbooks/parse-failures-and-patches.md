@@ -2,7 +2,7 @@
 
 What to do when `openaustralia-parser` cannot parse a day of Hansard, or parses it wrongly, and a person has to step in.
 It covers the day-parse path, `parse-speeches.rb`, which `morningupdate` runs. Start with [Daily Hansard parse](daily-hansard-parse.md) to triage a failed morning, then come here for the fix.
-Terms: [`CONTEXT.md`](../../CONTEXT.md). Worked examples: #973 (Senate 2026-09-10) and #996 (Senate 2026-10-12), both `Not an even number of people in the pairs voting`.
+Terms: [`GLOSSARY.md`](../../GLOSSARY.md). Worked examples: #973 (Senate 2026-09-10) and #996 (Senate 2026-10-12), both `Not an even number of people in the pairs voting`.
 
 Run parser scripts with `./bin/run <script>` from `/srv/www/<stage>/current/openaustralia-parser`. `bundle exec ./script.rb` can silently do nothing, because each script only runs when it is the main program.
 
@@ -223,7 +223,7 @@ Reloading may change identifiers, so it needs `--force` on the database load, an
 
 ## Known gaps
 
-- `data/README`, `CONTEXT.md` and the parser README describe patches only loosely, and the README's failure example still shows `uncaught throw` (the code now uses `raise`).
+- `data/README`, `GLOSSARY.md` and the parser README describe patches only loosely, and the README's failure example still shows `uncaught throw` (the code now uses `raise`).
 - The messages `Couldn't calculate speech duration` and `invalid data for <member>` appear in old issues (#640, #638) but nowhere in the current parser. `calculate_speech_durations` never raises or logs.
 - UNVERIFIED, read in code and not reproduced: a malformed time string (for example `1530`) could raise `ArgumentError` during duration calculation, and an empty speech by an unknown speaker could raise `NoMethodError`.
 

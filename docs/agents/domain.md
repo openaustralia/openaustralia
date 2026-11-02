@@ -6,7 +6,7 @@ How the engineering skills should consume this repo's domain documentation when 
 
 - **`AGENTS.md`** at the repo root. It is the canonical guidance for this repo; `CLAUDE.md` and
   `.github/copilot-instructions.md` only point at it.
-- **`CONTEXT.md`** at the repo root, if it exists.
+- **`GLOSSARY.md`** at the repo root, if it exists.
 - **`docs/adr/`**, if it exists. Read ADRs that touch the area you're about to work in.
 
 If any of these files don't exist, **proceed silently**. Don't flag their absence; don't suggest creating them
@@ -15,12 +15,12 @@ them lazily when terms or decisions actually get resolved.
 
 ## Layout: single-context
 
-This repo is **single-context**: one `CONTEXT.md` and one `docs/adr/` at the root.
+This repo is **single-context**: one `GLOSSARY.md` and one `docs/adr/` at the root.
 
 ```
 /
 ├── AGENTS.md
-├── CONTEXT.md                         ← created lazily by /domain-modeling
+├── GLOSSARY.md                        ← created lazily by /domain-modeling
 └── docs/
     ├── adr/                           ← created lazily by /domain-modeling
     │   ├── 0001-....md
@@ -30,15 +30,15 @@ This repo is **single-context**: one `CONTEXT.md` and one `docs/adr/` at the roo
 
 The six submodules (`twfy`, `openaustralia-parser`, `phplib`, `perllib`, `rblib`, `shlib`) are separate
 repositories, not workspace packages, so they are **not** contexts of this one. Domain docs for a submodule belong
-in that submodule's own repository. Don't write a `CONTEXT.md` or an ADR into a submodule checkout from here.
+in that submodule's own repository. Don't write a `GLOSSARY.md` or an ADR into a submodule checkout from here.
 
-If this repo ever does need per-context docs, the multi-context form is a root `CONTEXT-MAP.md` pointing at one
-`CONTEXT.md` per context, with context-scoped ADRs alongside each.
+If this repo ever does need per-context docs, the multi-context form is a root `GLOSSARY-MAP.md` pointing at one
+`GLOSSARY.md` per context, with context-scoped ADRs alongside each.
 
 ## Use the glossary's vocabulary
 
 When your output names a domain concept (in an issue title, a refactor proposal, a hypothesis, a test name), use the
-term as defined in `CONTEXT.md`. Don't drift to synonyms the glossary explicitly avoids.
+term as defined in `GLOSSARY.md`. Don't drift to synonyms the glossary explicitly avoids.
 
 If the concept you need isn't in the glossary yet, that's a signal. Either you're inventing language the project
 doesn't use (reconsider) or there's a real gap (note it for `/domain-modeling`).

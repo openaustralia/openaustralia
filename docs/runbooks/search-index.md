@@ -5,7 +5,7 @@ The index lives at `XAPIANDB`, which is set in `twfy/conf/general` to `/srv/www/
 The same directory also holds `searchdb-lastupdated`, a small file with a Unix time.
 
 Each indexing run that adds anything records a numbered **index batch** and tags the documents `batch:N`. The alert emailer reads those batches. See [Alerts and email](alerts-and-email.md).
-Terms: [`CONTEXT.md`](../../CONTEXT.md).
+Terms: [`GLOSSARY.md`](../../GLOSSARY.md).
 
 ## How the index is kept up to date
 

@@ -1,7 +1,7 @@
 # After an election, and yearly tasks
 
 Some jobs happen only around a federal election or once a year, so nobody remembers them. This page lists them in order.
-Terms: [`CONTEXT.md`](../../CONTEXT.md). The day-to-day failures are in [Members, links, postcodes and photos](members-and-links.md) and [Parse failures and patches](parse-failures-and-patches.md).
+Terms: [`GLOSSARY.md`](../../GLOSSARY.md). The day-to-day failures are in [Members, links, postcodes and photos](members-and-links.md) and [Parse failures and patches](parse-failures-and-patches.md).
 
 The data here is public. Wording of any notice about it is signed off by the CEO, and a change to what the site says about a named person follows the same rule as a patch (see [Parse failures and patches](parse-failures-and-patches.md#before-you-patch-is-it-an-inference)).
 

@@ -1,7 +1,7 @@
 # Site administration
 
 How to handle comments, people's accounts, email alerts, API keys and privacy requests on OpenAustralia.org.au.
-Most of this is done in the admin pages at `/admin/`, and the rest needs SQL by hand on the server. Terms: [`CONTEXT.md`](../../CONTEXT.md).
+Most of this is done in the admin pages at `/admin/`, and the rest needs SQL by hand on the server. Terms: [`GLOSSARY.md`](../../GLOSSARY.md).
 Never copy a person's email address, name or comment text into a ticket, chat or this repository. Refer to the row (user id, alert id, comment id) instead.
 
 ## Who can do what

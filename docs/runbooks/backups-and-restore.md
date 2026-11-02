@@ -17,7 +17,7 @@ What is **not** backed up:
   If anyone does run the script: it keeps the 14 newest dumps and moves every dump dated the 1st of a month to `firsts/`, where they stay for ever. It dumps `--all-databases`, so the file `openaustralia-all-including-sensitive-data-<date>.sql.bz2` holds personal data (email addresses and password hashes), and it passes the database password on the `mysqldump` command line. Keep any such file out of tickets and chat, and do not leave it in a release directory, which is pruned.
 - **Archives from before December 2025**: an earlier backup tool's archives cannot be recovered (see ADR 0004 in the infrastructure repository).
 
-Terms: [`CONTEXT.md`](../../CONTEXT.md).
+Terms: [`GLOSSARY.md`](../../GLOSSARY.md).
 
 ## What you can rebuild instead of restoring
 

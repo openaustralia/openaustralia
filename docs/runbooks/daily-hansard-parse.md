@@ -10,7 +10,7 @@ It runs these steps, and stops at the first one that exits non-zero:
 `alertmailer.php` runs at 10:00 and emails the alerts. See [Alerts and email](alerts-and-email.md).
 `previous-working-day` ignores public holidays and parliamentary sitting days. A day that fails is **not retried** the next morning.
 
-Terms: [`CONTEXT.md`](../../CONTEXT.md). Log and monitor locations: [Cron and monitoring](cron-and-monitoring.md).
+Terms: [`GLOSSARY.md`](../../GLOSSARY.md). Log and monitor locations: [Cron and monitoring](cron-and-monitoring.md).
 
 ## Symptom: a day is missing from the site, or the cron email shows an error
 

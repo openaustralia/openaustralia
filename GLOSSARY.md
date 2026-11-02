@@ -2,7 +2,7 @@
 
 The deployment and operations repository for OpenAustralia.org.au. It pins the code for the site, the Hansard parser and four small libraries, and deploys them together.
 This file defines the words the [runbooks](docs/runbooks/README.md) use. It holds terms only. For procedures, read the runbooks.
-The web application has its own glossary in `twfy/CONTEXT.md` (suppression, lift, paused).
+The web application has its own glossary in `twfy/GLOSSARY.md` (suppression, lift, paused).
 
 ## Language
 
