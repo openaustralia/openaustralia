@@ -17,6 +17,12 @@ The House of Representatives or the Senate. In the parser and the database the S
 **Proof**:
 A Hansard day that APH has published in draft, which may still change. The parser records it so the text can be fetched again when it is final.
 
+**Pair**:
+Two senators from opposite sides who agree to skip the same division. APH lists the names of every pair in one flat list, and the parser treats consecutive names as a pair.
+
+**Unpaired names**:
+The names in a pairs list that has an odd number of names. The parser cannot tell who pairs with whom, so it writes the names in an `<unpaired>` element and writes no pairs for that division.
+
 **Members**:
 The people who have sat in either house, with their periods of service, parties and ministerial roles. They come from CSV files in the parser, not from APH.
 
