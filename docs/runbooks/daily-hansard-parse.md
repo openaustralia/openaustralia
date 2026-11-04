@@ -28,7 +28,7 @@ Terms: [`GLOSSARY.md`](../../GLOSSARY.md). Log and monitor locations: [Cron and 
 | `Link to XML download is missing` | The APH page had no "View/Save XML" link. **WARN level: it is in the parser log only, not the cron email, and the run exits 0.** See the cache warning below | `lib/hansard_parser.rb` |
 | `Patch failed` | A hand patch in `data/patches/` no longer applies to the fresh XML | `lib/patch.rb` |
 | `Could not determine division result` | A **tied House** division whose result text matches nothing the parser knows | `lib/hansard_division.rb` |
-| `Not an even number of people in the pairs voting` | APH's pairs list has an odd number of names. Needs a patch | `lib/hansard_division.rb` |
+| `Not an even number of people in the pairs voting` | APH's pairs list has an odd number of names. **WARN level: it is in the parser log only, not the cron email, and the run exits 0.** The parser keeps the names unpaired and the day loads. See [Odd pairs lists](parse-failures-and-patches.md#odd-pairs-lists). Parser versions before openaustralia-parser#289 raise this as an error and need a patch | `lib/hansard_parser.rb` |
 | HTTP 403, 429, 502, 503 or 504 after five tries | APH is blocking or failing. Other codes (404, 500) and network errors are not retried and abort at once. The scraper uses a user agent APH allowlisted, so a persistent block can mean the allowlist changed | `lib/aph_mechanize_agent.rb` |
 
 **For the fix itself, including patches and every error that needs a person, see [Parse failures and patches](parse-failures-and-patches.md).** This page only triages.

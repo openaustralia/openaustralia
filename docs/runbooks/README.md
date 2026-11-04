@@ -11,7 +11,8 @@ Terms such as `origxml`, `RAWDATA` and `alerts-lastsent` are defined in [`GLOSSA
 | A deploy failed, or a deploy left the site half updated | [Deploy and rollback](deploy-and-rollback.md) |
 | A day of debates is missing from the site | [Daily Hansard parse](daily-hansard-parse.md) |
 | The morning cron email or Sentry check-in shows a parser error | [Daily Hansard parse](daily-hansard-parse.md), then [Parse failures and patches](parse-failures-and-patches.md) for the fix |
-| The parser stops on one day with an error that needs a person: an unknown name, `Not an even number of people in the pairs voting`, `Patch failed`, `Unexpected tag` | [Parse failures and patches](parse-failures-and-patches.md) |
+| The parser stops on one day with an error that needs a person: an unknown name, `Patch failed`, `Unexpected tag` | [Parse failures and patches](parse-failures-and-patches.md) |
+| The parser log has a `Not an even number of people in the pairs voting` warning | [Parse failures and patches](parse-failures-and-patches.md#odd-pairs-lists) |
 | The parser fails on every date, before it parses anything | [Parse failures and patches](parse-failures-and-patches.md#data-file-errors-at-startup) |
 | You have fixed the data or written a patch and the day still fails the same way | [Parse failures and patches](parse-failures-and-patches.md#patches) (the cached XML bypasses a patch) |
 | A member is missing, has the wrong dates, or a division fails with "Couldn't figure out who" | [Members and links](members-and-links.md) and [Daily Hansard parse](daily-hansard-parse.md) |

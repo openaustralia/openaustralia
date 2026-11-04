@@ -2,7 +2,7 @@
 
 What to do when `openaustralia-parser` cannot parse a day of Hansard, or parses it wrongly, and a person has to step in.
 It covers the day-parse path, `parse-speeches.rb`, which `morningupdate` runs. Start with [Daily Hansard parse](daily-hansard-parse.md) to triage a failed morning, then come here for the fix.
-Terms: [`GLOSSARY.md`](../../GLOSSARY.md). Worked examples: #973 (Senate 2026-09-10) and #996 (Senate 2026-10-12), both `Not an even number of people in the pairs voting`.
+Terms: [`GLOSSARY.md`](../../GLOSSARY.md). Worked examples: #973 (Senate 2026-09-10) and #996 (Senate 2026-10-12), both `Not an even number of people in the pairs voting`. That error stopped the parser until openaustralia-parser#289, which made it a warning.
 
 Run parser scripts with `./bin/run <script>` from `/srv/www/<stage>/current/openaustralia-parser`. `bundle exec ./script.rb` can silently do nothing, because each script only runs when it is the main program.
 
@@ -26,7 +26,7 @@ The loop runs from the latest date back to the earliest, House first and then Se
 | `Unknown speaker "<name>"`, `Can't figure out which person the aph id`, `Found person (...) but not both in the right period and house` | [Names and speakers](#names-and-speakers) |
 | `Could not find house speaker`, `Could not find senate president`, `Could not find deputy ... for date`, `More than one match for name`, `speakername can not be nil` | [Names and speakers](#names-and-speakers) |
 | `Unrecognised party`, `Couldn't find person`, `State ... is not a valid`, `Division is undefined`, `Birthday ... not valid`, or any error before the first date is parsed | [Data file errors at startup](#data-file-errors-at-startup) |
-| `Not an even number of people in the pairs voting` | [Patches](#patches) |
+| `Not an even number of people in the pairs voting` | [Odd pairs lists](#odd-pairs-lists) |
 | `Could not determine division result`, `Speaker not found` | [Patches](#patches) and [Names and speakers](#names-and-speakers) |
 | `Unexpected tag`, `Unexpected attributes`, `Unexpected value for contents`, `Front title is to short`, `Assertion failed!` | [APH changed its XML](#aph-changed-its-xml) |
 | `Patch failed` | [Patches](#patches) |
@@ -128,12 +128,23 @@ For the same reason, `Patch failed` can only appear on a fresh fetch: a new day,
 
 Use one when APH's own data is wrong or malformed for that day, for example:
 
-- `Not an even number of people in the pairs voting (<n> names)`. The message lists the division, time, APH link and every name in the `pairs` element. Compare `num.votes` in the `pairs` element with the names, and check whether someone listed in the pairs also voted in that division. A pair that includes the placeholder name `Vacancy` is dropped, but only **after** this check, so it does not help with an odd list.
 - `Could not determine division result`. It is raised only for a **tied House** division, when the result text matches none of "casting vote with the ayes", "agreed to", "casting vote with the noes", "negatived" or "was not carried".
 - `Speaker not found`. A tied House division whose heading does not follow the form "Speaker", a dash, then the name in brackets (or "President" in place of "Speaker"). The tie-breaking Speaker is added to the vote list by name, so a Speaker missing from the data also produces a `Couldn't figure out who ...` for a name that is not in the XML.
 - `Patch failed`, or an `Unexpected ...` error caused by a single bad passage.
 
 There are 46 patches in `data/patches/` in the parser, such as `senate.2026-09-10.xml.patch`. Read one first to see the form. The one for 2026-09-10 deletes a single spurious `<name>` line from `<pairs>`.
+
+### Odd pairs lists
+
+A **pair** is two senators from opposite sides who agree to skip the same division. APH lists the names of every pair in one flat list, and the parser treats consecutive names as a pair.
+
+When that list has an odd number of names, the parser cannot tell who pairs with whom. The parser logs `Not an even number of people in the pairs voting (<n> names)` at WARN level, so the line goes to the parser log only and never to the cron email. The message lists the division, time, APH link and every name in the `pairs` element.
+The parser then writes no pairs for that division, writes the listed names in an `<unpaired>` element in `scrapedxml`, and loads the day as normal. A person has to look in the parser log to notice it.
+
+A patch is optional. It restores the real pairs in `scrapedxml`. To decide what the patch should say, compare `num.votes` in the `pairs` element with the names, and check whether someone listed in the pairs also voted in that division.
+The placeholder name `Vacancy` is never a person: the parser drops a pair that includes it, and leaves it out of the unpaired names.
+
+Parser versions before openaustralia-parser#289 raise the same text as an error, and the day fails until a patch is deployed.
 
 ### Before you patch: is it an inference?
 
