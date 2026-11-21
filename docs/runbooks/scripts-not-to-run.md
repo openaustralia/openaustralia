@@ -8,7 +8,6 @@ Paths are in the `twfy` and `openaustralia-parser` repositories (submodules of t
 
 | Script | Why |
 |---|---|
-| `openaustralia-parser/postcodes.rb` | Fails with `ArgumentError: wrong number of arguments (given 0, expected 1)` on every direct run, so postcodes cannot be reloaded. See [Members, links, postcodes and photos](members-and-links.md#symptom-postcode-lookups-are-wrong-or-empty) |
 | `openaustralia-parser/export-comments.rb`, `import-comments.rb` | Both `require "mysql"`, which is not in the `Gemfile` (only `mysql2` is), so they raise `LoadError`. They also need an environment variable `BE-DANGEROUS` that a shell cannot export, and `export-comments.rb` deletes comments after exporting. To move comments, use database snapshots or SQL |
 | `openaustralia-parser/wikipedia.rb` | An empty file. The real Wikipedia import is `twfy/scripts/weeklyupdate` |
 | `twfy/scripts/fawkesuser/handlemail` | Starts with `exit;` and is marked unfinished. Bounces are handled by the Postal webhook |
