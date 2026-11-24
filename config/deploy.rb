@@ -23,6 +23,11 @@ set :composer_roles, :app
 set :composer_working_dir, -> { release_path.join('twfy') }
 set :composer_install_flags, '--no-dev --prefer-dist --no-interaction --optimize-autoloader'
 
+# Directories shared between releases. Apache (www-data) can't write inside a release, and twfy's Blade views are
+# compiled on first use, so the compiled-views folder lives in shared/. The infrastructure repo's openaustralia role
+# creates it with group www-data and mode 2775; Capistrano only links it into each release.
+append :linked_dirs, 'twfy/storage/framework/views'
+
 # Use sudo for apache restart
 set :use_sudo, true
 

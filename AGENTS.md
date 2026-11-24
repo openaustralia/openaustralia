@@ -53,7 +53,8 @@ Capistrano 3, defined in `Capfile` and `config/deploy.rb`, stages `production` a
 server is found through EC2 tags (`Application` and `Roles`, see `config/deploy.rb`); there is no `Stage` tag, so a
 single running instance serves both stages. The deploy keeps a `cached-copy` with submodules initialised,
 symlinks shared config into the release (`twfy/conf/general` and `openaustralia-parser/configuration.yml` live in
-`shared/`, not in git), compiles `twfy/scripts/run-with-lockfile`, runs `composer install`, then Phinx migrations and
+`shared/`, not in git), links `twfy/storage/framework/views` (Blade's compiled views, which Apache writes as `www-data`) to
+`shared/` through `linked_dirs`, compiles `twfy/scripts/run-with-lockfile`, runs `composer install`, then Phinx migrations and
 the Tailwind CSS build (`npm ci`, `npm run build:css`) inside `twfy`, and restarts Apache with sudo. Migrations run
 before the `current` symlink flips, so a failure after that step leaves the database ahead of the live code.
 The `capistrano-tagging3` gem tags each deploy, and `sentry:release` records it in Sentry.
