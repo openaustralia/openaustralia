@@ -33,7 +33,12 @@ Do these in order. Sequencing matters because of the nightly job at 01:37.
 8. **Postcodes.** `data/postcodes.csv` was regenerated on 2026-11-21 from the `openaustralia/aec_electorate_postcodes` scraper. Before that it dated from 2022-07-07, had no rows for `Bullwinkel`, and still had rows for the abolished divisions `Higgins` and `North Sydney`.
    The process is to refresh the morph.io scraper, check that it labels the new boundaries `current` (the script keeps only `current` rows), run `parse-postcodes.rb` locally, commit the CSV, bump the pointer, deploy, then load it with `postcodes.rb`. The load fails if a sitting division has no postcode, which catches a stale scraper. Check what the live table holds with `SELECT name, COUNT(*) FROM postcode_lookup GROUP BY name`.
    UNVERIFIED: how the scraper labels `current` and `redistributed` rows after the next boundary change.
-9. **ABC election links.** A new election needs a new block in `parse-member-links.rb` (copy the 2025 one, with the key `abc_election_results_<year>`) **and** a new `abc_election_results_<year>` entry in `twfy/www/includes/easyparliament/page.php`, which lists only 2007 to 2022. So the 2025 links are scraped and stored, but never shown. Both are code changes by pull request.
+9. **ABC election links.** A new election needs three code changes, each by pull request:
+   - a new block in `parse-member-links.rb` (copy the 2025 one, with the key `abc_election_results_<year>`);
+   - the year at the front of `ELECTION_YEARS` in `twfy/www/includes/Parliament/MemberLinks.php`;
+   - a matching `abc_election_results_<year>` block in `twfy/www/includes/easyparliament/page.php`, until production sends the member pages to Laravel.
+
+   Without the last two, the links are scraped and stored but never shown. ABC marks a few electorates with a trailing `(*)`, which `abc_electorate_name` strips. Check that the stored `canonical` names match the constituency names, because a link stored under a different name is never read.
 10. **Rankings.** During a dissolution no House member has a future end date, so `mpinfoin.pl rankings` prints `Failed to find any MPs for rankings ...` and the rankings stop refreshing until the new House sits.
 
 ## Things that look like tasks but are not
